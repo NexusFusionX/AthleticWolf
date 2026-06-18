@@ -10,6 +10,9 @@ export default function Home() {
             <a href="#about" className="transition-colors hover:text-foreground">
               About
             </a>
+            <a href="#packages" className="transition-colors hover:text-foreground">
+              Packages
+            </a>
             <a href="#contact" className="transition-colors hover:text-foreground">
               Contact
             </a>
@@ -121,6 +124,114 @@ export default function Home() {
                   <p className="mt-3 text-sm leading-relaxed text-muted">
                     {item.desc}
                   </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Packages */}
+        <section id="packages" className="border-t border-white/10 px-6 py-20 sm:px-8 sm:py-28">
+          <div className="mx-auto max-w-6xl">
+            <div className="max-w-2xl">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
+                Packages
+              </p>
+              <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+                Choose a package for yourself
+              </h2>
+              <p className="mt-4 text-lg text-muted">
+                All plans are 6-month coaching packages designed to help you reach
+                your fitness goals with expert guidance.
+              </p>
+            </div>
+
+            <div className="mt-14 grid gap-6 lg:grid-cols-3">
+              {[
+                {
+                  name: "Silver",
+                  price: 70,
+                  value: 140,
+                  featured: false,
+                  features: [
+                    "1:1 Coaching",
+                    "Customized Diet Plan",
+                    "Customized Workout Plan",
+                    "Supplement Guide",
+                    "Weekly Calls and Check-ins",
+                  ],
+                },
+                {
+                  name: "Platinum",
+                  price: 130,
+                  value: 260,
+                  featured: true,
+                  features: [
+                    "Everything in Silver",
+                    "24/7 Assistant",
+                    "WhatsApp Access",
+                    "Body Condition Check-ups",
+                    "Accountability",
+                  ],
+                },
+                {
+                  name: "Diamond",
+                  price: 170,
+                  value: 340,
+                  featured: false,
+                  features: [
+                    "Everything in Platinum",
+                    "Medical Condition Check-ups",
+                    "Meal Recipes Guide",
+                    "Muscular Condition Check-ups",
+                    "Various Workout Plans",
+                  ],
+                },
+              ].map((pkg) => (
+                <div
+                  key={pkg.name}
+                  className={`relative flex flex-col rounded-2xl border p-8 ${
+                    pkg.featured
+                      ? "border-accent bg-surface shadow-[0_0_40px_rgba(249,115,22,0.15)]"
+                      : "border-white/10 bg-surface"
+                  }`}
+                >
+                  {pkg.featured && (
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-accent px-4 py-1 text-xs font-semibold uppercase tracking-wide text-white">
+                      Most Popular
+                    </span>
+                  )}
+                  <p className="text-sm font-semibold uppercase tracking-[0.15em] text-accent">
+                    {pkg.name}
+                  </p>
+                  <p className="mt-1 text-sm text-muted">6 Month Plan</p>
+                  <div className="mt-6 flex items-end gap-1">
+                    <span className="text-4xl font-bold">${pkg.price}</span>
+                    <span className="mb-1 text-sm text-muted">/ per month</span>
+                  </div>
+                  <p className="mt-2 text-sm text-muted">Value ${pkg.value}</p>
+
+                  <ul className="mt-8 flex flex-1 flex-col gap-3">
+                    {pkg.features.map((feature) => (
+                      <li key={feature} className="flex items-start gap-3 text-sm">
+                        <span className="mt-0.5 text-accent" aria-hidden>
+                          ✓
+                        </span>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <a
+                    href="#contact"
+                    className={`mt-8 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold transition-colors ${
+                      pkg.featured
+                        ? "bg-accent text-white hover:bg-accent-hover"
+                        : "border border-white/20 hover:border-accent hover:text-accent"
+                    }`}
+                  >
+                    Get Started
+                  </a>
                 </div>
               ))}
             </div>
