@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Athletic Wolf | Personal Fitness Coaching",
+  title: "Athletic Wolf | Fitness & Athletic Performance Coaching",
   description:
-    "Transform your strength, endurance, and confidence with personalized coaching from Athletic Wolf.",
+    "Elite fitness coaching for athletes and everyday warriors. Personalized training, nutrition guidance, and real accountability.",
 };
 
 export default function RootLayout({
