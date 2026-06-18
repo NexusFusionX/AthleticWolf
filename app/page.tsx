@@ -61,7 +61,7 @@ export default function Home() {
 
             <div className="grid w-full max-w-md grid-cols-2 gap-4 lg:max-w-lg">
               {[
-                { stat: "500+", label: "Clients trained" },
+                { stat: "1000+", label: "Clients trained" },
                 { stat: "10+", label: "Years experience" },
                 { stat: "98%", label: "Goal completion" },
                 { stat: "24/7", label: "Support access" },
