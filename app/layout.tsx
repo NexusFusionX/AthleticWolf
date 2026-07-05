@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Anton } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
@@ -14,10 +14,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const anton = Anton({
+  variable: "--font-anton",
+  weight: "400",
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
-  title: "Athletic Wolf | Fitness & Athletic Performance Coaching",
+  title: "Athletic Wolf | Online Personal Training & Coaching",
   description:
-    "Elite fitness coaching for athletes and everyday warriors. Personalized training, nutrition guidance, and real accountability.",
+    "ISSA-certified online personal training. Custom workout and nutrition programs, weekly check-ins, and real accountability — coaching clients worldwide.",
 };
 
 export default function RootLayout({
@@ -28,9 +34,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${anton.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <div className="grain-overlay" aria-hidden />
         {children}
         <Analytics />
         <SpeedInsights />

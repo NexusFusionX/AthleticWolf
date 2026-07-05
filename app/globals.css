@@ -1,27 +1,101 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0f1419;
-  --foreground: #f4f4f5;
-  --accent: #f97316;
-  --accent-hover: #ea580c;
-  --muted: #a1a1aa;
-  --surface: #18181b;
+  --background: #0a0b0d;
+  --surface: #131519;
+  --surface-2: #1b1e24;
+  --foreground: #f5f5f4;
+  --muted: #96979c;
+  --border: #ffffff14;
+  --accent: #ff5a1f;
+  --accent-hover: #e6490f;
+  --accent-gold: #ffc24d;
+  --accent-2: #4fb3ff;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
-  --color-muted: var(--muted);
-  --color-surface: var(--surface);
+  --color-accent-gold: var(--accent-gold);
+  --color-accent-2: var(--accent-2);
   --font-sans: var(--font-geist-sans);
+  --font-display: var(--font-anton);
   --font-mono: var(--font-geist-mono);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: var(--background);
+  background-color: var(--background);
+  background-image:
+    radial-gradient(circle, color-mix(in srgb, var(--accent) 22%, transparent), transparent 55%),
+    radial-gradient(circle, color-mix(in srgb, var(--accent-2) 16%, transparent), transparent 50%),
+    radial-gradient(circle, color-mix(in srgb, var(--accent-gold) 14%, transparent), transparent 55%);
+  background-repeat: no-repeat;
+  background-size: 70% 70%, 60% 60%, 55% 55%;
+  background-position: 10% -10%, 95% 15%, 20% 90%;
+  animation: mesh-drift 26s ease-in-out infinite alternate;
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+@keyframes mesh-drift {
+  0% {
+    background-position: 10% -10%, 95% 15%, 20% 90%;
+  }
+  50% {
+    background-position: 25% 5%, 75% 35%, 40% 75%;
+  }
+  100% {
+    background-position: 5% 5%, 90% 0%, 10% 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none;
+  }
+}
+
+.font-display {
+  font-family: var(--font-anton), var(--font-geist-sans), system-ui, sans-serif;
+}
+
+.text-flame {
+  background-image: linear-gradient(
+    90deg,
+    var(--accent) 0%,
+    var(--accent-gold) 50%,
+    var(--accent) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.bg-flame {
+  background-image: linear-gradient(
+    135deg,
+    var(--accent) 0%,
+    var(--accent-gold) 55%,
+    var(--accent-hover) 100%
+  );
+}
+
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width='140'%20height='140'%3E%3Cfilter%20id='n'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.8'%20numOctaves='3'%20stitchTiles='stitch'%2F%3E%3C%2Ffilter%3E%3Crect%20width='100%25'%20height='100%25'%20filter='url(%23n)'%2F%3E%3C%2Fsvg%3E");
 }
