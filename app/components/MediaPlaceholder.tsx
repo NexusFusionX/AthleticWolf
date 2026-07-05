@@ -7,7 +7,7 @@ export function MediaPlaceholder({
 }) {
   return (
     <div
-      className={`flex ${aspect} flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-white/15 bg-surface-2 p-6 text-center`}
+      className={`flex ${aspect} flex-col items-center justify-center gap-2 rounded-2xl border border-dashed border-line bg-white p-6 text-center`}
     >
       <span className="text-xs font-semibold uppercase tracking-[0.15em] text-muted">
         Media placeholder

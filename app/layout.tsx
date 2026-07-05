@@ -1,22 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Anton } from "next/font/google";
+import { Barlow_Condensed, Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const barlow = Barlow_Condensed({
+  variable: "--font-barlow",
+  weight: ["600", "700", "800"],
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const anton = Anton({
-  variable: "--font-anton",
-  weight: "400",
+const inter = Inter({
+  variable: "--font-inter",
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
 });
 
@@ -34,10 +30,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${anton.variable} h-full antialiased`}
+      className={`${barlow.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <div className="grain-overlay" aria-hidden />
         {children}
         <Analytics />
         <SpeedInsights />

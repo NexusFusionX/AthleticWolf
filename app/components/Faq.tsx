@@ -43,7 +43,7 @@ const faqs = [
 
 export function Faq() {
   return (
-    <div className="mt-14 divide-y divide-white/10 rounded-2xl border border-white/10 bg-surface">
+    <div className="mt-14 divide-y divide-line rounded-2xl border border-line bg-card">
       {faqs.map((item) => (
         <details key={item.q} className="group px-6 py-5 sm:px-8">
           <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-left font-semibold">

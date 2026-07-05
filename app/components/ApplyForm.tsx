@@ -46,7 +46,7 @@ export function ApplyForm() {
 
   if (submitted) {
     return (
-      <div className="rounded-2xl border border-white/10 bg-surface p-8 text-center">
+      <div className="rounded-2xl border border-line bg-card p-8 text-center">
         <p className="text-lg font-semibold">Thanks — almost there!</p>
         <p className="mt-2 text-sm leading-relaxed text-muted">
           Your email app should have opened with your details pre-filled. Hit
@@ -57,13 +57,16 @@ export function ApplyForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-5 sm:grid-cols-2">
+    <form
+      onSubmit={handleSubmit}
+      className="grid gap-5 rounded-2xl border border-line bg-card p-6 sm:grid-cols-2 sm:p-8"
+    >
       <label className="flex flex-col gap-2 text-sm">
         Name
         <input
           name="name"
           required
-          className="rounded-xl border border-white/10 bg-surface-2 px-4 py-3 text-sm outline-none focus:border-accent"
+          className="rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-accent"
         />
       </label>
       <label className="flex flex-col gap-2 text-sm">
@@ -72,7 +75,7 @@ export function ApplyForm() {
           type="email"
           name="email"
           required
-          className="rounded-xl border border-white/10 bg-surface-2 px-4 py-3 text-sm outline-none focus:border-accent"
+          className="rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-accent"
         />
       </label>
       <label className="flex flex-col gap-2 text-sm">
@@ -80,7 +83,7 @@ export function ApplyForm() {
         <input
           name="country"
           required
-          className="rounded-xl border border-white/10 bg-surface-2 px-4 py-3 text-sm outline-none focus:border-accent"
+          className="rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-accent"
         />
       </label>
       <label className="flex flex-col gap-2 text-sm">
@@ -88,7 +91,7 @@ export function ApplyForm() {
         <select
           name="goal"
           required
-          className="rounded-xl border border-white/10 bg-surface-2 px-4 py-3 text-sm outline-none focus:border-accent"
+          className="rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-accent"
         >
           {goals.map((g) => (
             <option key={g}>{g}</option>
@@ -100,7 +103,7 @@ export function ApplyForm() {
         <select
           name="package"
           required
-          className="rounded-xl border border-white/10 bg-surface-2 px-4 py-3 text-sm outline-none focus:border-accent"
+          className="rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-accent"
         >
           {packages.map((p) => (
             <option key={p}>{p}</option>
@@ -112,12 +115,12 @@ export function ApplyForm() {
         <textarea
           name="message"
           rows={4}
-          className="rounded-xl border border-white/10 bg-surface-2 px-4 py-3 text-sm outline-none focus:border-accent"
+          className="rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink outline-none transition-colors focus:border-accent"
         />
       </label>
       <button
         type="submit"
-        className="mt-2 inline-flex items-center justify-center rounded-full bg-flame px-8 py-3.5 text-base font-semibold text-white transition-all hover:brightness-110 sm:col-span-2"
+        className="mt-2 inline-flex items-center justify-center rounded-xl bg-accent px-8 py-3.5 text-base font-bold uppercase tracking-wide text-white transition-colors hover:bg-accent-dark sm:col-span-2"
       >
         Submit Application
       </button>

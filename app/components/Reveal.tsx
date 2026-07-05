@@ -1,15 +1,6 @@
 "use client";
 
-import { motion, type Variants } from "framer-motion";
-
-const variants: Variants = {
-  hidden: { opacity: 0, y: 28 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
-  },
-};
+import { useEffect, useRef, useState } from "react";
 
 export function Reveal({
   children,
@@ -20,57 +11,32 @@ export function Reveal({
   delay?: number;
   className?: string;
 }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15, rootMargin: "-40px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <motion.div
-      className={className}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
-      variants={variants}
-      transition={{ delay }}
+    <div
+      ref={ref}
+      className={`reveal ${visible ? "is-visible" : ""} ${className ?? ""}`}
+      style={{ transitionDelay: `${delay}s` }}
     >
       {children}
-    </motion.div>
-  );
-}
-
-const containerVariants: Variants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.12 },
-  },
-};
-
-export function RevealGroup({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <motion.div
-      className={className}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
-      variants={containerVariants}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-export function RevealItem({
-  children,
-  className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <motion.div className={className} variants={variants}>
-      {children}
-    </motion.div>
+    </div>
   );
 }

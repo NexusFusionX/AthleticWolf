@@ -1,109 +1,114 @@
-import Image from "next/image";
-import { MediaPlaceholder } from "./components/MediaPlaceholder";
 import { Faq } from "./components/Faq";
 import { ApplyForm } from "./components/ApplyForm";
-import { Reveal, RevealGroup, RevealItem } from "./components/Reveal";
-import { AnimatedHeroHeading, AnimatedFadeIn } from "./components/AnimatedHero";
+import { Reveal } from "./components/Reveal";
+import { HeroImage } from "./components/HeroImage";
+import { BeforeAfterSlider } from "./components/BeforeAfterSlider";
+import { packages } from "./data/packages";
 
-const trustBadges = [
-  "ISSA Certified Trainer",
-  "100% Online Coaching",
-  "Coaching UK & USA Clients Worldwide",
+const heroStats = [
+  { label: "ISSA", caption: "Certified Trainer" },
+  { label: "100%", caption: "Online Coaching" },
+  { label: "Global", caption: "UK & USA Clients" },
+];
+
+const programs = [
+  {
+    icon: "🔥",
+    title: "Fat Loss",
+    desc: "Sustainable fat loss through structured training and nutrition — no crash diets.",
+  },
+  {
+    icon: "💪",
+    title: "Muscle Building",
+    desc: "Progressive strength programming designed to build lean muscle at your pace.",
+  },
+  {
+    icon: "⚖️",
+    title: "Body Recomposition",
+    desc: "Lose fat and build muscle at the same time with a plan tuned to your body.",
+  },
+  {
+    icon: "💻",
+    title: "Online Coaching",
+    desc: "Full remote coaching with weekly check-ins, plan updates, and direct coach access.",
+  },
+  {
+    icon: "🥗",
+    title: "Nutrition Coaching",
+    desc: "Custom nutrition plans built around your preferences, schedule, and goals.",
+  },
 ];
 
 const howItWorks = [
   {
-    step: "01",
-    title: "Apply",
-    desc: "Tell us about your goals, training experience, and lifestyle through a short application.",
+    num: "01",
+    title: "Assessment First",
+    desc: "Every client starts with a full intake covering goals, training history, and lifestyle.",
   },
   {
-    step: "02",
-    title: "Get Your Custom Plan",
-    desc: "Receive a workout and nutrition plan built specifically around your body, schedule, and preferences.",
+    num: "02",
+    title: "Custom Plan",
+    desc: "You get a training and nutrition plan built specifically around your body and schedule.",
   },
   {
-    step: "03",
-    title: "Train With Support",
-    desc: "Weekly check-ins and direct coach access keep you accountable and moving forward.",
+    num: "03",
+    title: "Weekly Check-ins",
+    desc: "Regular check-ins keep your plan accountable and updated as you progress.",
   },
   {
-    step: "04",
-    title: "Adjust & Progress",
-    desc: "Your plan evolves as you do — updated regularly based on real results, not guesswork.",
+    num: "04",
+    title: "Real Results",
+    desc: "Sustainable progress — tracked, adjusted, and built to last.",
   },
 ];
 
-const packages = [
+const differentiators = [
   {
-    name: "Silver",
-    price: 70,
-    value: 140,
-    featured: false,
-    features: [
-      "1:1 Coaching",
-      "Customized Diet Plan",
-      "Customized Workout Plan",
-      "Supplement Guide",
-      "Weekly Calls and Check-ins",
-    ],
+    title: "Personalized Programs",
+    desc: "Every plan is tailored to your body, schedule, and goals — no cookie-cutter workouts.",
   },
   {
-    name: "Platinum",
-    price: 130,
-    value: 260,
-    featured: true,
-    features: [
-      "Everything in Silver",
-      "24/7 Assistant",
-      "WhatsApp Access",
-      "Body Condition Check-ups",
-      "Accountability",
-    ],
+    title: "Performance Focused",
+    desc: "Strength, speed, endurance, and mobility — we train the whole athlete, not just one muscle group.",
   },
   {
-    name: "Diamond",
-    price: 170,
-    value: 340,
-    featured: false,
-    features: [
-      "Everything in Platinum",
-      "Medical Condition Check-ups",
-      "Meal Recipes Guide",
-      "Muscular Condition Check-ups",
-      "Various Workout Plans",
-    ],
+    title: "Real Accountability",
+    desc: "Weekly check-ins, progress tracking, and direct access to your coach keep you on track.",
   },
 ];
 
 export default function Home() {
   return (
-    <div className="flex min-h-full flex-col bg-background text-foreground">
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-background/80 backdrop-blur-md">
+    <div className="flex min-h-full flex-col">
+      {/* Nav */}
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-ink/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 sm:px-8">
-          <a
-            href="#"
-            className="font-display text-xl tracking-wide sm:text-2xl"
-          >
-            ATHLETIC WOLF
+          <a href="#" className="font-display text-xl text-white sm:text-2xl">
+            Athletic<span className="text-accent">Wolf</span>
           </a>
-          <nav className="hidden items-center gap-8 text-sm font-medium text-muted sm:flex">
-            <a href="#about" className="transition-colors hover:text-foreground">
-              About
+          <nav className="hidden items-center gap-7 text-sm font-medium text-white/75 lg:flex">
+            <a href="#programs" className="transition-colors hover:text-white">
+              Programs
             </a>
-            <a href="#how-it-works" className="transition-colors hover:text-foreground">
+            <a href="#how-it-works" className="transition-colors hover:text-white">
               How It Works
             </a>
-            <a href="#packages" className="transition-colors hover:text-foreground">
+            <a href="#packages" className="transition-colors hover:text-white">
               Packages
             </a>
-            <a href="#faq" className="transition-colors hover:text-foreground">
+            <a href="#results" className="transition-colors hover:text-white">
+              Results
+            </a>
+            <a href="#about" className="transition-colors hover:text-white">
+              About
+            </a>
+            <a href="#faq" className="transition-colors hover:text-white">
               FAQ
             </a>
           </nav>
           <a
             href="#apply"
-            className="rounded-full bg-flame px-4 py-2 text-sm font-semibold text-white transition-all hover:brightness-110 sm:px-5 sm:py-2.5"
+            className="rounded-xl bg-accent px-4 py-2 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-accent-dark sm:px-5 sm:py-2.5"
           >
             Get Started
           </a>
@@ -112,212 +117,178 @@ export default function Home() {
 
       <main>
         {/* Hero */}
-        <section className="relative overflow-hidden px-6 py-20 sm:px-8 sm:py-28 lg:py-36">
-          <div
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,90,31,0.2),transparent_50%),radial-gradient(circle_at_bottom_left,rgba(79,179,255,0.14),transparent_50%)]"
-            aria-hidden
-          />
-          <div className="relative mx-auto flex max-w-6xl flex-col items-start gap-10 lg:flex-row lg:items-center lg:justify-between">
-            <div className="max-w-2xl">
-              <AnimatedFadeIn>
-                <p className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-                  Online Personal Training
-                </p>
-              </AnimatedFadeIn>
-              <AnimatedHeroHeading
-                lines={[
-                  [{ text: "UNLEASH" }, { text: "YOUR" }],
-                  [{ text: "INNER" }, { text: "WOLF", accent: true }],
-                ]}
-              />
-              <AnimatedFadeIn delay={0.5}>
-                <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted sm:text-xl">
-                  ISSA-certified coaching for athletes and everyday people, wherever
-                  you are. Custom training and nutrition plans, built around your
-                  life — not a template.
-                </p>
-              </AnimatedFadeIn>
-              <AnimatedFadeIn delay={0.65}>
-                <div className="mt-10 flex flex-col gap-4 sm:flex-row">
-                  <a
-                    href="#apply"
-                    className="inline-flex items-center justify-center rounded-full bg-flame px-8 py-3.5 text-base font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_28px_rgba(255,140,20,0.4)]"
+        <section className="bg-ink px-6 pt-16 pb-0 text-white sm:px-8">
+          <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
+                Online Coaching, Worldwide
+              </p>
+              <h1 className="font-display mt-3 text-5xl leading-[1.05] sm:text-6xl lg:text-7xl">
+                UNLEASH YOUR <span className="text-accent">INNER WOLF</span>
+              </h1>
+              <p className="mt-6 max-w-lg text-lg leading-relaxed text-white/70">
+                ISSA-certified coaching for athletes and everyday people, wherever
+                you are. Custom training and nutrition plans, built around your
+                life — not a template.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-4">
+                <a
+                  href="#packages"
+                  className="rounded-xl bg-accent px-8 py-3.5 text-base font-bold uppercase tracking-wide text-white transition-colors hover:bg-accent-dark"
+                >
+                  View Packages
+                </a>
+                <a
+                  href="#apply"
+                  className="rounded-xl border border-white/25 px-8 py-3.5 text-base font-bold uppercase tracking-wide text-white transition-colors hover:border-white"
+                >
+                  Get Started
+                </a>
+              </div>
+
+              <div className="mt-16 flex flex-wrap border-t border-white/10">
+                {heroStats.map((stat, i) => (
+                  <div
+                    key={stat.label}
+                    className={`py-6 pr-8 ${i > 0 ? "border-l border-white/10 pl-8" : ""}`}
                   >
-                    Start Your Journey
-                  </a>
-                  <a
-                    href="#about"
-                    className="inline-flex items-center justify-center rounded-full border border-white/20 px-8 py-3.5 text-base font-semibold transition-all hover:-translate-y-0.5 hover:border-accent hover:text-accent"
-                  >
-                    Learn More
-                  </a>
-                </div>
-              </AnimatedFadeIn>
+                    <p className="font-display text-3xl">{stat.label}</p>
+                    <p className="mt-1 text-sm text-white/55">{stat.caption}</p>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <AnimatedFadeIn
-              delay={0.4}
-              className="w-full max-w-md lg:max-w-lg"
-            >
-              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-white/10 bg-surface-2">
-                <Image
-                  src="/media/hero/coach-hero.jpg"
-                  alt="Athletic Wolf coach"
-                  fill
-                  priority
-                  className="object-cover object-top"
-                  sizes="(min-width: 1024px) 32rem, (min-width: 640px) 28rem, 100vw"
-                />
-              </div>
-            </AnimatedFadeIn>
+            <div className="mx-auto w-full max-w-sm">
+              <HeroImage />
+            </div>
           </div>
         </section>
 
-        {/* Trust bar */}
-        <section className="border-t border-white/10 px-6 py-8 sm:px-8">
-          <RevealGroup className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-4 sm:justify-between">
-            {trustBadges.map((badge, i) => (
-              <RevealItem key={badge}>
-                <span className="flex items-center gap-2 rounded-full border border-white/10 bg-surface px-5 py-2 text-sm font-medium text-muted">
-                  <span
-                    className="h-1.5 w-1.5 rounded-full"
-                    style={{
-                      backgroundColor: i % 2 === 0 ? "var(--accent)" : "var(--accent-2)",
-                    }}
-                    aria-hidden
-                  />
-                  {badge}
-                </span>
-              </RevealItem>
-            ))}
-          </RevealGroup>
-        </section>
-
-        {/* About */}
-        <section id="about" className="border-t border-white/10 px-6 py-20 sm:px-8 sm:py-28">
+        {/* Programs */}
+        <section id="programs" className="px-6 py-20 sm:px-8 sm:py-28">
           <div className="mx-auto max-w-6xl">
-            <Reveal className="max-w-2xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-                About Your Coach
+            <Reveal className="max-w-xl">
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
+                What We Offer
               </p>
-              <h2 className="mt-4 font-display text-4xl tracking-wide sm:text-5xl">
-                BUILT FOR PEOPLE WHO REFUSE TO SETTLE
+              <h2 className="font-display mt-3 text-4xl sm:text-5xl">
+                Programs Built For Your Goal
               </h2>
-              <p className="mt-6 text-lg leading-relaxed text-muted">
-                Athletic Wolf is built on a simple belief: everyone has an
-                athlete inside them. As an ISSA-certified coach, every program
-                combines science-backed training, nutrition guidance, and
-                real accountability — delivered fully online to clients
-                wherever they are.
+              <p className="mt-4 text-muted">
+                Every program starts with an onboarding assessment, so you never
+                get a generic plan.
               </p>
             </Reveal>
 
-            <RevealGroup className="mt-14 grid gap-6 sm:grid-cols-3">
-              {[
-                {
-                  title: "Personalized Programs",
-                  desc: "Every plan is tailored to your body, schedule, and goals — no cookie-cutter workouts.",
-                },
-                {
-                  title: "Performance Focused",
-                  desc: "Strength, speed, endurance, and mobility — we train the whole athlete, not just one muscle group.",
-                },
-                {
-                  title: "Real Accountability",
-                  desc: "Weekly check-ins, progress tracking, and direct access to your coach keep you on track.",
-                },
-              ].map((item) => (
-                <RevealItem key={item.title}>
-                  <div className="h-full rounded-2xl border border-white/10 bg-surface p-6 transition-colors hover:border-accent/40">
-                    <h3 className="text-lg font-semibold">{item.title}</h3>
-                    <p className="mt-3 text-sm leading-relaxed text-muted">
-                      {item.desc}
-                    </p>
-                  </div>
-                </RevealItem>
-              ))}
-            </RevealGroup>
-          </div>
-        </section>
-
-        {/* How it works */}
-        <section id="how-it-works" className="border-t border-white/10 px-6 py-20 sm:px-8 sm:py-28">
-          <div className="mx-auto max-w-6xl">
-            <Reveal className="max-w-2xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-                How Coaching Works
-              </p>
-              <h2 className="mt-4 font-display text-4xl tracking-wide sm:text-5xl">
-                FROM APPLICATION TO RESULTS
-              </h2>
-            </Reveal>
-
-            <RevealGroup className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {howItWorks.map((item, i) => (
-                <RevealItem key={item.step}>
-                  <div className="h-full rounded-2xl border border-white/10 bg-surface p-6 transition-colors hover:border-accent/40">
-                    <p
-                      className="font-display text-3xl"
-                      style={{ color: i % 2 === 0 ? "var(--accent)" : "var(--accent-2)" }}
+            <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {programs.map((program, i) => (
+                <Reveal key={program.title} delay={i * 0.08}>
+                  <div className="h-full rounded-2xl border border-line bg-card p-7 transition-transform hover:-translate-y-1">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-2xl">
+                      {program.icon}
+                    </div>
+                    <h3 className="font-display mt-5 text-2xl">{program.title}</h3>
+                    <p className="mt-2 text-sm text-muted">{program.desc}</p>
+                    <a
+                      href="#apply"
+                      className="mt-4 inline-block text-sm font-semibold text-accent hover:underline"
                     >
-                      {item.step}
-                    </p>
-                    <h3 className="mt-3 text-lg font-semibold">{item.title}</h3>
-                    <p className="mt-3 text-sm leading-relaxed text-muted">
-                      {item.desc}
-                    </p>
+                      Get started →
+                    </a>
                   </div>
-                </RevealItem>
+                </Reveal>
               ))}
-            </RevealGroup>
+            </div>
+          </div>
+        </section>
+
+        {/* How It Works */}
+        <section id="how-it-works" className="bg-ink px-6 py-20 text-white sm:px-8 sm:py-28">
+          <div className="mx-auto max-w-6xl">
+            <Reveal className="max-w-xl">
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
+                The Process
+              </p>
+              <h2 className="font-display mt-3 text-4xl sm:text-5xl">
+                How Coaching Works
+              </h2>
+            </Reveal>
+
+            <div className="mt-14 grid divide-y divide-white/10 overflow-hidden rounded-2xl border border-white/10 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
+              {howItWorks.map((step, i) => (
+                <Reveal key={step.num} delay={i * 0.08}>
+                  <div className="h-full p-7">
+                    <p className="font-display text-sm tracking-[0.15em] text-accent">
+                      {step.num}
+                    </p>
+                    <h3 className="font-display mt-3 text-xl">{step.title}</h3>
+                    <p className="mt-2 text-sm text-white/60">{step.desc}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
           </div>
         </section>
 
         {/* Packages */}
-        <section id="packages" className="border-t border-white/10 px-6 py-20 sm:px-8 sm:py-28">
+        <section id="packages" className="px-6 py-20 sm:px-8 sm:py-28">
           <div className="mx-auto max-w-6xl">
-            <Reveal className="max-w-2xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-                Packages
+            <Reveal className="max-w-xl">
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
+                Membership
               </p>
-              <h2 className="mt-4 font-display text-4xl tracking-wide sm:text-5xl">
-                CHOOSE YOUR PACKAGE
+              <h2 className="font-display mt-3 text-4xl sm:text-5xl">
+                Choose Your Package
               </h2>
-              <p className="mt-4 text-lg text-muted">
+              <p className="mt-4 text-muted">
                 All plans are 6-month coaching packages designed to help you reach
                 your fitness goals with expert guidance.
               </p>
             </Reveal>
 
-            <RevealGroup className="mt-14 grid gap-6 lg:grid-cols-3">
-              {packages.map((pkg) => (
-                <RevealItem key={pkg.name} className="h-full">
+            <div className="mt-14 grid items-stretch gap-5 lg:grid-cols-3">
+              {packages.map((pkg, i) => (
+                <Reveal key={pkg.name} delay={i * 0.08} className="h-full">
                   <div
-                    className={`relative flex h-full flex-col rounded-2xl border p-8 transition-transform duration-300 hover:-translate-y-2 ${
+                    className={`relative flex h-full flex-col rounded-2xl border p-8 ${
                       pkg.featured
-                        ? "border-accent bg-surface shadow-[0_0_40px_rgba(255,90,31,0.15)]"
-                        : "border-white/10 bg-surface"
+                        ? "border-ink bg-ink text-white lg:scale-[1.03]"
+                        : "border-line bg-card"
                     }`}
                   >
                     {pkg.featured && (
-                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-flame px-4 py-1 text-xs font-semibold uppercase tracking-wide text-white">
+                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-accent px-4 py-1 text-xs font-bold uppercase tracking-wide text-white">
                         Most Popular
                       </span>
                     )}
-                    <p className="text-sm font-semibold uppercase tracking-[0.15em] text-accent">
-                      {pkg.name}
+                    <p className="font-display text-lg tracking-wide">{pkg.name}</p>
+                    <p
+                      className={`mt-1 text-sm ${pkg.featured ? "text-white/55" : "text-muted"}`}
+                    >
+                      6 Month Plan
                     </p>
-                    <p className="mt-1 text-sm text-muted">6 Month Plan</p>
-                    <div className="mt-6 flex items-end gap-1">
-                      <span className="text-4xl font-bold">${pkg.price}</span>
-                      <span className="mb-1 text-sm text-muted">/ per month</span>
+                    <div className="mt-5 flex items-end gap-1">
+                      <span className="font-display text-4xl">${pkg.price}</span>
+                      <span
+                        className={`mb-1 text-sm ${pkg.featured ? "text-white/55" : "text-muted"}`}
+                      >
+                        / month
+                      </span>
                     </div>
-                    <p className="mt-2 text-sm text-muted">Value ${pkg.value}</p>
+                    <p className={`mt-1 text-sm ${pkg.featured ? "text-white/55" : "text-muted"}`}>
+                      Value ${pkg.value}
+                    </p>
 
-                    <ul className="mt-8 flex flex-1 flex-col gap-3">
+                    <ul className="mt-6 flex flex-1 flex-col gap-2.5">
                       {pkg.features.map((feature) => (
-                        <li key={feature} className="flex items-start gap-3 text-sm">
-                          <span className="mt-0.5 text-accent" aria-hidden>
+                        <li
+                          key={feature}
+                          className={`flex items-start gap-3 border-b border-dashed py-2 text-sm ${
+                            pkg.featured ? "border-white/15" : "border-line"
+                          }`}
+                        >
+                          <span className="mt-0.5 font-bold text-accent" aria-hidden>
                             ✓
                           </span>
                           <span>{feature}</span>
@@ -326,88 +297,218 @@ export default function Home() {
                     </ul>
 
                     <a
-                      href="#apply"
-                      className={`mt-8 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-semibold transition-all ${
+                      href={`/checkout?package=${encodeURIComponent(pkg.name)}`}
+                      className={`mt-8 inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-bold uppercase tracking-wide transition-colors ${
                         pkg.featured
-                          ? "bg-flame text-white hover:brightness-110"
-                          : "border border-white/20 hover:border-accent hover:text-accent"
+                          ? "bg-accent text-white hover:bg-accent-dark"
+                          : "bg-ink text-white hover:bg-ink-soft"
                       }`}
                     >
                       Get Started
                     </a>
                   </div>
-                </RevealItem>
+                </Reveal>
               ))}
-            </RevealGroup>
+            </div>
           </div>
         </section>
 
-        {/* Proof / transformations */}
-        <section id="results" className="border-t border-white/10 px-6 py-20 sm:px-8 sm:py-28">
+        {/* Results */}
+        <section
+          id="results"
+          className="border-y border-line bg-white px-6 py-20 sm:px-8 sm:py-28"
+        >
           <div className="mx-auto max-w-6xl">
-            <Reveal className="max-w-2xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
-                Results
+            <Reveal className="max-w-xl">
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
+                Member Results
               </p>
-              <h2 className="mt-4 font-display text-4xl tracking-wide sm:text-5xl">
-                REAL CLIENTS, REAL PROGRESS
+              <h2 className="font-display mt-3 text-4xl sm:text-5xl">
+                Real Clients, Real Progress
               </h2>
-              <p className="mt-4 text-lg text-muted">
-                Transformation photos and client stories go here once
-                available.
+              <p className="mt-4 text-muted">
+                Drag the sliders to compare — real transformation photos go here
+                once available.
               </p>
             </Reveal>
 
-            <RevealGroup className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {["Client 1", "Client 2", "Client 3", "Client 4"].map((label) => (
-                <RevealItem key={label}>
-                  <MediaPlaceholder label={`${label} before/after`} />
-                </RevealItem>
+            <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {["Transformation 1", "Transformation 2", "Transformation 3"].map(
+                (label, i) => (
+                  <Reveal key={label} delay={i * 0.08}>
+                    <BeforeAfterSlider beforeLabel="BEFORE" afterLabel="AFTER" />
+                  </Reveal>
+                )
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* About the Coach */}
+        <section id="about" className="px-6 py-20 sm:px-8 sm:py-28">
+          <div className="mx-auto max-w-6xl">
+            <Reveal className="max-w-2xl">
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
+                About Your Coach
+              </p>
+              <h2 className="font-display mt-3 text-4xl sm:text-5xl">
+                Built For People Who Refuse To Settle
+              </h2>
+              <p className="mt-6 text-lg leading-relaxed text-muted">
+                Athletic Wolf is built on a simple belief: everyone has an athlete
+                inside them. As an ISSA-certified coach, every program combines
+                science-backed training, nutrition guidance, and real
+                accountability — delivered fully online to clients wherever they
+                are.
+              </p>
+            </Reveal>
+
+            <div className="mt-14 grid gap-5 sm:grid-cols-3">
+              {differentiators.map((item, i) => (
+                <Reveal key={item.title} delay={i * 0.08}>
+                  <div className="h-full rounded-2xl border border-line bg-card p-6">
+                    <h3 className="font-display text-xl">{item.title}</h3>
+                    <p className="mt-2 text-sm text-muted">{item.desc}</p>
+                  </div>
+                </Reveal>
               ))}
-            </RevealGroup>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA band */}
+        <section className="px-6 sm:px-8">
+          <div className="mx-auto max-w-6xl">
+            <Reveal>
+              <div className="flex flex-wrap items-center justify-between gap-8 rounded-3xl bg-accent px-8 py-12 text-white sm:px-14 sm:py-16">
+                <div>
+                  <h2 className="font-display text-3xl sm:text-4xl">
+                    Ready To Transform?
+                  </h2>
+                  <p className="mt-3 max-w-md text-white/90">
+                    Submit your application and we&apos;ll get back to you within
+                    24-48 hours to get you started.
+                  </p>
+                </div>
+                <a
+                  href="#apply"
+                  className="rounded-xl bg-ink px-8 py-4 text-base font-bold uppercase tracking-wide text-white transition-colors hover:bg-ink-soft"
+                >
+                  Apply Now →
+                </a>
+              </div>
+            </Reveal>
           </div>
         </section>
 
         {/* FAQ */}
-        <section id="faq" className="border-t border-white/10 px-6 py-20 sm:px-8 sm:py-28">
+        <section id="faq" className="px-6 py-20 sm:px-8 sm:py-28">
           <div className="mx-auto max-w-6xl">
-            <Reveal className="max-w-2xl">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">
+            <Reveal className="max-w-xl">
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
                 FAQ
               </p>
-              <h2 className="mt-4 font-display text-4xl tracking-wide sm:text-5xl">
-                QUESTIONS, ANSWERED
+              <h2 className="font-display mt-3 text-4xl sm:text-5xl">
+                Questions, Answered
               </h2>
             </Reveal>
-            <Reveal delay={0.15}>
+            <Reveal delay={0.1}>
               <Faq />
             </Reveal>
           </div>
         </section>
 
         {/* Apply */}
-        <section id="apply" className="border-t border-white/10 px-6 py-20 sm:px-8 sm:py-28">
+        <section id="apply" className="px-6 py-20 sm:px-8 sm:py-28">
           <div className="mx-auto max-w-3xl">
             <Reveal className="text-center">
-              <h2 className="font-display text-4xl tracking-wide sm:text-5xl">
-                READY TO TRANSFORM?
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
+                Get Started
+              </p>
+              <h2 className="font-display mt-3 text-4xl sm:text-5xl">
+                Apply For Coaching
               </h2>
-              <p className="mx-auto mt-4 max-w-lg text-lg text-muted">
-                Submit your application and we&apos;ll get back to you within
-                24-48 hours to get you started.
+              <p className="mx-auto mt-4 max-w-lg text-muted">
+                Tell us about your goals and we&apos;ll get back to you within
+                24-48 hours.
               </p>
             </Reveal>
-            <Reveal delay={0.15} className="mt-12">
+            <Reveal delay={0.1} className="mt-12">
               <ApplyForm />
             </Reveal>
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-white/10 px-6 py-8 sm:px-8">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-sm text-muted sm:flex-row">
-          <p>© {new Date().getFullYear()} Athletic Wolf. All rights reserved.</p>
-          <p>Train smarter. Move stronger. Live bolder.</p>
+      {/* Footer */}
+      <footer className="bg-ink px-6 pt-16 pb-8 text-white sm:px-8">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid gap-10 border-b border-white/10 pb-12 sm:grid-cols-2 lg:grid-cols-4">
+            <div>
+              <p className="font-display text-xl">
+                Athletic<span className="text-accent">Wolf</span>
+              </p>
+              <p className="mt-4 max-w-xs text-sm text-white/55">
+                ISSA-certified online personal training and nutrition coaching —
+                built for clients worldwide, no gym required.
+              </p>
+            </div>
+            <div>
+              <h5 className="text-sm font-bold uppercase tracking-[0.12em] text-white/90">
+                Explore
+              </h5>
+              <ul className="mt-4 flex flex-col gap-2.5 text-sm text-white/55">
+                <li>
+                  <a href="#programs" className="hover:text-white">
+                    Programs
+                  </a>
+                </li>
+                <li>
+                  <a href="#packages" className="hover:text-white">
+                    Packages
+                  </a>
+                </li>
+                <li>
+                  <a href="#results" className="hover:text-white">
+                    Results
+                  </a>
+                </li>
+                <li>
+                  <a href="#about" className="hover:text-white">
+                    About
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="text-sm font-bold uppercase tracking-[0.12em] text-white/90">
+                Support
+              </h5>
+              <ul className="mt-4 flex flex-col gap-2.5 text-sm text-white/55">
+                <li>
+                  <a href="#faq" className="hover:text-white">
+                    FAQ
+                  </a>
+                </li>
+                <li>
+                  <a href="#apply" className="hover:text-white">
+                    Apply for Coaching
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="text-sm font-bold uppercase tracking-[0.12em] text-white/90">
+                Contact
+              </h5>
+              <p className="mt-4 text-sm text-white/55">hello@athleticwolf.com</p>
+              <p className="mt-2 text-sm text-white/55">@athletic_wolf7</p>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-6 text-xs text-white/40">
+            <span>© {new Date().getFullYear()} Athletic Wolf. All rights reserved.</span>
+            <span>Train smarter. Move stronger. Live bolder.</span>
+          </div>
         </div>
       </footer>
     </div>
