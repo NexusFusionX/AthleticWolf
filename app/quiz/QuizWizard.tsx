@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
@@ -155,6 +155,26 @@ const steps: { label: string; fields: Field[] }[] = [
 
 type FormValue = string | string[];
 
+type SavedProgress = {
+  step: number;
+  formData: Record<string, FormValue>;
+  packageName: string | null;
+};
+
+const STORAGE_KEY = "athletic-wolf-quiz-progress";
+
+function loadSavedProgress(): SavedProgress | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return null;
+    return parsed as SavedProgress;
+  } catch {
+    return null;
+  }
+}
+
 export function QuizWizard() {
   const searchParams = useSearchParams();
   const selectedPackage = searchParams.get("package");
@@ -163,6 +183,58 @@ export function QuizWizard() {
   const [formData, setFormData] = useState<Record<string, FormValue>>({});
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [resumePrompt, setResumePrompt] = useState<SavedProgress | null | undefined>(
+    undefined
+  );
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    const saved = loadSavedProgress();
+    const hasProgress =
+      saved &&
+      (saved.step > 0 ||
+        Object.values(saved.formData ?? {}).some((v) =>
+          Array.isArray(v) ? v.length > 0 : Boolean(v)
+        ));
+
+    if (hasProgress) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time client-only localStorage read on mount, before any UI renders
+      setResumePrompt(saved);
+    } else {
+      setResumePrompt(null);
+      setHydrated(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated || submitted) return;
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ step: current, formData, packageName: selectedPackage })
+    );
+  }, [current, formData, hydrated, submitted, selectedPackage]);
+
+  function resetProgress() {
+    localStorage.removeItem(STORAGE_KEY);
+    setCurrent(0);
+    setFormData({});
+    setErrors({});
+  }
+
+  function handleContinueResume() {
+    if (resumePrompt) {
+      setCurrent(resumePrompt.step);
+      setFormData(resumePrompt.formData);
+    }
+    setResumePrompt(null);
+    setHydrated(true);
+  }
+
+  function handleStartOver() {
+    resetProgress();
+    setResumePrompt(null);
+    setHydrated(true);
+  }
 
   function setValue(name: string, value: FormValue) {
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -244,11 +316,62 @@ export function QuizWizard() {
       subject
     )}&body=${encodeURIComponent(body)}`;
 
+    localStorage.removeItem(STORAGE_KEY);
     setSubmitted(true);
   }
 
   function handleBack() {
     if (current > 0) setCurrent((c) => c - 1);
+  }
+
+  if (resumePrompt === undefined) {
+    return null;
+  }
+
+  if (resumePrompt) {
+    return (
+      <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
+        <div className="w-full overflow-hidden rounded-2xl border border-line bg-card">
+          <div className="bg-ink px-8 py-7 text-white">
+            <Link href="/" className="font-display text-lg">
+              Athletic<span className="text-accent">Wolf</span>
+            </Link>
+            <p className="mt-4 text-sm font-semibold uppercase tracking-[0.18em] text-accent">
+              Welcome Back
+            </p>
+            <h1 className="font-display mt-1.5 text-3xl sm:text-4xl">
+              Resume Your Assessment?
+            </h1>
+          </div>
+          <div className="p-8 text-center">
+            <p className="text-muted">
+              You have an assessment in progress — Step {resumePrompt.step + 1}{" "}
+              of {steps.length}
+              {resumePrompt.packageName
+                ? ` for the ${resumePrompt.packageName} Plan`
+                : ""}
+              . Continue where you left off, or start over.
+            </p>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <button
+                type="button"
+                onClick={handleContinueResume}
+                className="font-display rounded-xl bg-accent px-7 py-3 text-base text-white transition-colors hover:bg-accent-dark"
+              >
+                Continue Where I Left Off →
+              </button>
+              <button
+                type="button"
+                onClick={handleStartOver}
+                className="rounded-xl border border-line px-7 py-3 text-sm font-semibold transition-colors hover:border-ink"
+              >
+                Start Over
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -282,9 +405,18 @@ export function QuizWizard() {
                   />
                 ))}
               </div>
-              <p className="mt-2.5 text-xs uppercase tracking-[0.14em] text-white/60">
-                Step {current + 1} of {steps.length} — {steps[current].label}
-              </p>
+              <div className="mt-2.5 flex items-center justify-between">
+                <p className="text-xs uppercase tracking-[0.14em] text-white/60">
+                  Step {current + 1} of {steps.length} — {steps[current].label}
+                </p>
+                <button
+                  type="button"
+                  onClick={resetProgress}
+                  className="text-xs font-semibold uppercase tracking-[0.1em] text-white/50 underline-offset-2 transition-colors hover:text-white hover:underline"
+                >
+                  Start Over
+                </button>
+              </div>
             </>
           )}
         </div>
