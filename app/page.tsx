@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Faq } from "./components/Faq";
 import { ApplyForm } from "./components/ApplyForm";
 import { Reveal } from "./components/Reveal";
@@ -356,21 +357,35 @@ export default function Home() {
         {/* About the Coach */}
         <section id="about" className="px-6 py-20 sm:px-8 sm:py-28">
           <div className="mx-auto max-w-6xl">
-            <Reveal className="max-w-2xl">
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-                About Your Coach
-              </p>
-              <h2 className="font-display mt-3 text-4xl sm:text-5xl">
-                Built For People Who Refuse To Settle
-              </h2>
-              <p className="mt-6 text-lg leading-relaxed text-muted">
-                Athletic Wolf is built on a simple belief: everyone has an athlete
-                inside them. As an ISSA-certified coach, every program combines
-                science-backed training, nutrition guidance, and real
-                accountability — delivered fully online to clients wherever they
-                are.
-              </p>
-            </Reveal>
+            <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+              <Reveal>
+                <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
+                  About Your Coach
+                </p>
+                <h2 className="font-display mt-3 text-4xl sm:text-5xl">
+                  Built For People Who Refuse To Settle
+                </h2>
+                <p className="mt-6 text-lg leading-relaxed text-muted">
+                  Athletic Wolf is built on a simple belief: everyone has an
+                  athlete inside them. As an ISSA-certified coach, every program
+                  combines science-backed training, nutrition guidance, and real
+                  accountability — delivered fully online to clients wherever
+                  they are.
+                </p>
+              </Reveal>
+
+              <Reveal delay={0.1}>
+                <div className="shadow-premium relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-line">
+                  <Image
+                    src="/media/about/coach-mountain.jpg"
+                    alt="Athletic Wolf coach training outdoors"
+                    fill
+                    className="object-cover object-[center_20%]"
+                    sizes="(min-width: 1024px) 40rem, 100vw"
+                  />
+                </div>
+              </Reveal>
+            </div>
 
             <div className="mt-14 grid gap-5 sm:grid-cols-3">
               {differentiators.map((item, i) => (
