@@ -1,39 +1,47 @@
 import { Faq } from "./components/Faq";
 import { ApplyForm } from "./components/ApplyForm";
 import { Reveal } from "./components/Reveal";
-import { HeroImage } from "./components/HeroImage";
 import { BeforeAfterSlider } from "./components/BeforeAfterSlider";
+import { HeroBackground } from "./components/HeroBackground";
 import { packages } from "./data/packages";
+import {
+  FlameIcon,
+  DumbbellIcon,
+  BalanceIcon,
+  LaptopIcon,
+  LeafIcon,
+} from "./components/ProgramIcons";
 
-const heroStats = [
-  { label: "ISSA", caption: "Certified Trainer" },
-  { label: "100%", caption: "Online Coaching" },
-  { label: "Global", caption: "UK & USA Clients" },
+const heroBadges = [
+  "ISSA Certified Trainer",
+  "100% Online Coaching",
+  "Worldwide Coverage",
+  "Weekly Check-Ins",
 ];
 
 const programs = [
   {
-    icon: "🔥",
+    icon: FlameIcon,
     title: "Fat Loss",
     desc: "Sustainable fat loss through structured training and nutrition — no crash diets.",
   },
   {
-    icon: "💪",
+    icon: DumbbellIcon,
     title: "Muscle Building",
     desc: "Progressive strength programming designed to build lean muscle at your pace.",
   },
   {
-    icon: "⚖️",
+    icon: BalanceIcon,
     title: "Body Recomposition",
     desc: "Lose fat and build muscle at the same time with a plan tuned to your body.",
   },
   {
-    icon: "💻",
+    icon: LaptopIcon,
     title: "Online Coaching",
     desc: "Full remote coaching with weekly check-ins, plan updates, and direct coach access.",
   },
   {
-    icon: "🥗",
+    icon: LeafIcon,
     title: "Nutrition Coaching",
     desc: "Custom nutrition plans built around your preferences, schedule, and goals.",
   },
@@ -108,7 +116,7 @@ export default function Home() {
           </nav>
           <a
             href="#apply"
-            className="rounded-xl bg-accent px-4 py-2 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-accent-dark sm:px-5 sm:py-2.5"
+            className="btn-accent rounded-xl px-4 py-2 text-sm font-bold uppercase tracking-wide text-white sm:px-5 sm:py-2.5"
           >
             Get Started
           </a>
@@ -117,50 +125,51 @@ export default function Home() {
 
       <main>
         {/* Hero */}
-        <section className="bg-ink px-6 pt-16 pb-0 text-white sm:px-8">
-          <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
-            <div>
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
+        <section className="relative flex min-h-[640px] items-center overflow-hidden text-white sm:min-h-[760px]">
+          <HeroBackground />
+          <div className="relative z-10 w-full px-4 py-16 sm:px-8 lg:px-12">
+            <div className="card-float-3d w-full max-w-xs rounded-2xl border border-white/10 bg-ink/95 p-6 sm:p-7">
+              <span className="inline-block rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.15em] text-accent">
                 Online Coaching, Worldwide
-              </p>
-              <h1 className="font-display mt-3 text-5xl leading-[1.05] sm:text-6xl lg:text-7xl">
-                UNLEASH YOUR <span className="text-accent">INNER WOLF</span>
+              </span>
+
+              <h1 className="font-display mt-4 text-3xl leading-[1.05] sm:text-4xl">
+                UNLEASH THE
+                <br />
+                <span className="text-accent">INNER WOLF</span>
               </h1>
-              <p className="mt-6 max-w-lg text-lg leading-relaxed text-white/70">
-                ISSA-certified coaching for athletes and everyday people, wherever
-                you are. Custom training and nutrition plans, built around your
-                life — not a template.
+
+              <p className="mt-4 text-sm leading-relaxed text-white/70">
+                ISSA-certified coaching, built around your life — not a
+                template.
               </p>
-              <div className="mt-8 flex flex-wrap gap-4">
+
+              <div className="mt-5 flex flex-wrap gap-2">
+                {heroBadges.map((badge) => (
+                  <span
+                    key={badge}
+                    className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/75"
+                  >
+                    <span className="h-1 w-1 rounded-full bg-accent" aria-hidden />
+                    {badge}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-6 flex flex-col gap-3">
                 <a
                   href="#packages"
-                  className="rounded-xl bg-accent px-8 py-3.5 text-base font-bold uppercase tracking-wide text-white transition-colors hover:bg-accent-dark"
+                  className="btn-accent rounded-xl px-5 py-3 text-center text-sm font-bold uppercase tracking-wide text-white"
                 >
                   View Packages
                 </a>
                 <a
                   href="#apply"
-                  className="rounded-xl border border-white/25 px-8 py-3.5 text-base font-bold uppercase tracking-wide text-white transition-colors hover:border-white"
+                  className="rounded-xl border border-white/20 px-5 py-3 text-center text-sm font-bold uppercase tracking-wide text-white transition-colors hover:border-white/50"
                 >
                   Get Started
                 </a>
               </div>
-
-              <div className="mt-16 flex flex-wrap border-t border-white/10">
-                {heroStats.map((stat, i) => (
-                  <div
-                    key={stat.label}
-                    className={`py-6 pr-8 ${i > 0 ? "border-l border-white/10 pl-8" : ""}`}
-                  >
-                    <p className="font-display text-3xl">{stat.label}</p>
-                    <p className="mt-1 text-sm text-white/55">{stat.caption}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="mx-auto w-full max-w-sm">
-              <HeroImage />
             </div>
           </div>
         </section>
@@ -184,9 +193,9 @@ export default function Home() {
             <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {programs.map((program, i) => (
                 <Reveal key={program.title} delay={i * 0.08}>
-                  <div className="h-full rounded-2xl border border-line bg-card p-7 transition-transform hover:-translate-y-1">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-2xl">
-                      {program.icon}
+                  <div className="card-premium h-full rounded-2xl border border-line bg-card p-7 transition-all hover:-translate-y-1.5">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-accent">
+                      <program.icon className="h-6 w-6" />
                     </div>
                     <h3 className="font-display mt-5 text-2xl">{program.title}</h3>
                     <p className="mt-2 text-sm text-muted">{program.desc}</p>
@@ -215,7 +224,7 @@ export default function Home() {
               </h2>
             </Reveal>
 
-            <div className="mt-14 grid divide-y divide-white/10 overflow-hidden rounded-2xl border border-white/10 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
+            <div className="shadow-premium mt-14 grid divide-y divide-white/10 overflow-hidden rounded-2xl border border-white/10 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
               {howItWorks.map((step, i) => (
                 <Reveal key={step.num} delay={i * 0.08}>
                   <div className="h-full p-7">
@@ -251,7 +260,7 @@ export default function Home() {
               {packages.map((pkg, i) => (
                 <Reveal key={pkg.name} delay={i * 0.08} className="h-full">
                   <div
-                    className={`relative flex h-full flex-col rounded-2xl border p-8 ${
+                    className={`card-premium relative flex h-full flex-col rounded-2xl border p-8 transition-all ${
                       pkg.featured
                         ? "border-ink bg-ink text-white lg:scale-[1.03]"
                         : "border-line bg-card"
@@ -298,10 +307,10 @@ export default function Home() {
 
                     <a
                       href={`/checkout?package=${encodeURIComponent(pkg.name)}`}
-                      className={`mt-8 inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-bold uppercase tracking-wide transition-colors ${
+                      className={`mt-8 inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-bold uppercase tracking-wide ${
                         pkg.featured
-                          ? "bg-accent text-white hover:bg-accent-dark"
-                          : "bg-ink text-white hover:bg-ink-soft"
+                          ? "btn-accent text-white"
+                          : "bg-ink text-white transition-colors hover:bg-ink-soft"
                       }`}
                     >
                       Get Started
@@ -316,7 +325,7 @@ export default function Home() {
         {/* Results */}
         <section
           id="results"
-          className="border-y border-line bg-white px-6 py-20 sm:px-8 sm:py-28"
+          className="border-y border-line bg-ink px-6 py-20 sm:px-8 sm:py-28"
         >
           <div className="mx-auto max-w-6xl">
             <Reveal className="max-w-xl">
@@ -366,7 +375,7 @@ export default function Home() {
             <div className="mt-14 grid gap-5 sm:grid-cols-3">
               {differentiators.map((item, i) => (
                 <Reveal key={item.title} delay={i * 0.08}>
-                  <div className="h-full rounded-2xl border border-line bg-card p-6">
+                  <div className="card-premium h-full rounded-2xl border border-line bg-card p-6 transition-all hover:-translate-y-1">
                     <h3 className="font-display text-xl">{item.title}</h3>
                     <p className="mt-2 text-sm text-muted">{item.desc}</p>
                   </div>

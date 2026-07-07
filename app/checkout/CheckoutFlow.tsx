@@ -12,14 +12,14 @@ export function CheckoutFlow() {
   if (!pkg) {
     return (
       <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
-        <div className="w-full rounded-2xl border border-line bg-card p-10 text-center">
+        <div className="w-full shadow-premium rounded-2xl border border-line bg-card p-10 text-center">
           <h1 className="font-display text-3xl">No Package Selected</h1>
           <p className="mt-3 text-muted">
             Head back to the packages section and pick a plan to check out.
           </p>
           <Link
             href="/#packages"
-            className="mt-6 inline-block rounded-xl bg-accent px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-accent-dark"
+            className="btn-accent mt-6 inline-block rounded-xl px-6 py-3 text-sm font-bold uppercase tracking-wide text-white"
           >
             View Packages
           </Link>
@@ -30,7 +30,7 @@ export function CheckoutFlow() {
 
   return (
     <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
-      <div className="w-full overflow-hidden rounded-2xl border border-line bg-card">
+      <div className="w-full overflow-hidden shadow-premium rounded-2xl border border-line bg-card">
         <div className="bg-ink px-8 py-7 text-white">
           <Link href="/" className="font-display text-lg">
             Athletic<span className="text-accent">Wolf</span>
@@ -44,7 +44,7 @@ export function CheckoutFlow() {
         </div>
 
         <div className="p-8">
-          <div className="rounded-xl border border-line bg-[#fafbfc] p-6">
+          <div className="rounded-xl border border-line bg-surface p-6">
             <div className="flex items-center justify-between">
               <p className="font-display text-xl">{pkg.name} Plan</p>
               {pkg.featured && (
@@ -72,7 +72,7 @@ export function CheckoutFlow() {
             </ul>
           </div>
 
-          <div className="mt-6 rounded-xl border border-dashed border-line bg-[#fafbfc] p-6 text-center">
+          <div className="mt-6 rounded-xl border border-dashed border-line bg-surface p-6 text-center">
             <p className="text-sm font-semibold">🔒 Payment Method</p>
             <p className="mt-2 text-sm text-muted">
               Secure payment processing isn&apos;t connected yet. Once it is,
@@ -83,7 +83,7 @@ export function CheckoutFlow() {
 
           <Link
             href={`/quiz?package=${encodeURIComponent(pkg.name)}`}
-            className="font-display mt-6 flex w-full items-center justify-center rounded-xl bg-accent px-8 py-3.5 text-base text-white transition-colors hover:bg-accent-dark"
+            className="btn-accent font-display mt-6 flex w-full items-center justify-center rounded-xl px-8 py-3.5 text-base text-white"
           >
             Complete Purchase (Test Mode) →
           </Link>

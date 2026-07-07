@@ -331,7 +331,7 @@ export function QuizWizard() {
   if (resumePrompt) {
     return (
       <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
-        <div className="w-full overflow-hidden rounded-2xl border border-line bg-card">
+        <div className="w-full overflow-hidden shadow-premium rounded-2xl border border-line bg-card">
           <div className="bg-ink px-8 py-7 text-white">
             <Link href="/" className="font-display text-lg">
               Athletic<span className="text-accent">Wolf</span>
@@ -356,14 +356,14 @@ export function QuizWizard() {
               <button
                 type="button"
                 onClick={handleContinueResume}
-                className="font-display rounded-xl bg-accent px-7 py-3 text-base text-white transition-colors hover:bg-accent-dark"
+                className="btn-accent font-display rounded-xl px-7 py-3 text-base text-white"
               >
                 Continue Where I Left Off →
               </button>
               <button
                 type="button"
                 onClick={handleStartOver}
-                className="rounded-xl border border-line px-7 py-3 text-sm font-semibold transition-colors hover:border-ink"
+                className="rounded-xl border border-line px-7 py-3 text-sm font-semibold transition-colors hover:border-accent/60"
               >
                 Start Over
               </button>
@@ -376,7 +376,7 @@ export function QuizWizard() {
 
   return (
     <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
-      <div className="w-full overflow-hidden rounded-2xl border border-line bg-card">
+      <div className="w-full overflow-hidden shadow-premium rounded-2xl border border-line bg-card">
         <div className="bg-ink px-8 py-7 text-white">
           <Link href="/" className="font-display text-lg">
             Athletic<span className="text-accent">Wolf</span>
@@ -458,10 +458,10 @@ export function QuizWizard() {
                       placeholder={field.placeholder}
                       min={field.min}
                       max={field.max}
-                      className={`w-full rounded-xl border bg-[#fafbfc] px-3.5 py-3 text-sm outline-none transition-colors ${
+                      className={`w-full rounded-xl border bg-surface px-3.5 py-3 text-sm outline-none transition-colors ${
                         errors[field.name]
                           ? "border-error"
-                          : "border-line focus:border-ink"
+                          : "border-line focus:border-accent"
                       }`}
                     />
                   )}
@@ -472,7 +472,7 @@ export function QuizWizard() {
                       onChange={(e) => setValue(field.name, e.target.value)}
                       placeholder={field.placeholder}
                       rows={3}
-                      className="w-full resize-y rounded-xl border border-line bg-[#fafbfc] px-3.5 py-3 text-sm outline-none transition-colors focus:border-ink"
+                      className="w-full resize-y rounded-xl border border-line bg-surface px-3.5 py-3 text-sm outline-none transition-colors focus:border-accent"
                     />
                   )}
 
@@ -494,8 +494,8 @@ export function QuizWizard() {
                             key={opt.value}
                             className={`flex cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-3 text-sm transition-colors ${
                               isChecked
-                                ? "border-accent bg-[#fff4ef]"
-                                : "border-line bg-[#fafbfc] hover:border-ink"
+                                ? "border-accent bg-accent/10"
+                                : "border-line bg-surface hover:border-accent/60"
                             }`}
                           >
                             <input
@@ -544,7 +544,7 @@ export function QuizWizard() {
               <button
                 type="button"
                 onClick={handleBack}
-                className="rounded-xl border border-line px-6 py-3 text-sm font-semibold transition-colors hover:border-ink"
+                className="rounded-xl border border-line px-6 py-3 text-sm font-semibold transition-colors hover:border-accent/60"
               >
                 ← Back
               </button>
@@ -554,7 +554,7 @@ export function QuizWizard() {
             <button
               type="button"
               onClick={handleNext}
-              className="font-display rounded-xl bg-accent px-7 py-3 text-base text-white transition-colors hover:bg-accent-dark"
+              className="btn-accent font-display rounded-xl px-7 py-3 text-base text-white"
             >
               {current === steps.length - 1 ? "Get My Plan →" : "Next Step →"}
             </button>

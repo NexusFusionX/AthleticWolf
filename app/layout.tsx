@@ -33,6 +33,7 @@ export default function RootLayout({
       className={`${barlow.variable} ${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
+        <div className="grain-overlay" aria-hidden />
         {children}
         <Analytics />
         <SpeedInsights />
