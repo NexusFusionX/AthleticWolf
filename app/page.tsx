@@ -3,7 +3,6 @@ import { Faq } from "./components/Faq";
 import { ApplyForm } from "./components/ApplyForm";
 import { Reveal } from "./components/Reveal";
 import { BeforeAfterSlider } from "./components/BeforeAfterSlider";
-import { HeroBackground } from "./components/HeroBackground";
 import { packages } from "./data/packages";
 import {
   FlameIcon,
@@ -126,50 +125,72 @@ export default function Home() {
 
       <main>
         {/* Hero */}
-        <section className="relative flex min-h-[640px] items-center overflow-hidden text-white sm:min-h-[760px]">
-          <HeroBackground />
-          <div className="relative z-10 w-full px-4 py-16 sm:px-8 lg:px-12">
-            <div className="card-float-3d w-full max-w-xs rounded-2xl border border-white/10 bg-ink/95 p-6 sm:p-7">
+        <section className="relative overflow-hidden px-6 pb-20 pt-14 text-white sm:px-8 sm:pb-28 sm:pt-20">
+          {/* ambient accent glow */}
+          <div
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_800px_520px_at_78%_18%,rgba(228,87,46,0.09),transparent_70%)]"
+            aria-hidden
+          />
+          <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+            <div>
               <span className="inline-block rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.15em] text-accent">
                 Online Coaching, Worldwide
               </span>
 
-              <h1 className="font-display mt-4 text-3xl leading-[1.05] sm:text-4xl">
+              <h1 className="font-display mt-5 text-5xl leading-[0.95] sm:text-6xl lg:text-7xl">
                 UNLEASH THE
                 <br />
                 <span className="text-accent">INNER WOLF</span>
               </h1>
 
-              <p className="mt-4 text-sm leading-relaxed text-white/70">
+              <p className="mt-5 max-w-md text-base leading-relaxed text-white/75 sm:text-lg">
                 ISSA-certified coaching, built around your life — not a
                 template.
               </p>
 
-              <div className="mt-5 flex flex-wrap gap-2">
-                {heroBadges.map((badge) => (
-                  <span
-                    key={badge}
-                    className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/75"
-                  >
-                    <span className="h-1 w-1 rounded-full bg-accent" aria-hidden />
-                    {badge}
-                  </span>
-                ))}
-              </div>
-
-              <div className="mt-6 flex flex-col gap-3">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4">
                 <a
                   href="#packages"
-                  className="btn-accent rounded-xl px-5 py-3 text-center text-sm font-bold uppercase tracking-wide text-white"
+                  className="btn-accent rounded-xl px-7 py-3.5 text-center text-sm font-bold uppercase tracking-wide text-white"
                 >
                   View Packages
                 </a>
                 <a
                   href="#apply"
-                  className="rounded-xl border border-white/20 px-5 py-3 text-center text-sm font-bold uppercase tracking-wide text-white transition-colors hover:border-white/50"
+                  className="rounded-xl border border-white/25 bg-white/5 px-7 py-3.5 text-center text-sm font-bold uppercase tracking-wide text-white transition-colors hover:border-white/60"
                 >
                   Get Started
                 </a>
+              </div>
+
+              <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3">
+                {heroBadges.map((badge) => (
+                  <span
+                    key={badge}
+                    className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-white/70"
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+                    {badge}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="relative mx-auto w-full max-w-sm lg:max-w-none">
+              {/* soft glow behind the photo card */}
+              <div
+                className="absolute -inset-5 rounded-[2.5rem] bg-accent/10 blur-3xl"
+                aria-hidden
+              />
+              <div className="shadow-premium relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/10">
+                <Image
+                  src="/media/hero/coach-hero-portrait.jpg"
+                  alt="Your coach — Athletic Wolf"
+                  fill
+                  priority
+                  className="object-cover"
+                  sizes="(min-width: 1024px) 540px, 100vw"
+                />
               </div>
             </div>
           </div>

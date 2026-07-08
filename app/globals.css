@@ -72,36 +72,6 @@ body {
     0 12px 32px rgba(0, 0, 0, 0.35);
 }
 
-.card-float-3d {
-  transform: perspective(1400px) rotateY(-7deg) rotateX(3deg);
-  box-shadow:
-    0 35px 70px -20px rgba(0, 0, 0, 0.65),
-    0 15px 35px -10px rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(255, 255, 255, 0.07);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-}
-
-.card-float-3d:hover {
-  transform: perspective(1400px) rotateY(-4deg) rotateX(1.5deg) translateY(-6px);
-  box-shadow:
-    0 45px 90px -20px rgba(0, 0, 0, 0.7),
-    0 20px 45px -10px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(255, 255, 255, 0.1);
-}
-
-@media (max-width: 640px) {
-  .card-float-3d {
-    transform: perspective(1400px) rotateY(-3deg) rotateX(1.5deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .card-float-3d,
-  .card-float-3d:hover {
-    transition: none;
-  }
-}
-
 .btn-accent {
   background: linear-gradient(155deg, color-mix(in srgb, var(--accent) 100%, white 8%), var(--accent) 55%, var(--accent-dark));
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15) inset, 0 8px 20px color-mix(in srgb, var(--accent) 25%, transparent);
