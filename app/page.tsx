@@ -343,13 +343,24 @@ export default function Home() {
             </Reveal>
 
             <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {["Transformation 1", "Transformation 2", "Transformation 3"].map(
-                (label, i) => (
-                  <Reveal key={label} delay={i * 0.08}>
-                    <BeforeAfterSlider beforeLabel="BEFORE" afterLabel="AFTER" />
-                  </Reveal>
-                )
-              )}
+              {[
+                {
+                  label: "Transformation 1",
+                  beforeSrc: "/media/results/demo-before.png",
+                  afterSrc: "/media/results/demo-after.png",
+                },
+                { label: "Transformation 2" },
+                { label: "Transformation 3" },
+              ].map((item, i) => (
+                <Reveal key={item.label} delay={i * 0.08}>
+                  <BeforeAfterSlider
+                    beforeSrc={item.beforeSrc}
+                    afterSrc={item.afterSrc}
+                    beforeLabel="BEFORE"
+                    afterLabel="AFTER"
+                  />
+                </Reveal>
+              ))}
             </div>
           </div>
         </section>
