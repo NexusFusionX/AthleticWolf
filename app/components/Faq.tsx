@@ -5,7 +5,7 @@ const faqs = [
   },
   {
     q: "Is the plan actually personalized to me?",
-    a: "Yes. Every plan is built around your goals, training experience, equipment access, schedule, and food preferences — no cookie-cutter templates.",
+    a: "Yes. Every plan is built around your goals, training experience, equipment access, schedule, and food preferences. No cookie-cutter templates.",
   },
   {
     q: "Can I request changes after receiving my plan?",
@@ -17,7 +17,7 @@ const faqs = [
   },
   {
     q: "Are supplements required?",
-    a: "No. Supplements are optional and only recommended where they genuinely help — the plan works with or without them.",
+    a: "No. Supplements are optional and only recommended where they genuinely help. The plan works with or without them.",
   },
   {
     q: "Is there a home workout option?",
@@ -33,7 +33,7 @@ const faqs = [
   },
   {
     q: "Can beginners join?",
-    a: "Yes — coaching is built for every level, from complete beginners to experienced athletes.",
+    a: "Yes. Coaching is built for every level, from complete beginners to experienced athletes.",
   },
   {
     q: "How long does support last?",

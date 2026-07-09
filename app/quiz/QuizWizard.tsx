@@ -345,7 +345,7 @@ export function QuizWizard() {
           </div>
           <div className="p-8 text-center">
             <p className="text-muted">
-              You have an assessment in progress — Step {resumePrompt.step + 1}{" "}
+              You have an assessment in progress: Step {resumePrompt.step + 1}{" "}
               of {steps.length}
               {resumePrompt.packageName
                 ? ` for the ${resumePrompt.packageName} Plan`
@@ -407,7 +407,7 @@ export function QuizWizard() {
               </div>
               <div className="mt-2.5 flex items-center justify-between">
                 <p className="text-xs uppercase tracking-[0.14em] text-white/60">
-                  Step {current + 1} of {steps.length} — {steps[current].label}
+                  Step {current + 1} of {steps.length}: {steps[current].label}
                 </p>
                 <button
                   type="button"

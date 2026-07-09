@@ -47,7 +47,7 @@ export function ApplyForm() {
   if (submitted) {
     return (
       <div className="shadow-premium rounded-2xl border border-line bg-card p-8 text-center">
-        <p className="text-lg font-semibold">Thanks — almost there!</p>
+        <p className="text-lg font-semibold">Thanks, almost there!</p>
         <p className="mt-2 text-sm leading-relaxed text-muted">
           Your email app should have opened with your details pre-filled. Hit
           send and we&apos;ll get back to you within 24-48 hours.

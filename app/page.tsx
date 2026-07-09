@@ -5,12 +5,13 @@ import { Reveal } from "./components/Reveal";
 import { BeforeAfterSlider } from "./components/BeforeAfterSlider";
 import { packages } from "./data/packages";
 import {
-  FlameIcon,
-  DumbbellIcon,
-  BalanceIcon,
-  LaptopIcon,
-  LeafIcon,
-} from "./components/ProgramIcons";
+  Flame,
+  Barbell,
+  Scales,
+  Laptop,
+  Leaf,
+  Check,
+} from "@phosphor-icons/react/dist/ssr";
 
 const heroBadges = [
   "ISSA Certified Trainer",
@@ -21,27 +22,27 @@ const heroBadges = [
 
 const programs = [
   {
-    icon: FlameIcon,
+    icon: Flame,
     title: "Fat Loss",
-    desc: "Sustainable fat loss through structured training and nutrition — no crash diets.",
+    desc: "Sustainable fat loss through structured training and nutrition. No crash diets.",
   },
   {
-    icon: DumbbellIcon,
+    icon: Barbell,
     title: "Muscle Building",
     desc: "Progressive strength programming designed to build lean muscle at your pace.",
   },
   {
-    icon: BalanceIcon,
+    icon: Scales,
     title: "Body Recomposition",
     desc: "Lose fat and build muscle at the same time with a plan tuned to your body.",
   },
   {
-    icon: LaptopIcon,
+    icon: Laptop,
     title: "Online Coaching",
     desc: "Full remote coaching with weekly check-ins, plan updates, and direct coach access.",
   },
   {
-    icon: LeafIcon,
+    icon: Leaf,
     title: "Nutrition Coaching",
     desc: "Custom nutrition plans built around your preferences, schedule, and goals.",
   },
@@ -66,18 +67,18 @@ const howItWorks = [
   {
     num: "04",
     title: "Real Results",
-    desc: "Sustainable progress — tracked, adjusted, and built to last.",
+    desc: "Sustainable progress: tracked, adjusted, and built to last.",
   },
 ];
 
 const differentiators = [
   {
     title: "Personalized Programs",
-    desc: "Every plan is tailored to your body, schedule, and goals — no cookie-cutter workouts.",
+    desc: "Every plan is tailored to your body, schedule, and goals. No cookie-cutter workouts.",
   },
   {
     title: "Performance Focused",
-    desc: "Strength, speed, endurance, and mobility — we train the whole athlete, not just one muscle group.",
+    desc: "Strength, speed, endurance, and mobility. We train the whole athlete, not just one muscle group.",
   },
   {
     title: "Real Accountability",
@@ -144,8 +145,7 @@ export default function Home() {
               </h1>
 
               <p className="mt-5 max-w-md text-base leading-relaxed text-white/75 sm:text-lg">
-                ISSA-certified coaching, built around your life — not a
-                template.
+                ISSA-certified coaching built around your life, not a template.
               </p>
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4">
@@ -162,18 +162,6 @@ export default function Home() {
                   Get Started
                 </a>
               </div>
-
-              <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3">
-                {heroBadges.map((badge) => (
-                  <span
-                    key={badge}
-                    className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-white/70"
-                  >
-                    <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
-                    {badge}
-                  </span>
-                ))}
-              </div>
             </div>
 
             <div className="relative mx-auto w-full max-w-sm lg:max-w-none">
@@ -185,7 +173,7 @@ export default function Home() {
               <div className="shadow-premium relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/10">
                 <Image
                   src="/media/hero/coach-hero-portrait.jpg"
-                  alt="Your coach — Athletic Wolf"
+                  alt="Your coach at Athletic Wolf"
                   fill
                   priority
                   className="object-cover"
@@ -196,14 +184,25 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Trust strip */}
+        <section className="border-y border-line px-6 py-5 sm:px-8">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-10 gap-y-2 sm:justify-between">
+            {heroBadges.map((badge) => (
+              <span
+                key={badge}
+                className="text-xs font-semibold uppercase tracking-wider text-white/60"
+              >
+                {badge}
+              </span>
+            ))}
+          </div>
+        </section>
+
         {/* Programs */}
         <section id="programs" className="px-6 py-20 sm:px-8 sm:py-28">
           <div className="mx-auto max-w-6xl">
             <Reveal className="max-w-xl">
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-                What We Offer
-              </p>
-              <h2 className="font-display mt-3 text-4xl sm:text-5xl">
+              <h2 className="font-display text-4xl sm:text-5xl">
                 Programs Built For Your Goal
               </h2>
               <p className="mt-4 text-muted">
@@ -212,21 +211,31 @@ export default function Home() {
               </p>
             </Reveal>
 
-            <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {programs.map((program, i) => (
-                <Reveal key={program.title} delay={i * 0.08}>
-                  <div className="card-premium h-full rounded-2xl border border-line bg-card p-7 transition-all hover:-translate-y-1.5">
+                <Reveal
+                  key={program.title}
+                  delay={i * 0.08}
+                  className={
+                    i === 0
+                      ? "sm:col-span-2 lg:col-span-2"
+                      : i >= 3
+                        ? "sm:col-span-1 lg:col-span-2"
+                        : ""
+                  }
+                >
+                  <div
+                    className={`card-premium h-full rounded-2xl border p-7 transition-all hover:-translate-y-1.5 ${
+                      i === 0
+                        ? "border-accent/30 bg-gradient-to-br from-accent/15 via-card to-card"
+                        : "border-line bg-card"
+                    }`}
+                  >
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-accent">
-                      <program.icon className="h-6 w-6" />
+                      <program.icon size={24} weight="regular" />
                     </div>
                     <h3 className="font-display mt-5 text-2xl">{program.title}</h3>
-                    <p className="mt-2 text-sm text-muted">{program.desc}</p>
-                    <a
-                      href="#apply"
-                      className="mt-4 inline-block text-sm font-semibold text-accent hover:underline"
-                    >
-                      Get started →
-                    </a>
+                    <p className="mt-2 max-w-md text-sm text-muted">{program.desc}</p>
                   </div>
                 </Reveal>
               ))}
@@ -238,10 +247,7 @@ export default function Home() {
         <section id="how-it-works" className="bg-ink px-6 py-20 text-white sm:px-8 sm:py-28">
           <div className="mx-auto max-w-6xl">
             <Reveal className="max-w-xl">
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-                The Process
-              </p>
-              <h2 className="font-display mt-3 text-4xl sm:text-5xl">
+              <h2 className="font-display text-4xl sm:text-5xl">
                 How Coaching Works
               </h2>
             </Reveal>
@@ -319,9 +325,12 @@ export default function Home() {
                             pkg.featured ? "border-white/15" : "border-line"
                           }`}
                         >
-                          <span className="mt-0.5 font-bold text-accent" aria-hidden>
-                            ✓
-                          </span>
+                          <Check
+                            size={16}
+                            weight="bold"
+                            className="mt-0.5 shrink-0 text-accent"
+                            aria-hidden
+                          />
                           <span>{feature}</span>
                         </li>
                       ))}
@@ -335,7 +344,7 @@ export default function Home() {
                           : "bg-ink text-white transition-colors hover:bg-ink-soft"
                       }`}
                     >
-                      Get Started
+                      Choose {pkg.name}
                     </a>
                   </div>
                 </Reveal>
@@ -351,15 +360,11 @@ export default function Home() {
         >
           <div className="mx-auto max-w-6xl">
             <Reveal className="max-w-xl">
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-                Member Results
-              </p>
-              <h2 className="font-display mt-3 text-4xl sm:text-5xl">
+              <h2 className="font-display text-4xl sm:text-5xl">
                 Real Clients, Real Progress
               </h2>
               <p className="mt-4 text-muted">
-                Drag the sliders to compare — real transformation photos go here
-                once available.
+                Drag the slider to see each transformation for yourself.
               </p>
             </Reveal>
 
@@ -401,7 +406,7 @@ export default function Home() {
                   Athletic Wolf is built on a simple belief: everyone has an
                   athlete inside them. As an ISSA-certified coach, every program
                   combines science-backed training, nutrition guidance, and real
-                  accountability — delivered fully online to clients wherever
+                  accountability, delivered fully online to clients wherever
                   they are.
                 </p>
               </Reveal>
@@ -419,12 +424,14 @@ export default function Home() {
               </Reveal>
             </div>
 
-            <div className="mt-14 grid gap-5 sm:grid-cols-3">
+            <div className="mt-14 border-t border-line">
               {differentiators.map((item, i) => (
-                <Reveal key={item.title} delay={i * 0.08}>
-                  <div className="card-premium h-full rounded-2xl border border-line bg-card p-6 transition-all hover:-translate-y-1">
+                <Reveal key={item.title} delay={i * 0.06}>
+                  <div className="grid gap-2 border-b border-line py-6 sm:grid-cols-[220px_1fr] sm:gap-10">
                     <h3 className="font-display text-xl">{item.title}</h3>
-                    <p className="mt-2 text-sm text-muted">{item.desc}</p>
+                    <p className="text-sm leading-relaxed text-muted">
+                      {item.desc}
+                    </p>
                   </div>
                 </Reveal>
               ))}
@@ -450,7 +457,7 @@ export default function Home() {
                   href="#apply"
                   className="rounded-xl bg-ink px-8 py-4 text-base font-bold uppercase tracking-wide text-white transition-colors hover:bg-ink-soft"
                 >
-                  Apply Now →
+                  Get Started
                 </a>
               </div>
             </Reveal>
@@ -461,10 +468,7 @@ export default function Home() {
         <section id="faq" className="px-6 py-20 sm:px-8 sm:py-28">
           <div className="mx-auto max-w-6xl">
             <Reveal className="max-w-xl">
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-                FAQ
-              </p>
-              <h2 className="font-display mt-3 text-4xl sm:text-5xl">
+              <h2 className="font-display text-4xl sm:text-5xl">
                 Questions, Answered
               </h2>
             </Reveal>
@@ -478,10 +482,7 @@ export default function Home() {
         <section id="apply" className="px-6 py-20 sm:px-8 sm:py-28">
           <div className="mx-auto max-w-3xl">
             <Reveal className="text-center">
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-                Get Started
-              </p>
-              <h2 className="font-display mt-3 text-4xl sm:text-5xl">
+              <h2 className="font-display text-4xl sm:text-5xl">
                 Apply For Coaching
               </h2>
               <p className="mx-auto mt-4 max-w-lg text-muted">
@@ -505,8 +506,8 @@ export default function Home() {
                 Athletic<span className="text-accent">Wolf</span>
               </p>
               <p className="mt-4 max-w-xs text-sm text-white/55">
-                ISSA-certified online personal training and nutrition coaching —
-                built for clients worldwide, no gym required.
+                ISSA-certified online personal training and nutrition coaching,
+                built for clients worldwide. No gym required.
               </p>
             </div>
             <div>

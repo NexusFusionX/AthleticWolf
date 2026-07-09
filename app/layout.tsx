@@ -19,7 +19,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Athletic Wolf | Online Personal Training & Coaching",
   description:
-    "ISSA-certified online personal training. Custom workout and nutrition programs, weekly check-ins, and real accountability — coaching clients worldwide.",
+    "ISSA-certified online personal training. Custom workout and nutrition programs, weekly check-ins, and real accountability. Coaching clients worldwide.",
 };
 
 export default function RootLayout({

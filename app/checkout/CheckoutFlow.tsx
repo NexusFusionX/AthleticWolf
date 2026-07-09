@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { Check } from "@phosphor-icons/react";
 import { packages } from "../data/packages";
 
 export function CheckoutFlow() {
@@ -63,9 +64,12 @@ export function CheckoutFlow() {
             <ul className="mt-5 flex flex-col gap-2 border-t border-line pt-5">
               {pkg.features.map((feature) => (
                 <li key={feature} className="flex items-start gap-2.5 text-sm">
-                  <span className="mt-0.5 font-bold text-accent" aria-hidden>
-                    ✓
-                  </span>
+                  <Check
+                    size={16}
+                    weight="bold"
+                    className="mt-0.5 shrink-0 text-accent"
+                    aria-hidden
+                  />
                   <span>{feature}</span>
                 </li>
               ))}
