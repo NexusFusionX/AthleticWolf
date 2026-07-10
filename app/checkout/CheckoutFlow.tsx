@@ -14,6 +14,8 @@ export function CheckoutFlow() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
+  const [existingPlan, setExistingPlan] = useState<any>(null);
+  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
 
   useEffect(() => {
     async function checkAuth() {
@@ -21,21 +23,32 @@ export function CheckoutFlow() {
         data: { user: authUser },
       } = await supabase.auth.getUser();
       setUser(authUser);
+
+      if (authUser) {
+        const { data: existingPlanData } = await supabase
+          .from("plans")
+          .select("*")
+          .eq("user_id", authUser.id)
+          .single();
+        if (existingPlanData) {
+          setExistingPlan(existingPlanData);
+        }
+      }
+
       setLoading(false);
     }
     checkAuth();
   }, []);
 
   async function handleCheckout() {
-    if (!pkg) return;
-    setProcessing(true);
+    if (!pkg || !user) return;
 
-    if (!user) {
-      window.location.href = `/auth/signup?redirect=/dashboard&package=${encodeURIComponent(
-        pkg.name
-      )}`;
+    if (existingPlan) {
+      setShowUpgradeDialog(true);
       return;
     }
+
+    setProcessing(true);
 
     try {
       const { error } = await supabase.from("plans").insert({
@@ -51,6 +64,64 @@ export function CheckoutFlow() {
       alert("Failed to complete purchase. Please try again.");
       setProcessing(false);
     }
+  }
+
+  async function handleUpgrade() {
+    if (!pkg || !user || !existingPlan) return;
+    setProcessing(true);
+
+    try {
+      const { error } = await supabase
+        .from("plans")
+        .update({
+          package_name: pkg.name,
+          status: "assessment_pending",
+          assessment_completed_at: null,
+        })
+        .eq("id", existingPlan.id);
+
+      if (error) throw error;
+
+      window.location.href = "/dashboard";
+    } catch (err) {
+      alert("Failed to upgrade. Please try again.");
+      setProcessing(false);
+    }
+  }
+
+  if (showUpgradeDialog && existingPlan && pkg) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-6">
+        <div className="w-full max-w-md overflow-hidden shadow-premium rounded-2xl border border-line bg-card">
+          <div className="bg-ink px-8 py-7 text-white">
+            <h2 className="font-display text-2xl">Active Package Detected</h2>
+          </div>
+
+          <div className="p-8">
+            <p className="text-muted mb-6">
+              You already have an active <strong>{existingPlan.package_name}</strong> package. Would you like to upgrade to <strong>{pkg.name}</strong>?
+            </p>
+
+            <div className="space-y-3">
+              <button
+                onClick={handleUpgrade}
+                disabled={processing}
+                className="btn btn-accent w-full px-8 py-3.5 text-base font-bold uppercase tracking-wide text-white disabled:opacity-50"
+              >
+                {processing ? "Upgrading..." : `Upgrade to ${pkg.name}`}
+              </button>
+
+              <button
+                onClick={() => window.location.href = "/dashboard"}
+                className="btn btn-outline w-full px-8 py-3.5 text-base font-bold uppercase tracking-wide disabled:opacity-50"
+              >
+                Keep Current Package
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   if (!pkg) {
