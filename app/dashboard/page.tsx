@@ -188,7 +188,11 @@ export default function DashboardPage() {
               {plan.plan_ready_at && (
                 <div>
                   <h2 className="font-display text-xl mb-4">Your Personal Coaching Plan</h2>
-                  <PlanViewer planContent={plan.plan_content} />
+                  <PlanViewer
+                    planContent={plan.plan_content}
+                    customerName={user?.full_name}
+                    packageName={plan.package_name}
+                  />
                 </div>
               )}
             </div>

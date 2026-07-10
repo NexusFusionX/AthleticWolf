@@ -1,10 +1,32 @@
 "use client";
 
+import { useState } from "react";
+import { Download } from "@phosphor-icons/react";
+import { generatePlanPDF } from "@/lib/generatePlanPDF";
+
 interface PlanViewerProps {
   planContent: string | null;
+  customerName?: string;
+  packageName?: string;
 }
 
-export function PlanViewer({ planContent }: PlanViewerProps) {
+export function PlanViewer({ planContent, customerName = "Valued Client", packageName = "Coaching Plan" }: PlanViewerProps) {
+  const [downloading, setDownloading] = useState(false);
+
+  function handleDownloadPDF() {
+    setDownloading(true);
+    try {
+      if (planContent) {
+        const plan = JSON.parse(planContent);
+        generatePlanPDF(plan, customerName, packageName);
+      }
+    } catch (err) {
+      console.error("Failed to generate PDF:", err);
+    } finally {
+      setDownloading(false);
+    }
+  }
+
   if (!planContent) {
     return (
       <div className="rounded-xl bg-surface p-6 text-center">
@@ -17,7 +39,17 @@ export function PlanViewer({ planContent }: PlanViewerProps) {
     const plan = JSON.parse(planContent);
 
     return (
-      <div className="rounded-xl border border-line bg-surface p-8 space-y-8">
+      <div className="space-y-6">
+        <button
+          onClick={handleDownloadPDF}
+          disabled={downloading}
+          className="btn btn-accent w-full flex items-center justify-center gap-2 px-6 py-3 text-base font-bold uppercase tracking-wide disabled:opacity-50"
+        >
+          <Download size={20} weight="bold" />
+          {downloading ? "Generating PDF..." : "Download Plan as PDF"}
+        </button>
+
+        <div className="rounded-xl border border-line bg-surface p-8 space-y-8">
         <div>
           <h3 className="font-display text-xl mb-6">Weekly Workout Schedule</h3>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -116,6 +148,7 @@ export function PlanViewer({ planContent }: PlanViewerProps) {
               </div>
             )}
           </div>
+        </div>
         </div>
       </div>
     );
