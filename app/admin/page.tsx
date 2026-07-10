@@ -20,31 +20,27 @@ function AdminContent() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<{ id: string; email: string } | null>(null);
   const [markingReady, setMarkingReady] = useState<string | null>(null);
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
+
+  const ADMIN_USERNAME = "mrmoiz";
+  const ADMIN_PASSWORD = "ulpdgwlc";
 
   useEffect(() => {
     checkAuth();
   }, []);
 
   async function checkAuth() {
-    try {
-      const {
-        data: { user: authUser },
-      } = await supabase.auth.getUser();
-
-      if (authUser && authUser.email === "hello@athleticwolf.com") {
-        setUser({
-          id: authUser.id,
-          email: authUser.email,
-        });
-        loadPlans();
-      } else {
-        setLoading(false);
-      }
-    } catch (err) {
+    const savedUsername = localStorage.getItem("admin-username");
+    if (savedUsername === ADMIN_USERNAME) {
+      setUser({
+        id: "admin",
+        email: ADMIN_USERNAME,
+      });
+      loadPlans();
+    } else {
       setLoading(false);
     }
   }
@@ -68,34 +64,19 @@ function AdminContent() {
     setLoginLoading(true);
 
     try {
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (signInError) {
-        setLoginError(signInError.message);
-        setLoginLoading(false);
-        return;
-      }
-
-      const {
-        data: { user: authUser },
-      } = await supabase.auth.getUser();
-
-      if (authUser && authUser.email === "hello@athleticwolf.com") {
+      if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        localStorage.setItem("admin-username", ADMIN_USERNAME);
         setUser({
-          id: authUser.id,
-          email: authUser.email,
+          id: "admin",
+          email: ADMIN_USERNAME,
         });
         loadPlans();
       } else {
-        setLoginError("Access denied. Only hello@athleticwolf.com can access.");
-        await supabase.auth.signOut();
+        setLoginError("Invalid credentials");
         setLoginLoading(false);
       }
     } catch (err) {
-      setLoginError("Login failed.");
+      setLoginError("Invalid credentials");
       setLoginLoading(false);
     }
   }
@@ -152,14 +133,14 @@ function AdminContent() {
             )}
 
             <label className="flex flex-col gap-2 text-sm mb-4">
-              Email
+              Username
               <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
                 className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
-                placeholder="hello@athleticwolf.com"
+                placeholder="mrmoiz"
               />
             </label>
 
@@ -200,8 +181,8 @@ function AdminContent() {
             <p className="text-muted mt-1">Logged in as {user.email}</p>
           </div>
           <button
-            onClick={async () => {
-              await supabase.auth.signOut();
+            onClick={() => {
+              localStorage.removeItem("admin-username");
               setUser(null);
             }}
             className="btn btn-outline px-6 py-2 text-sm font-bold uppercase tracking-wide"
