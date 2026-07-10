@@ -2,8 +2,9 @@
 
 import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
-import { Check, X } from "@phosphor-icons/react";
+import { Check, X, ArrowLeft } from "@phosphor-icons/react";
 import { supabase } from "@/lib/supabase";
+import { PlanWizard } from "@/app/components/PlanWizard";
 
 interface Plan {
   id: string;
@@ -13,6 +14,7 @@ interface Plan {
   created_at: string;
   assessment_completed_at: string | null;
   plan_ready_at: string | null;
+  plan_content: string | null;
 }
 
 function AdminContent() {
@@ -24,6 +26,7 @@ function AdminContent() {
   const [password, setPassword] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
+  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
 
   const ADMIN_USERNAME = "mrmoiz";
   const ADMIN_PASSWORD = "ulpdgwlc";
@@ -169,6 +172,42 @@ function AdminContent() {
     );
   }
 
+  const selectedPlan = selectedPlanId ? plans.find((p) => p.id === selectedPlanId) : null;
+
+  if (selectedPlan) {
+    return (
+      <div className="min-h-screen bg-paper px-6 py-12 sm:px-8">
+        <div className="mx-auto max-w-4xl">
+          <button
+            onClick={() => setSelectedPlanId(null)}
+            className="flex items-center gap-2 text-sm font-semibold text-accent mb-8 hover:text-accent/80 transition"
+          >
+            <ArrowLeft size={16} weight="bold" />
+            Back to Customers
+          </button>
+
+          <div className="mb-8">
+            <div className="rounded-2xl border border-line bg-card p-8">
+              <p className="text-sm text-muted mb-2">Customer Package</p>
+              <h1 className="font-display text-3xl mb-1">{selectedPlan.package_name}</h1>
+              <p className="text-sm text-foreground">
+                Assessment: {selectedPlan.assessment_completed_at ? "✓ Completed" : "○ Pending"}
+              </p>
+            </div>
+          </div>
+
+          <PlanWizard
+            planId={selectedPlan.id}
+            onSuccess={() => {
+              setSelectedPlanId(null);
+              loadPlans();
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-paper px-6 py-12 sm:px-8">
       <div className="mx-auto max-w-6xl">
@@ -250,19 +289,12 @@ function AdminContent() {
                         )}
                       </td>
                       <td className="px-6 py-4 text-sm">
-                        {!plan.plan_ready_at && plan.assessment_completed_at ? (
-                          <button
-                            onClick={() => handleMarkReady(plan.id)}
-                            disabled={markingReady === plan.id}
-                            className="btn btn-accent px-4 py-2 text-xs font-bold uppercase tracking-wide disabled:opacity-50"
-                          >
-                            {markingReady === plan.id ? "Marking..." : "Mark Ready"}
-                          </button>
-                        ) : plan.plan_ready_at ? (
-                          <span className="text-xs text-accent font-semibold">Sent ✓</span>
-                        ) : (
-                          <span className="text-xs text-muted">Waiting</span>
-                        )}
+                        <button
+                          onClick={() => setSelectedPlanId(plan.id)}
+                          className="btn btn-accent px-4 py-2 text-xs font-bold uppercase tracking-wide"
+                        >
+                          Create Plan
+                        </button>
                       </td>
                     </tr>
                   ))}

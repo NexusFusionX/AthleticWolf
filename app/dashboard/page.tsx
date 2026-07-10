@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { Check } from "@phosphor-icons/react";
+import { PlanViewer } from "@/app/components/PlanViewer";
 
 interface UserData {
   email: string;
@@ -19,6 +20,7 @@ interface Plan {
   created_at: string;
   assessment_completed_at: string | null;
   plan_ready_at: string | null;
+  plan_content: string | null;
 }
 
 export default function DashboardPage() {
@@ -87,7 +89,7 @@ export default function DashboardPage() {
         <div className="mx-auto max-w-2xl mb-6">
           <div className="rounded-xl bg-accent/10 border border-accent/30 p-4 text-center">
             <p className="font-semibold text-accent">🎉 Your coaching plan is ready!</p>
-            <p className="text-sm text-foreground mt-1">Check your email for your personalized plan and next steps.</p>
+            <p className="text-sm text-foreground mt-1">Scroll down to view your personalized plan and start your journey.</p>
           </div>
         </div>
       )}
@@ -184,13 +186,9 @@ export default function DashboardPage() {
               )}
 
               {plan.plan_ready_at && (
-                <div className="rounded-xl bg-accent/10 border border-accent/30 p-6">
-                  <p className="font-semibold text-accent mb-2">
-                    Your coaching plan is ready!
-                  </p>
-                  <p className="text-sm text-foreground">
-                    Check your email for your personalized coaching plan and next steps.
-                  </p>
+                <div>
+                  <h2 className="font-display text-xl mb-4">Your Personal Coaching Plan</h2>
+                  <PlanViewer planContent={plan.plan_content} />
                 </div>
               )}
             </div>
