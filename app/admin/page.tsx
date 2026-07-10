@@ -17,6 +17,10 @@ interface Plan {
   plan_content: string | null;
 }
 
+interface PlanWithStatus extends Plan {
+  hasPlanContent: boolean;
+}
+
 function AdminContent() {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
@@ -289,12 +293,21 @@ function AdminContent() {
                         )}
                       </td>
                       <td className="px-6 py-4 text-sm">
-                        <button
-                          onClick={() => setSelectedPlanId(plan.id)}
-                          className="btn btn-accent px-4 py-2 text-xs font-bold uppercase tracking-wide"
-                        >
-                          Create Plan
-                        </button>
+                        {plan.plan_content ? (
+                          <button
+                            onClick={() => setSelectedPlanId(plan.id)}
+                            className="inline-flex items-center gap-2 btn btn-outline px-4 py-2 text-xs font-bold uppercase tracking-wide"
+                          >
+                            ✓ Plan Created
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => setSelectedPlanId(plan.id)}
+                            className="btn btn-accent px-4 py-2 text-xs font-bold uppercase tracking-wide"
+                          >
+                            Create Plan
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))}
