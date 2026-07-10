@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { Check, X } from "@phosphor-icons/react";
 import { supabase } from "@/lib/supabase";
@@ -16,61 +15,98 @@ interface Plan {
   plan_ready_at: string | null;
 }
 
-interface UserData {
-  id: string;
-  email: string;
-}
-
-export default function AdminPage() {
-  const router = useRouter();
+function AdminContent() {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<UserData | null>(null);
+  const [user, setUser] = useState<{ id: string; email: string } | null>(null);
   const [markingReady, setMarkingReady] = useState<string | null>(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginError, setLoginError] = useState("");
 
   useEffect(() => {
-    async function loadAdmin() {
-      try {
-        const {
-          data: { user: authUser },
-        } = await supabase.auth.getUser();
+    checkAuth();
+  }, []);
 
-        if (!authUser || authUser.email !== "hello@athleticwolf.com") {
-          router.push("/");
-          return;
-        }
+  async function checkAuth() {
+    try {
+      const {
+        data: { user: authUser },
+      } = await supabase.auth.getUser();
 
+      if (authUser && authUser.email === "hello@athleticwolf.com") {
         setUser({
           id: authUser.id,
           email: authUser.email,
         });
-
-        const { data: plansData, error } = await supabase
-          .from("plans")
-          .select("*")
-          .order("created_at", { ascending: false });
-
-        if (error) throw error;
-        setPlans((plansData as Plan[]) || []);
+        loadPlans();
+      } else {
         setLoading(false);
-      } catch (err) {
-        console.error("Failed to load admin panel:", err);
-        router.push("/");
       }
+    } catch (err) {
+      setLoading(false);
     }
+  }
 
-    loadAdmin();
-  }, [router]);
+  async function loadPlans() {
+    try {
+      const { data: plansData } = await supabase
+        .from("plans")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      setPlans((plansData as Plan[]) || []);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault();
+    setLoginError("");
+    setLoginLoading(true);
+
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        setLoginError(signInError.message);
+        setLoginLoading(false);
+        return;
+      }
+
+      const {
+        data: { user: authUser },
+      } = await supabase.auth.getUser();
+
+      if (authUser && authUser.email === "hello@athleticwolf.com") {
+        setUser({
+          id: authUser.id,
+          email: authUser.email,
+        });
+        loadPlans();
+      } else {
+        setLoginError("Access denied. Only hello@athleticwolf.com can access.");
+        await supabase.auth.signOut();
+        setLoginLoading(false);
+      }
+    } catch (err) {
+      setLoginError("Login failed.");
+      setLoginLoading(false);
+    }
+  }
 
   async function handleMarkReady(planId: string) {
     setMarkingReady(planId);
     try {
-      const { error } = await supabase
+      await supabase
         .from("plans")
         .update({ plan_ready_at: new Date().toISOString() })
         .eq("id", planId);
-
-      if (error) throw error;
 
       setPlans((prev) =>
         prev.map((p) =>
@@ -78,9 +114,9 @@ export default function AdminPage() {
         )
       );
 
-      alert("Plan marked as ready! Email notification sent to customer.");
+      alert("Plan marked ready! Customer notified.");
     } catch (err) {
-      alert("Failed to mark plan ready. Please try again.");
+      alert("Failed to mark ready.");
     } finally {
       setMarkingReady(null);
     }
@@ -89,13 +125,67 @@ export default function AdminPage() {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <p className="text-muted">Loading admin panel...</p>
+        <p className="text-muted">Loading...</p>
       </div>
     );
   }
 
   if (!user) {
-    return null;
+    return (
+      <div className="mx-auto flex min-h-screen max-w-md items-center justify-center p-6">
+        <div className="w-full overflow-hidden shadow-premium rounded-2xl border border-line bg-card">
+          <div className="bg-ink px-8 py-7 text-white">
+            <Link href="/" className="font-display text-lg">
+              Athletic<span className="text-accent">Wolf</span>
+            </Link>
+            <p className="mt-4 text-sm font-semibold uppercase tracking-[0.18em] text-accent">
+              Admin
+            </p>
+            <h1 className="font-display mt-1.5 text-3xl">Coach Login</h1>
+          </div>
+
+          <form onSubmit={handleLogin} className="p-8">
+            {loginError && (
+              <div className="mb-6 rounded-xl bg-error/10 border border-error/30 p-4">
+                <p className="text-sm text-error">{loginError}</p>
+              </div>
+            )}
+
+            <label className="flex flex-col gap-2 text-sm mb-4">
+              Email
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
+                placeholder="hello@athleticwolf.com"
+              />
+            </label>
+
+            <label className="flex flex-col gap-2 text-sm mb-6">
+              Password
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
+                placeholder="••••••••"
+              />
+            </label>
+
+            <button
+              type="submit"
+              disabled={loginLoading}
+              className="btn btn-accent w-full px-8 py-3.5 text-base font-bold uppercase tracking-wide text-white disabled:opacity-50"
+            >
+              {loginLoading ? "Logging in..." : "Admin Login"}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -112,7 +202,7 @@ export default function AdminPage() {
           <button
             onClick={async () => {
               await supabase.auth.signOut();
-              router.push("/");
+              setUser(null);
             }}
             className="btn btn-outline px-6 py-2 text-sm font-bold uppercase tracking-wide"
           >
@@ -124,7 +214,7 @@ export default function AdminPage() {
           <div className="bg-ink px-8 py-6 text-white border-b border-line">
             <h2 className="font-display text-xl">Customer Assessments</h2>
             <p className="text-sm text-muted mt-1">
-              {plans.length} customer{plans.length !== 1 ? "s" : ""} total
+              {plans.length} total
             </p>
           </div>
 
@@ -137,9 +227,6 @@ export default function AdminPage() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-line bg-surface/50">
-                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted">
-                      Name
-                    </th>
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted">
                       Package
                     </th>
@@ -157,9 +244,6 @@ export default function AdminPage() {
                 <tbody>
                   {plans.map((plan) => (
                     <tr key={plan.id} className="border-b border-line hover:bg-surface/30 transition">
-                      <td className="px-6 py-4 text-sm text-foreground">
-                        Customer #{plan.user_id.slice(0, 8)}
-                      </td>
                       <td className="px-6 py-4 text-sm font-semibold">{plan.package_name}</td>
                       <td className="px-6 py-4 text-sm">
                         {plan.assessment_completed_at ? (
@@ -196,7 +280,7 @@ export default function AdminPage() {
                         ) : plan.plan_ready_at ? (
                           <span className="text-xs text-accent font-semibold">Sent ✓</span>
                         ) : (
-                          <span className="text-xs text-muted">Waiting for assessment</span>
+                          <span className="text-xs text-muted">Waiting</span>
                         )}
                       </td>
                     </tr>
@@ -208,5 +292,13 @@ export default function AdminPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AdminPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><p>Loading...</p></div>}>
+      <AdminContent />
+    </Suspense>
   );
 }
