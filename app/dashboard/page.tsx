@@ -89,7 +89,7 @@ export default function DashboardPage() {
         <div className="mx-auto max-w-2xl mb-6">
           <div className="rounded-xl bg-accent/10 border border-accent/30 p-4 text-center">
             <p className="font-semibold text-accent">🎉 Your coaching plan is ready!</p>
-            <p className="text-sm text-foreground mt-1">Scroll down to view your personalized plan and start your journey.</p>
+            <p className="text-sm text-foreground mt-2">Your personalized plan is below. Review your weekly workouts, nutrition targets, and goals to get started.</p>
           </div>
         </div>
       )}

@@ -8,128 +8,117 @@ interface PlanWizardProps {
   onSuccess: () => void;
 }
 
+const workoutOptions = [
+  "Chest & Triceps",
+  "Back & Biceps",
+  "Legs",
+  "Shoulders",
+  "Arms & Cardio",
+  "Full Body",
+  "Rest or Light Cardio",
+  "HIIT Training",
+  "Functional Training",
+  "Flexibility & Mobility",
+];
+
+const calorieOptions = ["1500", "1800", "2000", "2200", "2500", "2800", "3000", "3200", "3500"];
+const proteinOptions = ["100g", "120g", "140g", "150g", "160g", "180g", "200g", "220g"];
+const carbOptions = ["150g", "200g", "250g", "300g", "350g", "400g", "450g", "500g"];
+const fatOptions = ["50g", "60g", "70g", "80g", "90g", "100g", "110g", "120g"];
+const mealFrequencyOptions = ["3 meals per day", "4 meals per day", "5 meals per day", "6 meals per day"];
+const supplementOptions = [
+  "Whey Protein",
+  "Creatine Monohydrate",
+  "Multivitamin",
+  "Omega-3 Fish Oil",
+  "BCAAs",
+  "Pre-Workout",
+  "Mass Gainer",
+  "Casein Protein",
+];
+
+const primaryGoalOptions = [
+  "Lose fat",
+  "Build muscle",
+  "Body recomposition",
+  "Get stronger",
+  "Improve endurance",
+  "Athletic performance",
+  "General fitness",
+];
+
+const targetWeightOptions = [
+  "140 lbs",
+  "150 lbs",
+  "160 lbs",
+  "170 lbs",
+  "180 lbs",
+  "190 lbs",
+  "200 lbs",
+  "210 lbs",
+  "220 lbs",
+  "230 lbs",
+];
+
+const checkInFrequencyOptions = [
+  "Weekly on Mondays",
+  "Weekly on Fridays",
+  "Bi-weekly",
+  "Every 2 weeks",
+  "Monthly",
+];
+
+const progressMetricsOptions = [
+  "Weight",
+  "Body measurements",
+  "Strength gains",
+  "Photos",
+  "Energy levels",
+  "Sleep quality",
+  "Workout performance",
+];
+
+const adjustmentTriggersOptions = [
+  "No progress for 2 weeks",
+  "Plateau reached",
+  "Weight gain/loss of 5 lbs",
+  "Strength plateau",
+  "Persistent soreness",
+  "Lifestyle changes",
+];
+
 const steps = [
   {
     label: "Weekly Schedule",
     fields: [
-      {
-        name: "mondayWorkout",
-        label: "Monday Workout",
-        type: "text",
-        placeholder: "e.g. Chest & Triceps",
-      },
-      {
-        name: "tuesdayWorkout",
-        label: "Tuesday Workout",
-        type: "text",
-        placeholder: "e.g. Back & Biceps",
-      },
-      {
-        name: "wednesdayWorkout",
-        label: "Wednesday Workout",
-        type: "text",
-        placeholder: "e.g. Legs",
-      },
-      {
-        name: "thursdayWorkout",
-        label: "Thursday Workout",
-        type: "text",
-        placeholder: "e.g. Shoulders",
-      },
-      {
-        name: "fridayWorkout",
-        label: "Friday Workout",
-        type: "text",
-        placeholder: "e.g. Arms & Cardio",
-      },
-      {
-        name: "saturdayWorkout",
-        label: "Saturday Workout",
-        type: "text",
-        placeholder: "e.g. Full Body",
-      },
-      {
-        name: "sundayWorkout",
-        label: "Sunday Activity",
-        type: "text",
-        placeholder: "e.g. Rest or Light Cardio",
-      },
+      { name: "mondayWorkout", label: "Monday Workout", options: workoutOptions },
+      { name: "tuesdayWorkout", label: "Tuesday Workout", options: workoutOptions },
+      { name: "wednesdayWorkout", label: "Wednesday Workout", options: workoutOptions },
+      { name: "thursdayWorkout", label: "Thursday Workout", options: workoutOptions },
+      { name: "fridayWorkout", label: "Friday Workout", options: workoutOptions },
+      { name: "saturdayWorkout", label: "Saturday Workout", options: workoutOptions },
+      { name: "sundayWorkout", label: "Sunday Activity", options: workoutOptions },
     ],
   },
   {
     label: "Nutrition",
     fields: [
-      {
-        name: "dailyCalories",
-        label: "Daily Calorie Target",
-        type: "text",
-        placeholder: "e.g. 2500",
-      },
-      {
-        name: "proteinGrams",
-        label: "Daily Protein (grams)",
-        type: "text",
-        placeholder: "e.g. 150g",
-      },
-      {
-        name: "carbsGrams",
-        label: "Daily Carbs (grams)",
-        type: "text",
-        placeholder: "e.g. 300g",
-      },
-      {
-        name: "fatsGrams",
-        label: "Daily Fats (grams)",
-        type: "text",
-        placeholder: "e.g. 80g",
-      },
-      {
-        name: "mealFrequency",
-        label: "Recommended Meal Frequency",
-        type: "text",
-        placeholder: "e.g. 4-5 meals per day",
-      },
-      {
-        name: "supplements",
-        label: "Recommended Supplements",
-        type: "textarea",
-        placeholder: "e.g. Whey Protein, Creatine, Multivitamin",
-      },
+      { name: "dailyCalories", label: "Daily Calorie Target", options: calorieOptions },
+      { name: "proteinGrams", label: "Daily Protein", options: proteinOptions },
+      { name: "carbsGrams", label: "Daily Carbs", options: carbOptions },
+      { name: "fatsGrams", label: "Daily Fats", options: fatOptions },
+      { name: "mealFrequency", label: "Meal Frequency", options: mealFrequencyOptions },
+      { name: "supplements", label: "Recommended Supplements", options: supplementOptions, multiSelect: true },
     ],
   },
   {
     label: "Goals & Progress",
     fields: [
-      {
-        name: "primaryGoal",
-        label: "Primary Goal",
-        type: "text",
-        placeholder: "e.g. Lose 15 lbs of fat",
-      },
-      {
-        name: "targetWeight",
-        label: "Target Weight",
-        type: "text",
-        placeholder: "e.g. 185 lbs",
-      },
-      {
-        name: "checkInFrequency",
-        label: "Check-in Frequency",
-        type: "text",
-        placeholder: "e.g. Weekly on Mondays",
-      },
-      {
-        name: "progressMetrics",
-        label: "Progress Metrics to Track",
-        type: "textarea",
-        placeholder: "e.g. Weight, body measurements, strength gains",
-      },
-      {
-        name: "adjustmentTriggers",
-        label: "When to Adjust Plan",
-        type: "textarea",
-        placeholder: "e.g. No progress for 2 weeks, plateau reached",
-      },
+      { name: "primaryGoal", label: "Primary Goal", options: primaryGoalOptions },
+      { name: "targetWeight", label: "Target Weight", options: targetWeightOptions },
+      { name: "checkInFrequency", label: "Check-in Frequency", options: checkInFrequencyOptions },
+      { name: "progressMetrics", label: "Progress Metrics", options: progressMetricsOptions, multiSelect: true },
+      { name: "adjustmentTriggers", label: "Adjustment Triggers", options: adjustmentTriggersOptions, multiSelect: true },
     ],
   },
 ];
@@ -142,6 +131,18 @@ export function PlanWizard({ planId, onSuccess }: PlanWizardProps) {
 
   function setValue(name: string, value: string) {
     setFormData((prev) => ({ ...prev, [name]: value }));
+  }
+
+  function toggleMultiSelect(name: string, value: string) {
+    const current = formData[name] || "";
+    const values = current ? current.split(", ") : [];
+
+    if (values.includes(value)) {
+      const updated = values.filter((v) => v !== value);
+      setValue(name, updated.join(", "));
+    } else {
+      setValue(name, [...values, value].join(", "));
+    }
   }
 
   async function handleSubmit() {
@@ -178,12 +179,15 @@ export function PlanWizard({ planId, onSuccess }: PlanWizardProps) {
     if (current > 0) setCurrent((c) => c - 1);
   }
 
+  const currentStep = steps[current];
+  const currentField = currentStep.fields[0];
+
   return (
     <div className="mx-auto max-w-2xl rounded-2xl border border-line bg-card overflow-hidden shadow-premium">
       <div className="bg-ink px-8 py-7 text-white">
         <h2 className="font-display text-2xl">Create Coaching Plan</h2>
         <p className="text-sm text-muted mt-2">
-          Step {current + 1} of {steps.length}. {steps[current].label}
+          Step {current + 1} of {steps.length}. {currentStep.label}
         </p>
       </div>
 
@@ -195,27 +199,41 @@ export function PlanWizard({ planId, onSuccess }: PlanWizardProps) {
         )}
 
         <div className="space-y-4">
-          {steps[current].fields.map((field) => (
-            <label key={field.name} className="flex flex-col gap-2 text-sm">
-              {field.label}
-              {field.type === "textarea" ? (
-                <textarea
-                  value={formData[field.name] || ""}
-                  onChange={(e) => setValue(field.name, e.target.value)}
-                  placeholder={field.placeholder}
-                  rows={3}
-                  className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
-                />
+          {currentStep.fields.map((field) => (
+            <div key={field.name} className="flex flex-col gap-2">
+              <label className="text-sm font-semibold text-foreground">{field.label}</label>
+
+              {field.multiSelect ? (
+                <div className="flex flex-wrap gap-2">
+                  {field.options.map((option) => (
+                    <button
+                      key={option}
+                      onClick={() => toggleMultiSelect(field.name, option)}
+                      className={`px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
+                        (formData[field.name] || "").includes(option)
+                          ? "bg-accent text-ink"
+                          : "bg-surface border border-line text-foreground hover:border-accent"
+                      }`}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
               ) : (
-                <input
-                  type={field.type}
+                <select
                   value={formData[field.name] || ""}
                   onChange={(e) => setValue(field.name, e.target.value)}
-                  placeholder={field.placeholder}
                   className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
-                />
+                >
+                  <option value="">Select {field.label}</option>
+                  {field.options.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
               )}
-            </label>
+            </div>
           ))}
         </div>
 
