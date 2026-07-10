@@ -3,12 +3,55 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Check } from "@phosphor-icons/react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import { packages } from "../data/packages";
 
 export function CheckoutFlow() {
   const searchParams = useSearchParams();
   const packageName = searchParams.get("package");
   const pkg = packages.find((p) => p.name === packageName);
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [processing, setProcessing] = useState(false);
+
+  useEffect(() => {
+    async function checkAuth() {
+      const {
+        data: { user: authUser },
+      } = await supabase.auth.getUser();
+      setUser(authUser);
+      setLoading(false);
+    }
+    checkAuth();
+  }, []);
+
+  async function handleCheckout() {
+    if (!pkg) return;
+    setProcessing(true);
+
+    if (!user) {
+      window.location.href = `/auth/signup?redirect=/dashboard&package=${encodeURIComponent(
+        pkg.name
+      )}`;
+      return;
+    }
+
+    try {
+      const { error } = await supabase.from("plans").insert({
+        user_id: user.id,
+        package_name: pkg.name,
+        status: "assessment_pending",
+      });
+
+      if (error) throw error;
+
+      window.location.href = "/dashboard";
+    } catch (err) {
+      alert("Failed to complete purchase. Please try again.");
+      setProcessing(false);
+    }
+  }
 
   if (!pkg) {
     return (
@@ -85,12 +128,13 @@ export function CheckoutFlow() {
             </p>
           </div>
 
-          <Link
-            href={`/quiz?package=${encodeURIComponent(pkg.name)}`}
-            className="btn btn-accent font-display mt-6 w-full px-8 py-3.5 text-base text-white"
+          <button
+            onClick={handleCheckout}
+            disabled={processing}
+            className="btn btn-accent font-display mt-6 w-full px-8 py-3.5 text-base text-white disabled:opacity-50"
           >
-            Complete Purchase (Test Mode) →
-          </Link>
+            {processing ? "Processing..." : "Complete Purchase (Test Mode) →"}
+          </button>
         </div>
       </div>
     </div>
