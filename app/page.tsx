@@ -3,6 +3,7 @@ import { Faq } from "./components/Faq";
 import { ApplyForm } from "./components/ApplyForm";
 import { Reveal } from "./components/Reveal";
 import { BeforeAfterSlider } from "./components/BeforeAfterSlider";
+import { Header } from "./components/Header";
 import { packages } from "./data/packages";
 import {
   Flame,
@@ -89,40 +90,7 @@ const differentiators = [
 export default function Home() {
   return (
     <div className="flex min-h-full flex-col">
-      {/* Nav */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-ink/95 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 sm:px-8">
-          <a href="#" className="font-display text-xl text-white sm:text-2xl">
-            Athletic<span className="text-accent">Wolf</span>
-          </a>
-          <nav className="hidden items-center gap-7 text-sm font-medium text-white/75 lg:flex">
-            <a href="#programs" className="transition-colors hover:text-white">
-              Programs
-            </a>
-            <a href="#how-it-works" className="transition-colors hover:text-white">
-              How It Works
-            </a>
-            <a href="#packages" className="transition-colors hover:text-white">
-              Packages
-            </a>
-            <a href="#results" className="transition-colors hover:text-white">
-              Results
-            </a>
-            <a href="#about" className="transition-colors hover:text-white">
-              About
-            </a>
-            <a href="#faq" className="transition-colors hover:text-white">
-              FAQ
-            </a>
-          </nav>
-          <a
-            href="#apply"
-            className="btn btn-accent px-4 py-2 text-sm font-bold uppercase tracking-wide text-white sm:px-5 sm:py-2.5"
-          >
-            Get Started
-          </a>
-        </div>
-      </header>
+      <Header />
 
       <main>
         {/* Hero */}
