@@ -11,7 +11,7 @@ function SignupContent() {
   const packageName = searchParams.get("package");
   const redirectTo = packageName
     ? `/quiz?package=${encodeURIComponent(packageName)}`
-    : "/dashboard";
+    : "/";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

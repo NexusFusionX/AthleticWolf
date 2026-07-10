@@ -46,7 +46,7 @@ export function Header() {
         </nav>
         {!loading && (
           <a
-            href={isLoggedIn ? "/dashboard" : "#apply"}
+            href={isLoggedIn ? "/dashboard" : "/auth/login"}
             className="btn btn-accent px-4 py-2 text-sm font-bold uppercase tracking-wide text-white sm:px-5 sm:py-2.5"
           >
             {isLoggedIn ? "Dashboard" : "Get Started"}

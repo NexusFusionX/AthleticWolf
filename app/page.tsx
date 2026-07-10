@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { Faq } from "./components/Faq";
-import { ApplyForm } from "./components/ApplyForm";
 import { Reveal } from "./components/Reveal";
 import { BeforeAfterSlider } from "./components/BeforeAfterSlider";
 import { Header } from "./components/Header";
@@ -444,23 +443,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Apply */}
-        <section id="apply" className="px-6 py-20 sm:px-8 sm:py-28">
-          <div className="mx-auto max-w-3xl">
-            <Reveal className="text-center">
-              <h2 className="font-display text-4xl sm:text-5xl">
-                Apply For Coaching
-              </h2>
-              <p className="mx-auto mt-4 max-w-lg text-muted">
-                Tell us about your goals and we&apos;ll get back to you within
-                24-48 hours.
-              </p>
-            </Reveal>
-            <Reveal delay={0.1} className="mt-12">
-              <ApplyForm />
-            </Reveal>
-          </div>
-        </section>
       </main>
 
       {/* Footer */}
@@ -511,11 +493,6 @@ export default function Home() {
                 <li>
                   <a href="#faq" className="hover:text-white">
                     FAQ
-                  </a>
-                </li>
-                <li>
-                  <a href="#apply" className="hover:text-white">
-                    Apply for Coaching
                   </a>
                 </li>
               </ul>
