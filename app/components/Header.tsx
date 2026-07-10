@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { Bell } from "@phosphor-icons/react";
 
 export function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [hasNotification, setHasNotification] = useState(false);
 
   useEffect(() => {
     async function checkAuth() {
@@ -13,6 +15,19 @@ export function Header() {
         data: { user },
       } = await supabase.auth.getUser();
       setIsLoggedIn(!!user);
+
+      if (user) {
+        const { data: plan } = await supabase
+          .from("plans")
+          .select("plan_ready_at")
+          .eq("user_id", user.id)
+          .single();
+
+        if (plan?.plan_ready_at) {
+          setHasNotification(true);
+        }
+      }
+
       setLoading(false);
     }
     checkAuth();
@@ -47,9 +62,14 @@ export function Header() {
         {!loading && (
           <a
             href={isLoggedIn ? "/dashboard" : "/auth/login"}
-            className="btn btn-accent px-4 py-2 text-sm font-bold uppercase tracking-wide text-white sm:px-5 sm:py-2.5"
+            className="btn btn-accent px-4 py-2 text-sm font-bold uppercase tracking-wide text-white sm:px-5 sm:py-2.5 relative"
           >
             {isLoggedIn ? "Dashboard" : "Get Started"}
+            {hasNotification && (
+              <span className="absolute -top-2 -right-2 w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center">
+                <Bell size={12} weight="bold" className="text-ink" />
+              </span>
+            )}
           </a>
         )}
       </div>

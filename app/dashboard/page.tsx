@@ -83,6 +83,15 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-paper py-12 px-6">
+      {plan?.plan_ready_at && (
+        <div className="mx-auto max-w-2xl mb-6">
+          <div className="rounded-xl bg-accent/10 border border-accent/30 p-4 text-center">
+            <p className="font-semibold text-accent">🎉 Your coaching plan is ready!</p>
+            <p className="text-sm text-foreground mt-1">Check your email for your personalized plan and next steps.</p>
+          </div>
+        </div>
+      )}
+
       <div className="mx-auto max-w-2xl">
         <div className="flex items-center justify-between mb-8">
           <Link href="/" className="font-display text-xl">
