@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 type Option = { value: string; label: string };
 
@@ -176,6 +177,7 @@ function loadSavedProgress(): SavedProgress | null {
 }
 
 export function QuizWizard() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const selectedPackage = searchParams.get("package");
 
@@ -288,7 +290,7 @@ export function QuizWizard() {
     return ok;
   }
 
-  function handleNext() {
+  async function handleNext() {
     if (!validateStep(current)) return;
 
     if (current < steps.length - 1) {
@@ -296,28 +298,28 @@ export function QuizWizard() {
       return;
     }
 
-    const lines = [
-      selectedPackage ? `Package: ${selectedPackage}` : null,
-      ...steps.flatMap((step) =>
-        step.fields.map((field) => {
-          const value = formData[field.name];
-          const display = Array.isArray(value) ? value.join(", ") : value ?? "";
-          return `${field.label}: ${display}`;
-        })
-      ),
-    ].filter(Boolean);
-
-    const body = lines.join("\n");
-    const subject = `New coaching application${
-      selectedPackage ? ` - ${selectedPackage} Plan` : ""
-    }`;
-
-    window.location.href = `mailto:hello@athleticwolf.com?subject=${encodeURIComponent(
-      subject
-    )}&body=${encodeURIComponent(body)}`;
-
-    localStorage.removeItem(STORAGE_KEY);
     setSubmitted(true);
+
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        const { error } = await supabase
+          .from("plans")
+          .update({ assessment_completed_at: new Date().toISOString() })
+          .eq("user_id", user.id);
+
+        if (error) throw error;
+      }
+
+      localStorage.removeItem(STORAGE_KEY);
+      router.push("/dashboard");
+    } catch (err) {
+      alert("Failed to save assessment. Please try again.");
+      setSubmitted(false);
+    }
   }
 
   function handleBack() {
