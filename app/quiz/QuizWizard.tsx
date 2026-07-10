@@ -356,14 +356,14 @@ export function QuizWizard() {
               <button
                 type="button"
                 onClick={handleContinueResume}
-                className="btn-accent font-display rounded-xl px-7 py-3 text-base text-white"
+                className="btn btn-accent font-display px-7 py-3 text-base text-white"
               >
                 Continue Where I Left Off →
               </button>
               <button
                 type="button"
                 onClick={handleStartOver}
-                className="rounded-xl border border-line px-7 py-3 text-sm font-semibold transition-colors hover:border-accent/60"
+                className="btn border border-line px-7 py-3 text-sm font-semibold hover:border-accent/60"
               >
                 Start Over
               </button>
@@ -432,7 +432,7 @@ export function QuizWizard() {
               </p>
               <Link
                 href="/"
-                className="mt-6 inline-block rounded-xl bg-ink px-6 py-3 text-sm font-bold uppercase tracking-wide text-white transition-colors hover:bg-ink-soft"
+                className="btn btn-dark mt-6 px-6 py-3 text-sm font-bold uppercase tracking-wide text-white"
               >
                 Back to Home
               </Link>
@@ -544,7 +544,7 @@ export function QuizWizard() {
               <button
                 type="button"
                 onClick={handleBack}
-                className="rounded-xl border border-line px-6 py-3 text-sm font-semibold transition-colors hover:border-accent/60"
+                className="btn border border-line px-6 py-3 text-sm font-semibold hover:border-accent/60"
               >
                 ← Back
               </button>
@@ -554,7 +554,7 @@ export function QuizWizard() {
             <button
               type="button"
               onClick={handleNext}
-              className="btn-accent font-display rounded-xl px-7 py-3 text-base text-white"
+              className="btn btn-accent font-display px-7 py-3 text-base text-white"
             >
               {current === steps.length - 1 ? "Get My Plan →" : "Next Step →"}
             </button>

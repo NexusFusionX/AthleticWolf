@@ -72,16 +72,73 @@ body {
     0 12px 32px rgba(0, 0, 0, 0.35);
 }
 
-.btn-accent {
-  background: linear-gradient(155deg, color-mix(in srgb, var(--accent) 100%, white 8%), var(--accent) 55%, var(--accent-dark));
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15) inset, 0 8px 20px color-mix(in srgb, var(--accent) 25%, transparent);
-  transition: box-shadow 0.25s ease, transform 0.25s ease, filter 0.25s ease;
+/* Button system: shared base + three variants. Press-in on :active, lift on
+   hover (pointer devices only), one custom ease curve, keyboard focus ring. */
+.btn {
+  --btn-ease: cubic-bezier(0.165, 0.84, 0.44, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  transition:
+    transform 0.18s var(--btn-ease),
+    box-shadow 0.18s var(--btn-ease),
+    filter 0.18s var(--btn-ease),
+    border-color 0.18s var(--btn-ease),
+    background-color 0.18s var(--btn-ease);
 }
 
-.btn-accent:hover {
-  filter: brightness(1.06);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.18) inset, 0 12px 28px color-mix(in srgb, var(--accent) 40%, transparent);
-  transform: translateY(-1px);
+.btn-accent {
+  background: linear-gradient(155deg, color-mix(in srgb, var(--accent) 100%, white 8%), var(--accent) 55%, var(--accent-dark));
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.15) inset,
+    0 6px 16px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.btn-outline {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-dark {
+  background: var(--ink);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+}
+
+@media (hover: hover) {
+  .btn-accent:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1.5px);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.18) inset,
+      0 10px 22px rgba(0, 0, 0, 0.35),
+      0 6px 16px color-mix(in srgb, var(--accent) 28%, transparent);
+  }
+
+  .btn-outline:hover {
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.09);
+    transform: translateY(-1.5px);
+  }
+
+  .btn-dark:hover {
+    background: var(--ink-soft);
+    transform: translateY(-1.5px);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.08) inset,
+      0 10px 22px rgba(0, 0, 0, 0.35);
+  }
+}
+
+/* Press-in feedback: declared after hover so it wins while both apply */
+.btn:active {
+  transform: scale(0.97);
+  transition-duration: 0.09s;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 .font-display {
@@ -93,6 +150,55 @@ body {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+}
+
+/* Wheel scroll: sections roll in from the bottom and roll away over the top,
+   like segments on a rotating drum. Scroll-driven CSS only; browsers without
+   animation-timeline support simply render a normal static page. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .wheel-section {
+      --wheel-in: -24deg;
+      --wheel-out: 15deg;
+      animation:
+        wheel-enter linear both,
+        wheel-exit linear both;
+      animation-timeline: view(), view();
+      animation-range:
+        entry 0% entry 85%,
+        exit 15% exit 100%;
+      animation-composition: replace, add;
+    }
+
+    @media (max-width: 640px) {
+      .wheel-section {
+        --wheel-in: -10deg;
+        --wheel-out: 7deg;
+      }
+    }
+  }
+}
+
+@keyframes wheel-enter {
+  from {
+    transform: perspective(1100px) rotateX(var(--wheel-in)) translateY(48px)
+      scale(0.95);
+    opacity: 0.3;
+  }
+  to {
+    transform: perspective(1100px) rotateX(0deg) translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes wheel-exit {
+  from {
+    transform: perspective(1100px) rotateX(0deg) translateY(0) scale(1);
+  }
+  to {
+    transform: perspective(1100px) rotateX(var(--wheel-out)) translateY(-36px)
+      scale(0.97);
   }
 }
 

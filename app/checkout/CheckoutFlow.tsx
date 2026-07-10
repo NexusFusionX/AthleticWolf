@@ -20,7 +20,7 @@ export function CheckoutFlow() {
           </p>
           <Link
             href="/#packages"
-            className="btn-accent mt-6 inline-block rounded-xl px-6 py-3 text-sm font-bold uppercase tracking-wide text-white"
+            className="btn btn-accent mt-6 px-6 py-3 text-sm font-bold uppercase tracking-wide text-white"
           >
             View Packages
           </Link>
@@ -87,7 +87,7 @@ export function CheckoutFlow() {
 
           <Link
             href={`/quiz?package=${encodeURIComponent(pkg.name)}`}
-            className="btn-accent font-display mt-6 flex w-full items-center justify-center rounded-xl px-8 py-3.5 text-base text-white"
+            className="btn btn-accent font-display mt-6 w-full px-8 py-3.5 text-base text-white"
           >
             Complete Purchase (Test Mode) →
           </Link>

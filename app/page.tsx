@@ -117,7 +117,7 @@ export default function Home() {
           </nav>
           <a
             href="#apply"
-            className="btn-accent rounded-xl px-4 py-2 text-sm font-bold uppercase tracking-wide text-white sm:px-5 sm:py-2.5"
+            className="btn btn-accent px-4 py-2 text-sm font-bold uppercase tracking-wide text-white sm:px-5 sm:py-2.5"
           >
             Get Started
           </a>
@@ -151,13 +151,13 @@ export default function Home() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4">
                 <a
                   href="#packages"
-                  className="btn-accent rounded-xl px-7 py-3.5 text-center text-sm font-bold uppercase tracking-wide text-white"
+                  className="btn btn-accent px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-white"
                 >
                   View Packages
                 </a>
                 <a
                   href="#apply"
-                  className="rounded-xl border border-white/25 bg-white/5 px-7 py-3.5 text-center text-sm font-bold uppercase tracking-wide text-white transition-colors hover:border-white/60"
+                  className="btn btn-outline px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-white"
                 >
                   Get Started
                 </a>
@@ -199,7 +199,7 @@ export default function Home() {
         </section>
 
         {/* Programs */}
-        <section id="programs" className="px-6 py-20 sm:px-8 sm:py-28">
+        <section id="programs" className="wheel-section px-6 py-20 sm:px-8 sm:py-28">
           <div className="mx-auto max-w-6xl">
             <Reveal className="max-w-xl">
               <h2 className="font-display text-4xl sm:text-5xl">
@@ -244,7 +244,7 @@ export default function Home() {
         </section>
 
         {/* How It Works */}
-        <section id="how-it-works" className="bg-ink px-6 py-20 text-white sm:px-8 sm:py-28">
+        <section id="how-it-works" className="wheel-section bg-ink px-6 py-20 text-white sm:px-8 sm:py-28">
           <div className="mx-auto max-w-6xl">
             <Reveal className="max-w-xl">
               <h2 className="font-display text-4xl sm:text-5xl">
@@ -269,7 +269,7 @@ export default function Home() {
         </section>
 
         {/* Packages */}
-        <section id="packages" className="px-6 py-20 sm:px-8 sm:py-28">
+        <section id="packages" className="wheel-section px-6 py-20 sm:px-8 sm:py-28">
           <div className="mx-auto max-w-6xl">
             <Reveal className="max-w-xl">
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
@@ -338,10 +338,8 @@ export default function Home() {
 
                     <a
                       href={`/checkout?package=${encodeURIComponent(pkg.name)}`}
-                      className={`mt-8 inline-flex items-center justify-center rounded-xl px-6 py-3 text-sm font-bold uppercase tracking-wide ${
-                        pkg.featured
-                          ? "btn-accent text-white"
-                          : "bg-ink text-white transition-colors hover:bg-ink-soft"
+                      className={`btn mt-8 px-6 py-3 text-sm font-bold uppercase tracking-wide text-white ${
+                        pkg.featured ? "btn-accent" : "btn-dark"
                       }`}
                     >
                       Choose {pkg.name}
@@ -356,7 +354,7 @@ export default function Home() {
         {/* Results */}
         <section
           id="results"
-          className="border-y border-line bg-ink px-6 py-20 sm:px-8 sm:py-28"
+          className="wheel-section border-y border-line bg-ink px-6 py-20 sm:px-8 sm:py-28"
         >
           <div className="mx-auto max-w-6xl">
             <Reveal className="max-w-xl">
@@ -392,7 +390,7 @@ export default function Home() {
         </section>
 
         {/* About the Coach */}
-        <section id="about" className="px-6 py-20 sm:px-8 sm:py-28">
+        <section id="about" className="wheel-section px-6 py-20 sm:px-8 sm:py-28">
           <div className="mx-auto max-w-6xl">
             <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
               <Reveal>
@@ -440,7 +438,7 @@ export default function Home() {
         </section>
 
         {/* CTA band */}
-        <section className="px-6 sm:px-8">
+        <section className="wheel-section px-6 sm:px-8">
           <div className="mx-auto max-w-6xl">
             <Reveal>
               <div className="flex flex-wrap items-center justify-between gap-8 rounded-3xl bg-accent px-8 py-12 text-white sm:px-14 sm:py-16">
@@ -455,7 +453,7 @@ export default function Home() {
                 </div>
                 <a
                   href="#apply"
-                  className="rounded-xl bg-ink px-8 py-4 text-base font-bold uppercase tracking-wide text-white transition-colors hover:bg-ink-soft"
+                  className="btn btn-dark px-8 py-4 text-base font-bold uppercase tracking-wide text-white"
                 >
                   Get Started
                 </a>

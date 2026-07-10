@@ -120,7 +120,7 @@ export function ApplyForm() {
       </label>
       <button
         type="submit"
-        className="btn-accent mt-2 inline-flex items-center justify-center rounded-xl px-8 py-3.5 text-base font-bold uppercase tracking-wide text-white sm:col-span-2"
+        className="btn btn-accent mt-2 px-8 py-3.5 text-base font-bold uppercase tracking-wide text-white sm:col-span-2"
       >
         Submit Application
       </button>
