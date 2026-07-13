@@ -6,8 +6,8 @@
   --paper: var(--ink);
   --card: var(--ink-soft);
   --surface: #262c35;
-  --accent: #e4572e;
-  --accent-dark: #c43e18;
+  --accent: #0052cc;
+  --accent-dark: #003aa3;
   --muted: #99a1ab;
   --line: rgba(255, 255, 255, 0.12);
   --error: #e8574d;
@@ -26,12 +26,11 @@
   --color-line: var(--line);
   --color-error: var(--error);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
-  --font-display: var(--font-barlow);
 }
 
 html {
   scroll-behavior: smooth;
+  font-family: var(--font-sans), system-ui, sans-serif;
 }
 
 body {
@@ -39,7 +38,12 @@ body {
     radial-gradient(ellipse 1200px 700px at 50% -10%, color-mix(in srgb, var(--ink-soft) 55%, transparent), transparent),
     var(--paper);
   color: var(--foreground);
-  font-family: var(--font-inter), system-ui, sans-serif;
+  font-family: inherit;
+}
+
+h1, h2, h3, h4, h5, h6, .font-display {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
 }
 
 .grain-overlay {
@@ -142,9 +146,9 @@ body {
 }
 
 .font-display {
-  font-family: var(--font-barlow), var(--font-inter), sans-serif;
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 @media (prefers-reduced-motion: reduce) {

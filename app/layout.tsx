@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import { Barlow_Condensed, Inter } from "next/font/google";
+import { Outfit, Space_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
-const barlow = Barlow_Condensed({
-  variable: "--font-barlow",
-  weight: ["600", "700", "800"],
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-display",
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
 });
 
-const inter = Inter({
-  variable: "--font-inter",
+const outfit = Outfit({
+  variable: "--font-sans",
   weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
 });
@@ -30,7 +30,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${barlow.variable} ${inter.variable} h-full antialiased`}
+      className={`${spaceGrotesk.variable} ${outfit.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         <div className="grain-overlay" aria-hidden />
