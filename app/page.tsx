@@ -131,7 +131,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="relative mx-auto w-full max-w-sm lg:max-w-none">
+            <div className="relative mx-auto w-full max-w-md sm:max-w-lg lg:max-w-none">
               {/* soft glow behind the photo card */}
               <div
                 className="absolute -inset-5 rounded-[2.5rem] bg-accent/10 blur-3xl"
@@ -144,7 +144,7 @@ export default function Home() {
                   fill
                   priority
                   className="object-cover"
-                  sizes="(min-width: 1024px) 540px, 100vw"
+                  sizes="(min-width: 1024px) 540px, (min-width: 640px) 450px, 100vw"
                 />
               </div>
             </div>
