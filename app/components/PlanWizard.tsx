@@ -128,6 +128,8 @@ export function PlanWizard({ planId, onSuccess }: PlanWizardProps) {
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [planSaved, setPlanSaved] = useState(false);
+  const [markingReady, setMarkingReady] = useState(false);
 
   function setValue(name: string, value: string) {
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -160,10 +162,30 @@ export function PlanWizard({ planId, onSuccess }: PlanWizardProps) {
       if (updateError) throw updateError;
 
       setSubmitting(false);
-      onSuccess();
+      setPlanSaved(true);
     } catch (err) {
       setError("Failed to save plan. Please try again.");
       setSubmitting(false);
+    }
+  }
+
+  async function handleMarkReady() {
+    setMarkingReady(true);
+    setError("");
+
+    try {
+      const { error: updateError } = await supabase
+        .from("plans")
+        .update({ plan_ready_at: new Date().toISOString() })
+        .eq("id", planId);
+
+      if (updateError) throw updateError;
+
+      alert("Plan marked ready! Customer notified.");
+      onSuccess();
+    } catch (err) {
+      setError("Failed to mark plan ready. Please try again.");
+      setMarkingReady(false);
     }
   }
 
@@ -237,22 +259,38 @@ export function PlanWizard({ planId, onSuccess }: PlanWizardProps) {
           ))}
         </div>
 
-        <div className="mt-8 flex gap-3">
-          <button
-            onClick={handleBack}
-            disabled={current === 0}
-            className="btn btn-outline px-6 py-3 text-sm font-bold uppercase tracking-wide disabled:opacity-50"
-          >
-            ← Back
-          </button>
-          <button
-            onClick={handleNext}
-            disabled={submitting}
-            className="btn btn-accent flex-1 px-6 py-3 text-sm font-bold uppercase tracking-wide disabled:opacity-50"
-          >
-            {submitting ? "Saving..." : current === steps.length - 1 ? "Save Plan" : "Next →"}
-          </button>
-        </div>
+        {planSaved ? (
+          <div className="mt-8 space-y-4">
+            <div className="rounded-xl bg-accent/10 border border-accent/30 p-4">
+              <p className="text-sm font-semibold text-accent">✓ Plan saved successfully!</p>
+              <p className="text-xs text-foreground mt-1">Click below to notify the customer.</p>
+            </div>
+            <button
+              onClick={handleMarkReady}
+              disabled={markingReady}
+              className="btn btn-accent w-full px-6 py-3 text-sm font-bold uppercase tracking-wide disabled:opacity-50"
+            >
+              {markingReady ? "Notifying..." : "Mark Ready & Notify Customer"}
+            </button>
+          </div>
+        ) : (
+          <div className="mt-8 flex gap-3">
+            <button
+              onClick={handleBack}
+              disabled={current === 0}
+              className="btn btn-outline px-6 py-3 text-sm font-bold uppercase tracking-wide disabled:opacity-50"
+            >
+              ← Back
+            </button>
+            <button
+              onClick={handleNext}
+              disabled={submitting}
+              className="btn btn-accent flex-1 px-6 py-3 text-sm font-bold uppercase tracking-wide disabled:opacity-50"
+            >
+              {submitting ? "Saving..." : current === steps.length - 1 ? "Save Plan" : "Next →"}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
