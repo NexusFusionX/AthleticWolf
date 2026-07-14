@@ -306,9 +306,13 @@ export function QuizWizard() {
       } = await supabase.auth.getUser();
 
       if (user) {
+        // Update plan with assessment completion and assessment data
         const { error } = await supabase
           .from("plans")
-          .update({ assessment_completed_at: new Date().toISOString() })
+          .update({
+            assessment_completed_at: new Date().toISOString(),
+            assessment_data: JSON.stringify(formData),
+          })
           .eq("user_id", user.id);
 
         if (error) throw error;

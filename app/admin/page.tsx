@@ -2,9 +2,10 @@
 
 import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
-import { Check, X, ArrowLeft } from "@phosphor-icons/react";
+import { Check, X } from "@phosphor-icons/react";
 import { supabase } from "@/lib/supabase";
 import { PlanWizard } from "@/app/components/PlanWizard";
+import { AdminCustomerDetail } from "@/app/components/AdminCustomerDetail";
 
 interface Plan {
   id: string;
@@ -15,6 +16,14 @@ interface Plan {
   assessment_completed_at: string | null;
   plan_ready_at: string | null;
   plan_content: string | null;
+  assessment_data: string | null;
+}
+
+interface UserProfile {
+  id: string;
+  email: string;
+  full_name: string;
+  phone?: string;
 }
 
 interface PlanWithStatus extends Plan {
@@ -180,35 +189,11 @@ function AdminContent() {
 
   if (selectedPlan) {
     return (
-      <div className="min-h-screen bg-paper px-6 py-12 sm:px-8">
-        <div className="mx-auto max-w-4xl">
-          <button
-            onClick={() => setSelectedPlanId(null)}
-            className="flex items-center gap-2 text-sm font-semibold text-accent mb-8 hover:text-accent/80 transition"
-          >
-            <ArrowLeft size={16} weight="bold" />
-            Back to Customers
-          </button>
-
-          <div className="mb-8">
-            <div className="rounded-2xl border border-line bg-card p-8">
-              <p className="text-sm text-muted mb-2">Customer Package</p>
-              <h1 className="font-display text-3xl mb-1">{selectedPlan.package_name}</h1>
-              <p className="text-sm text-foreground">
-                Assessment: {selectedPlan.assessment_completed_at ? "✓ Completed" : "○ Pending"}
-              </p>
-            </div>
-          </div>
-
-          <PlanWizard
-            planId={selectedPlan.id}
-            onSuccess={() => {
-              setSelectedPlanId(null);
-              loadPlans();
-            }}
-          />
-        </div>
-      </div>
+      <AdminCustomerDetail
+        plan={selectedPlan}
+        onBack={() => setSelectedPlanId(null)}
+        onSuccess={loadPlans}
+      />
     );
   }
 
@@ -258,7 +243,7 @@ function AdminContent() {
                       Assessment
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted">
-                      Plan Status
+                      Plan
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted">
                       Action
@@ -267,7 +252,7 @@ function AdminContent() {
                 </thead>
                 <tbody>
                   {plans.map((plan) => (
-                    <tr key={plan.id} className="border-b border-line hover:bg-surface/30 transition">
+                    <tr key={plan.id} className="border-b border-line hover:bg-surface/30 transition cursor-pointer" onClick={() => setSelectedPlanId(plan.id)}>
                       <td className="px-6 py-4 text-sm font-semibold">{plan.package_name}</td>
                       <td className="px-6 py-4 text-sm">
                         {plan.assessment_completed_at ? (
@@ -289,25 +274,21 @@ function AdminContent() {
                             Ready
                           </span>
                         ) : (
-                          <span className="text-muted">Not ready</span>
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-surface px-3 py-1 text-xs font-semibold text-muted">
+                            {plan.plan_content ? "Created" : "Draft"}
+                          </span>
                         )}
                       </td>
                       <td className="px-6 py-4 text-sm">
-                        {plan.plan_content ? (
-                          <button
-                            onClick={() => setSelectedPlanId(plan.id)}
-                            className="inline-flex items-center gap-2 btn btn-outline px-4 py-2 text-xs font-bold uppercase tracking-wide"
-                          >
-                            ✓ Plan Created
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => setSelectedPlanId(plan.id)}
-                            className="btn btn-accent px-4 py-2 text-xs font-bold uppercase tracking-wide"
-                          >
-                            Create Plan
-                          </button>
-                        )}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedPlanId(plan.id);
+                          }}
+                          className="btn btn-accent px-4 py-2 text-xs font-bold uppercase tracking-wide"
+                        >
+                          View
+                        </button>
                       </td>
                     </tr>
                   ))}
