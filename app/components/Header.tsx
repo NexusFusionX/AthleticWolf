@@ -19,11 +19,11 @@ export function Header() {
       if (user) {
         const { data: plan } = await supabase
           .from("plans")
-          .select("plan_ready_at")
+          .select("plan_ready_at, notification_seen_at")
           .eq("user_id", user.id)
           .single();
 
-        if (plan?.plan_ready_at) {
+        if (plan?.plan_ready_at && !plan?.notification_seen_at) {
           setHasNotification(true);
         }
       }
