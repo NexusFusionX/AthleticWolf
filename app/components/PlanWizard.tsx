@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 
 interface PlanWizardProps {
@@ -130,6 +130,35 @@ export function PlanWizard({ planId, onSuccess }: PlanWizardProps) {
   const [error, setError] = useState("");
   const [planSaved, setPlanSaved] = useState(false);
   const [markingReady, setMarkingReady] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadExistingPlan() {
+      try {
+        const { data: plan } = await supabase
+          .from("plans")
+          .select("plan_content")
+          .eq("id", planId)
+          .single();
+
+        if (plan?.plan_content) {
+          try {
+            const savedData = JSON.parse(plan.plan_content);
+            setFormData(savedData);
+            setPlanSaved(true);
+          } catch (err) {
+            console.error("Failed to parse saved plan:", err);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load plan:", err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadExistingPlan();
+  }, [planId]);
 
   function setValue(name: string, value: string) {
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -199,6 +228,19 @@ export function PlanWizard({ planId, onSuccess }: PlanWizardProps) {
 
   function handleBack() {
     if (current > 0) setCurrent((c) => c - 1);
+  }
+
+  if (loading) {
+    return (
+      <div className="mx-auto max-w-2xl rounded-2xl border border-line bg-card overflow-hidden shadow-premium">
+        <div className="bg-ink px-8 py-7 text-white">
+          <h2 className="font-display text-2xl">Create Coaching Plan</h2>
+        </div>
+        <div className="p-8 text-center">
+          <p className="text-muted">Loading plan...</p>
+        </div>
+      </div>
+    );
   }
 
   const currentStep = steps[current];
