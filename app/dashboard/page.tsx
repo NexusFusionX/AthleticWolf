@@ -20,6 +20,7 @@ interface Plan {
   created_at: string;
   assessment_completed_at: string | null;
   plan_ready_at: string | null;
+  notification_seen_at: string | null;
   plan_content: string | null;
 }
 
@@ -73,6 +74,19 @@ export default function DashboardPage() {
     router.push("/");
   }
 
+  async function dismissNotification() {
+    if (!plan) return;
+
+    const { error } = await supabase
+      .from("plans")
+      .update({ notification_seen_at: new Date().toISOString() })
+      .eq("id", plan.id);
+
+    if (!error) {
+      setPlan({ ...plan, notification_seen_at: new Date().toISOString() });
+    }
+  }
+
   if (loading) {
     return (
       <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
@@ -85,11 +99,22 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-paper py-12 px-6">
-      {plan?.plan_ready_at && (
+      {plan?.plan_ready_at && !plan?.notification_seen_at && (
         <div className="mx-auto max-w-2xl mb-6">
-          <div className="rounded-xl bg-accent/10 border border-accent/30 p-4 text-center">
-            <p className="font-semibold text-accent">🎉 Your coaching plan is ready!</p>
-            <p className="text-sm text-foreground mt-2">Your personalized plan is below. Review your weekly workouts, nutrition targets, and goals to get started.</p>
+          <div className="rounded-xl bg-accent/10 border border-accent/30 p-4">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1 text-center">
+                <p className="font-semibold text-accent">🎉 Your coaching plan is ready!</p>
+                <p className="text-sm text-foreground mt-2">Your personalized plan is below. Review your weekly workouts, nutrition targets, and goals to get started.</p>
+              </div>
+              <button
+                onClick={dismissNotification}
+                className="text-muted hover:text-foreground transition-colors flex-shrink-0 mt-1"
+                aria-label="Dismiss notification"
+              >
+                ✕
+              </button>
+            </div>
           </div>
         </div>
       )}
