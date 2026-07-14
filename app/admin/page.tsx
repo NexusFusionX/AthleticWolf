@@ -237,6 +237,9 @@ function AdminContent() {
                 <thead>
                   <tr className="border-b border-line bg-surface/50">
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted">
+                      Name
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted">
                       Package
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted">
@@ -251,8 +254,20 @@ function AdminContent() {
                   </tr>
                 </thead>
                 <tbody>
-                  {plans.map((plan) => (
+                  {plans.map((plan) => {
+                    let customerName = "Unknown";
+                    if (plan.assessment_data) {
+                      try {
+                        const data = JSON.parse(plan.assessment_data);
+                        customerName = data.name || "Unknown";
+                      } catch (e) {
+                        customerName = "Unknown";
+                      }
+                    }
+
+                    return (
                     <tr key={plan.id} className="border-b border-line hover:bg-surface/30 transition cursor-pointer" onClick={() => setSelectedPlanId(plan.id)}>
+                      <td className="px-6 py-4 text-sm font-semibold">{customerName}</td>
                       <td className="px-6 py-4 text-sm font-semibold">{plan.package_name}</td>
                       <td className="px-6 py-4 text-sm">
                         {plan.assessment_completed_at ? (
@@ -291,7 +306,8 @@ function AdminContent() {
                         </button>
                       </td>
                     </tr>
-                  ))}
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
