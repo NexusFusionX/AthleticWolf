@@ -143,6 +143,33 @@ export function CheckoutFlow() {
     );
   }
 
+  if (!user && !loading) {
+    return (
+      <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
+        <div className="w-full shadow-premium rounded-2xl border border-line bg-card p-10 text-center">
+          <h1 className="font-display text-3xl">Sign In Required</h1>
+          <p className="mt-3 text-muted">
+            You need to create an account or log in to complete your order.
+          </p>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <Link
+              href={`/auth/signup?redirect=/checkout?package=${encodeURIComponent(packageName || "")}`}
+              className="btn btn-accent px-6 py-3 text-sm font-bold uppercase tracking-wide text-white"
+            >
+              Create Account
+            </Link>
+            <Link
+              href={`/auth/login?redirect=/checkout?package=${encodeURIComponent(packageName || "")}`}
+              className="btn btn-outline px-6 py-3 text-sm font-bold uppercase tracking-wide"
+            >
+              Sign In
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
       <div className="w-full overflow-hidden shadow-premium rounded-2xl border border-line bg-card">
