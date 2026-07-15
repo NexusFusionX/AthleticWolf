@@ -40,6 +40,18 @@ export function CheckoutFlow() {
     checkAuth();
   }, []);
 
+  // Determine if this is an upgrade or downgrade
+  const getActionType = () => {
+    if (!existingPlan || !pkg) return null;
+    const existingPkg = packages.find((p) => p.name === existingPlan.package_name);
+    if (!existingPkg) return null;
+    if (pkg.price > existingPkg.price) return "upgrade";
+    if (pkg.price < existingPkg.price) return "downgrade";
+    return "same";
+  };
+
+  const actionType = getActionType();
+
   async function handleCheckout() {
     if (!pkg || !user) return;
 
@@ -90,6 +102,12 @@ export function CheckoutFlow() {
   }
 
   if (showUpgradeDialog && existingPlan && pkg) {
+    const isUpgrade = actionType === "upgrade";
+    const isDowngrade = actionType === "downgrade";
+    const actionText = isUpgrade ? "upgrade" : isDowngrade ? "downgrade" : "switch";
+    const actionCapital = isUpgrade ? "Upgrade" : isDowngrade ? "Downgrade" : "Switch";
+    const loadingText = isUpgrade ? "Upgrading..." : isDowngrade ? "Downgrading..." : "Switching...";
+
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-6">
         <div className="w-full max-w-md overflow-hidden shadow-premium rounded-2xl border border-line bg-card">
@@ -99,7 +117,7 @@ export function CheckoutFlow() {
 
           <div className="p-8">
             <p className="text-muted mb-6">
-              You already have an active <strong>{existingPlan.package_name}</strong> package. Would you like to upgrade to <strong>{pkg.name}</strong>?
+              You already have an active <strong>{existingPlan.package_name}</strong> package. Would you like to {actionText} to <strong>{pkg.name}</strong>?
             </p>
 
             <div className="space-y-3">
@@ -108,7 +126,7 @@ export function CheckoutFlow() {
                 disabled={processing}
                 className="btn btn-accent w-full px-8 py-3.5 text-base font-bold uppercase tracking-wide text-white disabled:opacity-50"
               >
-                {processing ? "Upgrading..." : `Upgrade to ${pkg.name}`}
+                {processing ? loadingText : `${actionCapital} to ${pkg.name}`}
               </button>
 
               <button
