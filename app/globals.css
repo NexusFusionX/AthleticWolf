@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #14181d;
-  --ink-soft: #1e242b;
-  --paper: var(--ink);
-  --card: var(--ink-soft);
-  --surface: #262c35;
-  --accent: #D4A574;
-  --accent-dark: #9B8B5B;
-  --accent-light: #F0E5CC;
-  --accent-glow: rgba(212, 165, 116, 0.25);
-  --muted: #99a1ab;
-  --line: rgba(255, 255, 255, 0.12);
+  --ink: #1a1a1a;
+  --ink-soft: #2d2d2d;
+  --paper: #ffffff;
+  --card: #f8f8f8;
+  --surface: #f0f0f0;
+  --accent: #FF6B35;
+  --accent-dark: #E55100;
+  --accent-light: #FFB84D;
+  --accent-glow: rgba(255, 107, 53, 0.2);
+  --muted: #666666;
+  --line: rgba(0, 0, 0, 0.08);
   --error: #e8574d;
-  --foreground: #f2f3f5;
+  --foreground: #1a1a1a;
 }
 
 @theme inline {
@@ -25,6 +25,7 @@
   --color-accent: var(--accent);
   --color-accent-dark: var(--accent-dark);
   --color-accent-light: var(--accent-light);
+  --color-accent-glow: var(--accent-glow);
   --color-muted: var(--muted);
   --color-line: var(--line);
   --color-error: var(--error);
@@ -38,7 +39,7 @@ html {
 
 body {
   background:
-    radial-gradient(ellipse 1200px 700px at 50% -10%, color-mix(in srgb, var(--ink-soft) 55%, transparent), transparent),
+    radial-gradient(ellipse 1200px 700px at 50% -10%, rgba(255, 107, 53, 0.04), transparent),
     var(--paper);
   color: var(--foreground);
   font-family: inherit;
@@ -61,20 +62,20 @@ h1, h2, h3, h4, h5, h6, .font-display {
 
 .card-premium {
   box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.35),
-    0 10px 28px rgba(0, 0, 0, 0.32),
-    0 0 1px rgba(212, 165, 116, 0.1);
+    0 1px 3px rgba(0, 0, 0, 0.08),
+    0 4px 12px rgba(0, 0, 0, 0.05),
+    0 0 1px rgba(255, 107, 53, 0.1);
   transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
-  border: 1px solid rgba(212, 165, 116, 0.15);
+  border: 1px solid rgba(255, 107, 53, 0.15);
 }
 
 .card-premium:hover {
-  border-color: rgba(212, 165, 116, 0.35);
+  border-color: rgba(255, 107, 53, 0.3);
   box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.4),
-    0 18px 40px rgba(0, 0, 0, 0.4),
-    0 0 20px rgba(212, 165, 116, 0.2),
-    0 0 40px rgba(212, 165, 116, 0.08);
+    0 2px 4px rgba(0, 0, 0, 0.08),
+    0 8px 16px rgba(0, 0, 0, 0.1),
+    0 0 20px rgba(255, 107, 53, 0.2),
+    0 0 40px rgba(255, 107, 53, 0.08);
   transform: translateY(-2px);
 }
 
@@ -103,16 +104,16 @@ h1, h2, h3, h4, h5, h6, .font-display {
 .btn-accent {
   background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 50%, var(--accent-dark) 100%);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 2px 8px rgba(0, 0, 0, 0.1),
     0 4px 12px var(--accent-glow),
-    0 0 20px rgba(212, 165, 116, 0.15);
-  color: var(--ink);
+    0 0 20px rgba(255, 107, 53, 0.2);
+  color: #ffffff;
   font-weight: 700;
 }
 
 .btn-outline {
   border: 1.5px solid var(--accent);
-  background: rgba(212, 165, 116, 0.05);
+  background: rgba(255, 107, 53, 0.08);
   color: var(--accent);
 }
 
@@ -123,22 +124,22 @@ h1, h2, h3, h4, h5, h6, .font-display {
 
 @media (hover: hover) {
   .btn-accent:hover {
-    filter: brightness(1.08) saturate(1.05);
+    filter: brightness(0.95) saturate(1.1);
     transform: translateY(-2px);
     box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.25) inset,
-      0 12px 28px rgba(0, 0, 0, 0.4),
-      0 0 24px rgba(212, 165, 116, 0.35),
-      0 0 48px rgba(212, 165, 116, 0.15);
+      0 2px 8px rgba(0, 0, 0, 0.15),
+      0 12px 28px rgba(0, 0, 0, 0.15),
+      0 0 24px rgba(255, 107, 53, 0.4),
+      0 0 48px rgba(255, 107, 53, 0.2);
   }
 
   .btn-outline:hover {
-    border-color: var(--accent-light);
-    background: rgba(212, 165, 116, 0.12);
+    border-color: var(--accent);
+    background: rgba(255, 107, 53, 0.15);
     transform: translateY(-2px);
     box-shadow:
-      0 0 16px rgba(212, 165, 116, 0.25),
-      0 8px 20px rgba(0, 0, 0, 0.3);
+      0 0 16px rgba(255, 107, 53, 0.3),
+      0 8px 20px rgba(0, 0, 0, 0.08);
   }
 
   .btn-dark:hover {
@@ -241,18 +242,18 @@ h1, h2, h3, h4, h5, h6, .font-display {
   }
 }
 
-/* Gold-refined polish: enhanced shadows, glows, and micro-interactions */
-.shadow-gold {
+/* Orange-refined polish: enhanced shadows, glows, and micro-interactions */
+.shadow-orange {
   box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.35),
-    0 12px 32px rgba(0, 0, 0, 0.35),
-    0 0 20px rgba(212, 165, 116, 0.15);
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 0 20px rgba(255, 107, 53, 0.15);
 }
 
-.shadow-gold-glow {
+.shadow-orange-glow {
   box-shadow:
-    0 0 16px rgba(212, 165, 116, 0.3),
-    0 0 32px rgba(212, 165, 116, 0.1);
+    0 0 16px rgba(255, 107, 53, 0.3),
+    0 0 32px rgba(255, 107, 53, 0.1);
 }
 
 .accent-highlight {
@@ -289,21 +290,21 @@ h1, h2, h3, h4, h5, h6, .font-display {
   border-bottom-color: var(--accent-light);
 }
 
-/* Gold glow effect for premium elements */
-@keyframes gold-glow {
+/* Orange glow effect for premium elements */
+@keyframes orange-glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(212, 165, 116, 0.3);
+    box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
   }
   50% {
-    box-shadow: 0 0 32px rgba(212, 165, 116, 0.5);
+    box-shadow: 0 0 32px rgba(255, 107, 53, 0.5);
   }
 }
 
-.glow-gold {
-  animation: gold-glow 3s ease-in-out infinite;
+.glow-orange {
+  animation: orange-glow 3s ease-in-out infinite;
 }
 
-/* Hover lift effect with gold shadow */
+/* Hover lift effect with orange shadow */
 .hover-lift {
   transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
@@ -311,6 +312,6 @@ h1, h2, h3, h4, h5, h6, .font-display {
 .hover-lift:hover {
   transform: translateY(-4px);
   box-shadow:
-    0 0 20px rgba(212, 165, 116, 0.25),
-    0 12px 28px rgba(0, 0, 0, 0.35);
+    0 0 20px rgba(255, 107, 53, 0.25),
+    0 12px 28px rgba(0, 0, 0, 0.1);
 }
