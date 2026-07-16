@@ -1,8 +1,11 @@
 import Image from "next/image";
 import { Faq } from "./components/Faq";
 import { Reveal } from "./components/Reveal";
-import { BeforeAfterSlider } from "./components/BeforeAfterSlider";
 import { Header } from "./components/Header";
+import { WhoItIsFor } from "./components/WhoItIsFor";
+import { HowCoachingWorks } from "./components/HowCoachingWorks";
+import { ResultsCarousel } from "./components/ResultsCarousel";
+import { CoachVideos } from "./components/CoachVideos";
 import { packages } from "./data/packages";
 import {
   Flame,
@@ -11,13 +14,19 @@ import {
   Laptop,
   Leaf,
   Check,
+  ShieldCheck,
+  CheckCircle,
+  Clock,
+  Headset,
+  Target,
 } from "@phosphor-icons/react/dist/ssr";
 
 const heroBadges = [
-  "ISSA Certified Trainer",
-  "100% Online Coaching",
-  "Worldwide Coverage",
-  "Weekly Check-Ins",
+  { icon: ShieldCheck, title: "ISSA Certified Coach" },
+  { icon: CheckCircle, title: "Personalized Plans" },
+  { icon: Clock, title: "Weekly Check-ins" },
+  { icon: Headset, title: "24/7 Support" },
+  { icon: Target, title: "Evidence-Based Coaching" },
 ];
 
 const programs = [
@@ -45,29 +54,6 @@ const programs = [
     icon: Leaf,
     title: "Nutrition Coaching",
     desc: "Custom nutrition plans built around your preferences, schedule, and goals.",
-  },
-];
-
-const howItWorks = [
-  {
-    num: "01",
-    title: "Assessment First",
-    desc: "Every client starts with a full intake covering goals, training history, and lifestyle.",
-  },
-  {
-    num: "02",
-    title: "Custom Plan",
-    desc: "You get a training and nutrition plan built specifically around your body and schedule.",
-  },
-  {
-    num: "03",
-    title: "Weekly Check-ins",
-    desc: "Regular check-ins keep your plan accountable and updated as you progress.",
-  },
-  {
-    num: "04",
-    title: "Real Results",
-    desc: "Sustainable progress: tracked, adjusted, and built to last.",
   },
 ];
 
@@ -122,12 +108,6 @@ export default function Home() {
                 >
                   View Packages
                 </a>
-                <a
-                  href="#apply"
-                  className="btn btn-outline px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-white"
-                >
-                  Get Started
-                </a>
               </div>
             </div>
 
@@ -151,17 +131,22 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Trust strip */}
-        <section className="border-y border-line px-6 py-5 sm:px-8">
-          <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-10 gap-y-2 sm:justify-between">
-            {heroBadges.map((badge) => (
-              <span
-                key={badge}
-                className="text-xs font-semibold uppercase tracking-wider text-white/60"
-              >
-                {badge}
-              </span>
-            ))}
+        {/* Trust strip with icons */}
+        <section className="border-y border-line px-6 py-8 sm:px-8">
+          <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 sm:grid-cols-5">
+            {heroBadges.map((badge) => {
+              const Icon = badge.icon;
+              return (
+                <div key={badge.title} className="flex flex-col items-center gap-3 text-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-accent">
+                    <Icon size={24} weight="regular" />
+                  </div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-white/70">
+                    {badge.title}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </section>
 
@@ -210,30 +195,11 @@ export default function Home() {
           </div>
         </section>
 
-        {/* How It Works */}
-        <section id="how-it-works" className="wheel-section bg-ink px-6 py-20 text-white sm:px-8 sm:py-28">
-          <div className="mx-auto max-w-6xl">
-            <Reveal className="max-w-xl">
-              <h2 className="font-display text-4xl sm:text-5xl">
-                How Coaching Works
-              </h2>
-            </Reveal>
+        {/* Who It Is For */}
+        <WhoItIsFor />
 
-            <div className="shadow-premium mt-14 grid divide-y divide-white/10 overflow-hidden rounded-2xl border border-white/10 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
-              {howItWorks.map((step, i) => (
-                <Reveal key={step.num} delay={i * 0.08}>
-                  <div className="h-full p-7">
-                    <p className="font-display text-sm tracking-[0.15em] text-accent">
-                      {step.num}
-                    </p>
-                    <h3 className="font-display mt-3 text-xl">{step.title}</h3>
-                    <p className="mt-2 text-sm text-white/60">{step.desc}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* How Coaching Works */}
+        <HowCoachingWorks />
 
         {/* Packages */}
         <section id="packages" className="wheel-section px-6 py-20 sm:px-8 sm:py-28">
@@ -318,43 +284,11 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Results */}
-        <section
-          id="results"
-          className="wheel-section border-y border-line bg-ink px-6 py-20 sm:px-8 sm:py-28"
-        >
-          <div className="mx-auto max-w-6xl">
-            <Reveal className="max-w-xl">
-              <h2 className="font-display text-4xl sm:text-5xl">
-                Real Clients, Real Progress
-              </h2>
-              <p className="mt-4 text-muted">
-                Drag the slider to see each transformation for yourself.
-              </p>
-            </Reveal>
+        {/* Results Carousel */}
+        <ResultsCarousel />
 
-            <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {[
-                {
-                  label: "Transformation 1",
-                  beforeSrc: "/media/results/demo-before.png",
-                  afterSrc: "/media/results/demo-after.png",
-                },
-                { label: "Transformation 2" },
-                { label: "Transformation 3" },
-              ].map((item, i) => (
-                <Reveal key={item.label} delay={i * 0.08}>
-                  <BeforeAfterSlider
-                    beforeSrc={item.beforeSrc}
-                    afterSrc={item.afterSrc}
-                    beforeLabel="BEFORE"
-                    afterLabel="AFTER"
-                  />
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* Coach Videos */}
+        <CoachVideos />
 
         {/* About the Coach */}
         <section id="about" className="wheel-section px-6 py-20 sm:px-8 sm:py-28">

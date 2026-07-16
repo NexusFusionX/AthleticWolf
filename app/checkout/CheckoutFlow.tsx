@@ -71,7 +71,8 @@ export function CheckoutFlow() {
 
       if (error) throw error;
 
-      window.location.href = "/dashboard";
+      // Redirect to assessment page instead of dashboard
+      window.location.href = "/quiz";
     } catch (err) {
       alert("Failed to complete purchase. Please try again.");
       setProcessing(false);
@@ -94,7 +95,8 @@ export function CheckoutFlow() {
 
       if (error) throw error;
 
-      window.location.href = "/dashboard";
+      // Redirect to assessment page
+      window.location.href = "/quiz";
     } catch (err) {
       alert("Failed to upgrade. Please try again.");
       setProcessing(false);

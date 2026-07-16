@@ -43,19 +43,19 @@ export function Header() {
           <a href="#programs" className="transition-colors hover:text-white">
             Programs
           </a>
-          <a href="#how-it-works" className="transition-colors hover:text-white">
+          <a href="/#how-it-works" className="transition-colors hover:text-white">
             How It Works
           </a>
-          <a href="#packages" className="transition-colors hover:text-white">
+          <a href="/packages" className="transition-colors hover:text-white">
             Packages
           </a>
-          <a href="#results" className="transition-colors hover:text-white">
+          <a href="/#results" className="transition-colors hover:text-white">
             Results
           </a>
-          <a href="#about" className="transition-colors hover:text-white">
+          <a href="/#about" className="transition-colors hover:text-white">
             About
           </a>
-          <a href="#faq" className="transition-colors hover:text-white">
+          <a href="/#faq" className="transition-colors hover:text-white">
             FAQ
           </a>
         </nav>
