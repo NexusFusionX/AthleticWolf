@@ -2,16 +2,20 @@
 
 :root {
   --ink: #1a1a1a;
-  --ink-soft: #2d2d2d;
+  --ink-soft: #333333;
   --paper: #ffffff;
-  --card: #f8f8f8;
-  --surface: #f0f0f0;
+  --card: #ffffff;
+  --surface: #fafafa;
   --accent: #FF6B35;
-  --accent-dark: #E55100;
-  --accent-light: #FFB84D;
-  --accent-glow: rgba(255, 107, 53, 0.2);
-  --muted: #666666;
-  --line: rgba(0, 0, 0, 0.08);
+  --accent-bright: #FF8A4D;
+  --accent-dark: #D84315;
+  --accent-deep: #B83A0F;
+  --accent-light: #FFB366;
+  --accent-pale: #FFF0E6;
+  --accent-glow: rgba(255, 107, 53, 0.3);
+  --accent-glow-bright: rgba(255, 138, 77, 0.25);
+  --muted: #999999;
+  --line: rgba(0, 0, 0, 0.06);
   --error: #e8574d;
   --foreground: #1a1a1a;
 }
@@ -64,18 +68,18 @@ h1, h2, h3, h4, h5, h6, .font-display {
   box-shadow:
     0 1px 3px rgba(0, 0, 0, 0.08),
     0 4px 12px rgba(0, 0, 0, 0.05),
-    0 0 1px rgba(255, 107, 53, 0.1);
+    0 0 12px rgba(255, 107, 53, 0.08);
   transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
-  border: 1px solid rgba(255, 107, 53, 0.15);
+  border: 1px solid rgba(255, 107, 53, 0.18);
 }
 
 .card-premium:hover {
-  border-color: rgba(255, 107, 53, 0.3);
+  border-color: rgba(255, 107, 53, 0.35);
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.08),
     0 8px 16px rgba(0, 0, 0, 0.1),
-    0 0 20px rgba(255, 107, 53, 0.2),
-    0 0 40px rgba(255, 107, 53, 0.08);
+    0 0 24px rgba(255, 107, 53, 0.25),
+    0 0 48px rgba(255, 107, 53, 0.12);
   transform: translateY(-2px);
 }
 
@@ -102,19 +106,19 @@ h1, h2, h3, h4, h5, h6, .font-display {
 }
 
 .btn-accent {
-  background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 50%, var(--accent-dark) 100%);
+  background: linear-gradient(135deg, var(--accent-bright) 0%, var(--accent) 45%, var(--accent-dark) 100%);
   box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.1),
+    0 1px 3px rgba(0, 0, 0, 0.12),
     0 4px 12px var(--accent-glow),
-    0 0 20px rgba(255, 107, 53, 0.2);
+    0 0 24px var(--accent-glow-bright);
   color: #ffffff;
   font-weight: 700;
 }
 
 .btn-outline {
   border: 1.5px solid var(--accent);
-  background: rgba(255, 107, 53, 0.08);
-  color: var(--accent);
+  background: var(--accent-pale);
+  color: var(--accent-dark);
 }
 
 .btn-dark {
@@ -124,22 +128,22 @@ h1, h2, h3, h4, h5, h6, .font-display {
 
 @media (hover: hover) {
   .btn-accent:hover {
-    filter: brightness(0.95) saturate(1.1);
+    filter: brightness(1.05) saturate(1.15);
     transform: translateY(-2px);
     box-shadow:
-      0 2px 8px rgba(0, 0, 0, 0.15),
-      0 12px 28px rgba(0, 0, 0, 0.15),
-      0 0 24px rgba(255, 107, 53, 0.4),
-      0 0 48px rgba(255, 107, 53, 0.2);
+      0 2px 8px rgba(0, 0, 0, 0.12),
+      0 12px 28px rgba(0, 0, 0, 0.12),
+      0 0 28px rgba(255, 107, 53, 0.45),
+      0 0 56px rgba(255, 107, 53, 0.25);
   }
 
   .btn-outline:hover {
-    border-color: var(--accent);
-    background: rgba(255, 107, 53, 0.15);
+    border-color: var(--accent-dark);
+    background: linear-gradient(135deg, var(--accent-pale) 0%, rgba(255, 107, 53, 0.12) 100%);
     transform: translateY(-2px);
     box-shadow:
-      0 0 16px rgba(255, 107, 53, 0.3),
-      0 8px 20px rgba(0, 0, 0, 0.08);
+      0 0 16px rgba(255, 107, 53, 0.25),
+      0 8px 20px rgba(0, 0, 0, 0.06);
   }
 
   .btn-dark:hover {
@@ -293,15 +297,33 @@ h1, h2, h3, h4, h5, h6, .font-display {
 /* Orange glow effect for premium elements */
 @keyframes orange-glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+    box-shadow:
+      0 0 16px rgba(255, 107, 53, 0.25),
+      0 0 32px rgba(255, 138, 77, 0.12);
   }
   50% {
-    box-shadow: 0 0 32px rgba(255, 107, 53, 0.5);
+    box-shadow:
+      0 0 28px rgba(255, 107, 53, 0.4),
+      0 0 48px rgba(255, 138, 77, 0.2);
   }
 }
 
 .glow-orange {
-  animation: orange-glow 3s ease-in-out infinite;
+  animation: orange-glow 3.5s ease-in-out infinite;
+}
+
+/* Pulse animation for emphasis */
+@keyframes pulse-orange {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.pulse-orange {
+  animation: pulse-orange 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 /* Hover lift effect with orange shadow */
@@ -312,6 +334,6 @@ h1, h2, h3, h4, h5, h6, .font-display {
 .hover-lift:hover {
   transform: translateY(-4px);
   box-shadow:
-    0 0 20px rgba(255, 107, 53, 0.25),
-    0 12px 28px rgba(0, 0, 0, 0.1);
+    0 0 24px rgba(255, 107, 53, 0.28),
+    0 12px 28px rgba(0, 0, 0, 0.12);
 }
