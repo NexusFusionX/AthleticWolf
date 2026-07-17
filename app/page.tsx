@@ -8,6 +8,8 @@ import { HowCoachingWorks } from "./components/HowCoachingWorks";
 import { ResultsCarousel } from "./components/ResultsCarousel";
 import { CoachVideos } from "./components/CoachVideos";
 import { Programs } from "./components/Programs";
+import { HeroBadges } from "./components/HeroBadges";
+import { SeoText } from "./components/SeoText";
 import { packages } from "./data/packages";
 import {
   Check,
@@ -101,23 +103,7 @@ export default function Home() {
         </section>
 
         {/* Trust strip with icons */}
-        <section className="border-y border-line px-6 py-8 sm:px-8">
-          <div className="mx-auto grid max-w-6xl grid-cols-2 gap-6 sm:grid-cols-5">
-            {heroBadges.map((badge) => {
-              const Icon = badge.icon;
-              return (
-                <div key={badge.title} className="flex flex-col items-center gap-3 text-center">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-accent">
-                    <Icon size={24} weight="regular" />
-                  </div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-white/70">
-                    {badge.title}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </section>
+        <HeroBadges badges={heroBadges} />
 
         {/* Programs */}
         <Programs />
@@ -200,12 +186,12 @@ export default function Home() {
                     </ul>
 
                     <a
-                      href={`/quiz?package=${encodeURIComponent(pkg.name)}`}
+                      href={`/packages/${pkg.slug}`}
                       className={`btn mt-8 px-6 py-3 text-sm font-bold uppercase tracking-wide text-white ${
                         pkg.featured ? "btn-accent" : "btn-dark"
                       }`}
                     >
-                      Choose {pkg.name}
+                      View {pkg.name}
                     </a>
                   </div>
                 </Reveal>
@@ -267,6 +253,9 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* SEO Text */}
+        <SeoText />
 
         {/* FAQ */}
         <section id="faq" className="px-6 py-20 sm:px-8 sm:py-28">

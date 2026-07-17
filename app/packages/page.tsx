@@ -102,12 +102,12 @@ export default function PackagesPage() {
                   </ul>
 
                   <Link
-                    href={`/quiz?package=${encodeURIComponent(pkg.name)}`}
+                    href={`/packages/${pkg.slug}`}
                     className={`btn w-full px-6 py-4 text-sm font-bold uppercase tracking-wide text-white transition-all ${
                       pkg.featured ? "btn-accent" : "btn-dark"
                     }`}
                   >
-                    Choose {pkg.name}
+                    View {pkg.name}
                   </Link>
                 </div>
               ))}

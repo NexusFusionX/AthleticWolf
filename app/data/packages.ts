@@ -1,9 +1,11 @@
 export const packages = [
   {
+    slug: "silver",
     name: "Silver",
     price: 70,
     value: 140,
     featured: false,
+    tagline: "The essential coaching package to build the habits that stick.",
     features: [
       "1:1 Coaching",
       "Customized Diet Plan",
@@ -13,10 +15,12 @@ export const packages = [
     ],
   },
   {
+    slug: "platinum",
     name: "Platinum",
     price: 130,
     value: 260,
     featured: true,
+    tagline: "Our most popular package — full support, plans, and daily access.",
     features: [
       "Everything in Silver",
       "24/7 Assistant",
@@ -26,10 +30,12 @@ export const packages = [
     ],
   },
   {
+    slug: "diamond",
     name: "Diamond",
     price: 170,
     value: 340,
     featured: false,
+    tagline: "The complete experience for clients who want every detail covered.",
     features: [
       "Everything in Platinum",
       "Medical Condition Check-ups",

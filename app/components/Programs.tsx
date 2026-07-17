@@ -1,35 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { Reveal } from "./Reveal";
-
-const programs = [
-  {
-    src: "/media/programs/fat-loss.jpg",
-    title: "Fat Loss Coaching",
-    desc: "Lose fat, improve health and confidence with sustainable nutrition & training.",
-  },
-  {
-    src: "/media/programs/muscle-building.jpg",
-    title: "Muscle Building Coaching",
-    desc: "Build lean muscle with structured workouts and optimal nutrition.",
-  },
-  {
-    src: "/media/programs/body-recomposition.jpg",
-    title: "Body Recomposition",
-    desc: "Lose fat and gain muscle at the same time. Transform your body composition.",
-  },
-  {
-    src: "/media/programs/online-coaching.jpg",
-    title: "Online Coaching",
-    desc: "Full remote coaching with weekly check-ins, plan updates, and direct coach access.",
-  },
-  {
-    src: "/media/programs/nutrition-coaching.jpg",
-    title: "Nutrition Coaching",
-    desc: "Custom nutrition plans built around your preferences, schedule, and goals.",
-  },
-];
+import { programs } from "../data/programs";
 
 export function Programs() {
   return (
@@ -44,8 +18,11 @@ export function Programs() {
 
         <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
           {programs.map((program, i) => (
-            <Reveal key={program.title} delay={i * 0.06}>
-              <div className="card-premium overflow-hidden rounded-xl border border-line bg-card transition-all hover:-translate-y-1.5">
+            <Reveal key={program.slug} delay={i * 0.06}>
+              <Link
+                href={`/programs/${program.slug}`}
+                className="card-premium block overflow-hidden rounded-xl border border-line bg-card transition-all hover:-translate-y-1.5"
+              >
                 <div className="relative aspect-[3/4] w-full overflow-hidden">
                   <Image
                     src={program.src}
@@ -63,7 +40,7 @@ export function Programs() {
                     {program.desc}
                   </p>
                 </div>
-              </div>
+              </Link>
             </Reveal>
           ))}
         </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { ClipboardText, Phone, FileText, User, Trophy, ArrowRight, ArrowDown } from "@phosphor-icons/react";
 import { Reveal } from "./Reveal";
 
@@ -102,6 +103,15 @@ export function HowCoachingWorks() {
               );
             })}
           </div>
+        </div>
+
+        <div className="mt-12 text-center">
+          <Link
+            href="/how-it-works"
+            className="text-sm font-semibold text-accent hover:underline"
+          >
+            View Full Step-By-Step Details →
+          </Link>
         </div>
       </div>
     </section>
