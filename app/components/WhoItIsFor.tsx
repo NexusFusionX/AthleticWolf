@@ -38,24 +38,27 @@ const categories = [
 
 export function WhoItIsFor() {
   return (
-    <section className="wheel-section px-6 py-20 sm:px-8 sm:py-28">
+    <section className="wheel-section px-6 py-16 sm:px-8 sm:py-20">
       <div className="mx-auto max-w-6xl">
-        <h2 className="font-display text-center text-4xl sm:text-5xl">
+        <div className="mx-auto mb-4 h-px w-10 bg-accent" />
+        <h2 className="font-display text-center text-2xl tracking-wide sm:text-3xl">
           WHO THIS IS FOR
         </h2>
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {categories.map((category, i) => {
+        <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+          {categories.map((category) => {
             const Icon = category.icon;
             return (
               <div
                 key={category.title}
-                className="card-premium flex flex-col items-center rounded-2xl border border-line bg-card p-8 text-center transition-all hover:-translate-y-1.5"
+                className="flex flex-col items-center gap-3 rounded-xl border border-line bg-card px-4 py-6 text-center transition-all hover:-translate-y-1 hover:border-accent/40"
               >
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent/10 text-accent">
-                  <Icon size={32} weight="regular" />
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-accent/10 text-accent">
+                  <Icon size={20} weight="regular" />
                 </div>
-                <h3 className="font-display mt-6 text-lg">{category.title}</h3>
+                <h3 className="text-xs font-semibold leading-tight">
+                  {category.title}
+                </h3>
               </div>
             );
           })}

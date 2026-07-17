@@ -3,6 +3,7 @@ import { Faq } from "./components/Faq";
 import { Reveal } from "./components/Reveal";
 import { Header } from "./components/Header";
 import { WhoItIsFor } from "./components/WhoItIsFor";
+import { DoesThisSoundLikeYou } from "./components/DoesThisSoundLikeYou";
 import { HowCoachingWorks } from "./components/HowCoachingWorks";
 import { ResultsCarousel } from "./components/ResultsCarousel";
 import { CoachVideos } from "./components/CoachVideos";
@@ -197,6 +198,9 @@ export default function Home() {
 
         {/* Who It Is For */}
         <WhoItIsFor />
+
+        {/* Does This Sound Like You */}
+        <DoesThisSoundLikeYou />
 
         {/* How Coaching Works */}
         <HowCoachingWorks />
