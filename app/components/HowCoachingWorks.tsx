@@ -43,33 +43,32 @@ export function HowCoachingWorks() {
 
         <div className="mt-16">
           {/* Desktop flow */}
-          <div className="hidden lg:block">
-            <div className="flex items-end justify-center gap-3">
-              {steps.map((step, i) => {
-                const Icon = step.icon;
-                return (
-                  <Reveal key={step.title} delay={i * 0.08}>
-                    <div className="flex flex-col items-center">
-                      <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-line bg-card text-accent">
-                        <Icon size={32} weight="regular" />
-                      </div>
-                      <p className="font-display mt-4 text-sm font-bold uppercase tracking-wider">
-                        {step.title}
-                      </p>
-                      <p className="mt-2 max-w-[120px] text-center text-xs text-muted">
-                        {step.desc}
-                      </p>
-
-                      {i < steps.length - 1 && (
-                        <div className="mt-6 flex items-center gap-2 text-accent">
-                          <ArrowRight size={20} weight="bold" />
-                        </div>
-                      )}
+          <div className="hidden lg:grid lg:grid-cols-5 lg:gap-6">
+            {steps.map((step, i) => {
+              const Icon = step.icon;
+              return (
+                <Reveal key={step.title} delay={i * 0.08}>
+                  <div className="relative flex flex-col items-center text-center">
+                    <div className="relative z-10 flex h-20 w-20 shrink-0 items-center justify-center rounded-full border-2 border-line bg-card text-accent">
+                      <Icon size={32} weight="regular" />
                     </div>
-                  </Reveal>
-                );
-              })}
-            </div>
+
+                    {i < steps.length - 1 && (
+                      <div className="absolute left-full top-10 flex w-6 -translate-x-1/2 -translate-y-1/2 items-center justify-center text-accent">
+                        <ArrowRight size={20} weight="bold" />
+                      </div>
+                    )}
+
+                    <p className="font-display mt-4 text-sm font-bold uppercase tracking-wider">
+                      {step.title}
+                    </p>
+                    <p className="mt-2 max-w-[140px] text-center text-xs text-muted">
+                      {step.desc}
+                    </p>
+                  </div>
+                </Reveal>
+              );
+            })}
           </div>
 
           {/* Mobile flow */}
