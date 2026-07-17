@@ -35,8 +35,9 @@ export function HowCoachingWorks() {
   return (
     <section id="how-it-works" className="wheel-section px-6 py-20 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-7xl">
-        <Reveal className="max-w-xl">
-          <h2 className="font-display text-center text-4xl sm:text-5xl">
+        <Reveal>
+          <div className="mx-auto mb-4 h-px w-10 bg-accent" />
+          <h2 className="font-display text-center text-2xl tracking-wide sm:text-4xl lg:text-5xl">
             HOW COACHING WORKS
           </h2>
         </Reveal>
@@ -72,28 +73,33 @@ export function HowCoachingWorks() {
           </div>
 
           {/* Mobile flow */}
-          <div className="lg:hidden">
+          <div className="mx-auto max-w-sm lg:hidden">
             {steps.map((step, i) => {
               const Icon = step.icon;
               const isLast = i === steps.length - 1;
               return (
                 <Reveal key={step.title} delay={i * 0.08}>
-                  <div className="grid grid-cols-[4rem_1fr] gap-4">
+                  <div className="grid grid-cols-[3rem_1fr] gap-4">
                     <div className="flex h-full flex-col items-center">
-                      <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-line bg-card text-accent">
-                        <Icon size={24} weight="regular" />
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-line bg-card text-ink-soft">
+                        <Icon size={18} weight="light" />
                       </div>
                       {!isLast && (
-                        <div className="flex flex-1 items-center justify-center text-accent">
-                          <ArrowDown size={20} weight="bold" />
+                        <div className="relative flex flex-1 items-center justify-center">
+                          <div className="absolute inset-y-0 w-px bg-line" aria-hidden />
+                          <ArrowDown
+                            size={14}
+                            weight="bold"
+                            className="relative z-10 bg-paper text-accent"
+                          />
                         </div>
                       )}
                     </div>
-                    <div className={`flex flex-col justify-center ${isLast ? "" : "pb-6"}`}>
-                      <p className="font-display text-sm font-bold uppercase tracking-wider">
+                    <div className={`flex flex-col justify-center ${isLast ? "" : "pb-5"}`}>
+                      <p className="font-display text-xs font-bold uppercase tracking-wider">
                         {step.title}
                       </p>
-                      <p className="mt-1 text-sm text-muted">{step.desc}</p>
+                      <p className="mt-1 text-xs leading-relaxed text-muted">{step.desc}</p>
                     </div>
                   </div>
                 </Reveal>
