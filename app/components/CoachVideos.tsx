@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Reveal } from "./Reveal";
 import { Play } from "@phosphor-icons/react";
 
@@ -27,26 +27,36 @@ const videos = [
 
 function VideoCard({ video }: { video: (typeof videos)[number] }) {
   const [playing, setPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  function handlePlay() {
+    setPlaying(true);
+    videoRef.current?.play();
+  }
 
   return (
     <div className="card-premium group relative overflow-hidden rounded-2xl border border-line bg-card transition-all hover:-translate-y-1.5">
-      <div className="relative aspect-video w-full overflow-hidden bg-ink">
-        {playing ? (
-          <video
-            src={video.src}
-            controls
-            autoPlay
-            playsInline
-            className="h-full w-full object-cover"
-          />
-        ) : (
+      <div className="relative aspect-[9/16] w-full overflow-hidden bg-ink">
+        <video
+          ref={videoRef}
+          src={video.src}
+          controls={playing}
+          playsInline
+          preload="metadata"
+          onLoadedMetadata={(e) => {
+            e.currentTarget.currentTime = 0.1;
+          }}
+          className="h-full w-full object-cover"
+        />
+
+        {!playing && (
           <button
             type="button"
-            onClick={() => setPlaying(true)}
-            className="flex h-full w-full items-center justify-center bg-gradient-to-br from-accent/20 to-card"
+            onClick={handlePlay}
+            className="absolute inset-0 flex items-center justify-center bg-black/20 transition-colors hover:bg-black/30"
             aria-label={`Play ${video.title}`}
           >
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent/20 text-accent transition-transform group-hover:scale-110">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent/90 text-white shadow-lg transition-transform group-hover:scale-110">
               <Play size={32} weight="fill" />
             </div>
           </button>
