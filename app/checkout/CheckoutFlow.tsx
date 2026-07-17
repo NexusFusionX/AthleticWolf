@@ -1,13 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Check } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { packages } from "../data/packages";
 
+const ASSESSMENT_KEY = "athletic-wolf-pending-assessment";
+
 export function CheckoutFlow() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const packageName = searchParams.get("package");
   const pkg = packages.find((p) => p.name === packageName);
@@ -16,6 +19,8 @@ export function CheckoutFlow() {
   const [processing, setProcessing] = useState(false);
   const [existingPlan, setExistingPlan] = useState<any>(null);
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
+  const [pendingAssessment, setPendingAssessment] = useState<any>(null);
+  const [redirectingToQuiz, setRedirectingToQuiz] = useState(false);
 
   useEffect(() => {
     async function checkAuth() {
@@ -24,21 +29,42 @@ export function CheckoutFlow() {
       } = await supabase.auth.getUser();
       setUser(authUser);
 
+      let plan = null;
       if (authUser) {
         const { data: existingPlanData } = await supabase
           .from("plans")
           .select("*")
           .eq("user_id", authUser.id)
           .single();
-        if (existingPlanData) {
-          setExistingPlan(existingPlanData);
+        plan = existingPlanData ?? null;
+        if (plan) {
+          setExistingPlan(plan);
         }
+      }
+
+      // Brand-new customer (no plan yet): assessment must be completed first.
+      if (authUser && !plan && packageName) {
+        let assessment = null;
+        try {
+          const raw = localStorage.getItem(ASSESSMENT_KEY);
+          assessment = raw ? JSON.parse(raw) : null;
+        } catch {
+          assessment = null;
+        }
+
+        if (!assessment || assessment.package !== packageName) {
+          setRedirectingToQuiz(true);
+          router.replace(`/quiz?package=${encodeURIComponent(packageName)}`);
+          return;
+        }
+
+        setPendingAssessment(assessment);
       }
 
       setLoading(false);
     }
     checkAuth();
-  }, []);
+  }, [packageName, router]);
 
   // Determine if this is an upgrade or downgrade
   const getActionType = () => {
@@ -66,13 +92,17 @@ export function CheckoutFlow() {
       const { error } = await supabase.from("plans").insert({
         user_id: user.id,
         package_name: pkg.name,
-        status: "assessment_pending",
+        status: "active",
+        assessment_completed_at: new Date().toISOString(),
+        assessment_data: pendingAssessment
+          ? JSON.stringify(pendingAssessment.formData)
+          : null,
       });
 
       if (error) throw error;
 
-      // Redirect to assessment page instead of dashboard
-      window.location.href = "/quiz";
+      localStorage.removeItem(ASSESSMENT_KEY);
+      window.location.href = "/dashboard";
     } catch (err) {
       alert("Failed to complete purchase. Please try again.");
       setProcessing(false);
@@ -88,15 +118,13 @@ export function CheckoutFlow() {
         .from("plans")
         .update({
           package_name: pkg.name,
-          status: "assessment_pending",
-          assessment_completed_at: null,
+          status: "active",
         })
         .eq("id", existingPlan.id);
 
       if (error) throw error;
 
-      // Redirect to assessment page
-      window.location.href = "/quiz";
+      window.location.href = "/dashboard";
     } catch (err) {
       alert("Failed to upgrade. Please try again.");
       setProcessing(false);
@@ -142,6 +170,10 @@ export function CheckoutFlow() {
         </div>
       </div>
     );
+  }
+
+  if (redirectingToQuiz) {
+    return null;
   }
 
   if (!pkg) {
@@ -236,6 +268,15 @@ export function CheckoutFlow() {
               ))}
             </ul>
           </div>
+
+          {pendingAssessment && (
+            <div className="mt-6 flex items-center gap-2.5 rounded-xl border border-accent/30 bg-accent/10 px-4 py-3">
+              <Check size={18} weight="bold" className="shrink-0 text-accent" />
+              <p className="text-sm font-semibold text-accent">
+                Assessment complete — you&apos;re ready to check out.
+              </p>
+            </div>
+          )}
 
           <div className="mt-6 rounded-xl border border-dashed border-line bg-surface p-6 text-center">
             <p className="text-sm font-semibold">🔒 Payment Method</p>

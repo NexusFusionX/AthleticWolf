@@ -200,7 +200,7 @@ export default function Home() {
                     </ul>
 
                     <a
-                      href={`/checkout?package=${encodeURIComponent(pkg.name)}`}
+                      href={`/quiz?package=${encodeURIComponent(pkg.name)}`}
                       className={`btn mt-8 px-6 py-3 text-sm font-bold uppercase tracking-wide text-white ${
                         pkg.featured ? "btn-accent" : "btn-dark"
                       }`}

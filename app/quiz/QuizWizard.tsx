@@ -163,6 +163,7 @@ type SavedProgress = {
 };
 
 const STORAGE_KEY = "athletic-wolf-quiz-progress";
+const ASSESSMENT_KEY = "athletic-wolf-pending-assessment";
 
 function loadSavedProgress(): SavedProgress | null {
   try {
@@ -189,6 +190,44 @@ export function QuizWizard() {
     undefined
   );
   const [hydrated, setHydrated] = useState(false);
+
+  const [authLoading, setAuthLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
+  const [existingPlan, setExistingPlan] = useState<any>(null);
+
+  useEffect(() => {
+    async function checkAuth() {
+      const {
+        data: { user: authUser },
+      } = await supabase.auth.getUser();
+      setUser(authUser);
+
+      let plan = null;
+      if (authUser) {
+        const { data } = await supabase
+          .from("plans")
+          .select("*")
+          .eq("user_id", authUser.id)
+          .single();
+        plan = data ?? null;
+        setExistingPlan(plan);
+      }
+
+      setAuthLoading(false);
+
+      // Already has a plan under a different package: this is a switch/upgrade,
+      // skip the assessment and let checkout's upgrade dialog handle it.
+      if (
+        authUser &&
+        plan &&
+        selectedPackage &&
+        plan.package_name !== selectedPackage
+      ) {
+        router.replace(`/checkout?package=${encodeURIComponent(selectedPackage)}`);
+      }
+    }
+    checkAuth();
+  }, [selectedPackage, router]);
 
   useEffect(() => {
     const saved = loadSavedProgress();
@@ -301,25 +340,30 @@ export function QuizWizard() {
     setSubmitted(true);
 
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (user) {
-        // Update plan with assessment completion and assessment data
+      if (user && existingPlan) {
+        // Re-doing the assessment for an existing package: update directly,
+        // no payment step needed since they've already purchased.
         const { error } = await supabase
           .from("plans")
           .update({
             assessment_completed_at: new Date().toISOString(),
             assessment_data: JSON.stringify(formData),
           })
-          .eq("user_id", user.id);
+          .eq("id", existingPlan.id);
 
         if (error) throw error;
-      }
 
-      localStorage.removeItem(STORAGE_KEY);
-      router.push("/dashboard");
+        localStorage.removeItem(STORAGE_KEY);
+        router.push("/dashboard");
+      } else {
+        // Brand-new customer: assessment is done, now send them to pay.
+        localStorage.setItem(
+          ASSESSMENT_KEY,
+          JSON.stringify({ package: selectedPackage, formData })
+        );
+        localStorage.removeItem(STORAGE_KEY);
+        router.push(`/checkout?package=${encodeURIComponent(selectedPackage || "")}`);
+      }
     } catch (err) {
       alert("Failed to save assessment. Please try again.");
       setSubmitted(false);
@@ -330,7 +374,41 @@ export function QuizWizard() {
     if (current > 0) setCurrent((c) => c - 1);
   }
 
-  if (resumePrompt === undefined) {
+  if (authLoading || resumePrompt === undefined) {
+    return null;
+  }
+
+  if (!user) {
+    const redirectTarget = `/quiz${selectedPackage ? `?package=${encodeURIComponent(selectedPackage)}` : ""}`;
+    return (
+      <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
+        <div className="w-full shadow-premium rounded-2xl border border-line bg-card p-10 text-center">
+          <h1 className="font-display text-3xl">Sign In Required</h1>
+          <p className="mt-3 text-muted">
+            You need to create an account or log in to start your assessment.
+          </p>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <Link
+              href={`/auth/signup?redirect=${encodeURIComponent(redirectTarget)}`}
+              className="btn btn-accent px-6 py-3 text-sm font-bold uppercase tracking-wide text-white"
+            >
+              Create Account
+            </Link>
+            <Link
+              href={`/auth/login?redirect=${encodeURIComponent(redirectTarget)}`}
+              className="btn btn-outline px-6 py-3 text-sm font-bold uppercase tracking-wide"
+            >
+              Sign In
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Existing plan under a different package: redirecting to checkout's
+  // upgrade dialog, nothing to render here.
+  if (existingPlan && selectedPackage && existingPlan.package_name !== selectedPackage) {
     return null;
   }
 
@@ -430,11 +508,9 @@ export function QuizWizard() {
         <div className="p-8">
           {submitted ? (
             <div className="py-4 text-center">
-              <h2 className="font-display text-3xl">You&apos;re All Set! ✅</h2>
+              <h2 className="font-display text-3xl">Assessment Complete ✅</h2>
               <p className="mt-3 text-muted">
-                Your email app should have opened with your details pre-filled.
-                Hit send and we&apos;ll get back to you within 24-48 hours to
-                arrange payment and get you started.
+                Taking you to the next step...
               </p>
               <Link
                 href="/"

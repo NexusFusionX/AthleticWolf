@@ -102,7 +102,7 @@ export default function PackagesPage() {
                   </ul>
 
                   <Link
-                    href={`/checkout?package=${encodeURIComponent(pkg.name)}`}
+                    href={`/quiz?package=${encodeURIComponent(pkg.name)}`}
                     className={`btn w-full px-6 py-4 text-sm font-bold uppercase tracking-wide text-white transition-all ${
                       pkg.featured ? "btn-accent" : "btn-dark"
                     }`}
