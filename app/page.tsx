@@ -7,13 +7,9 @@ import { DoesThisSoundLikeYou } from "./components/DoesThisSoundLikeYou";
 import { HowCoachingWorks } from "./components/HowCoachingWorks";
 import { ResultsCarousel } from "./components/ResultsCarousel";
 import { CoachVideos } from "./components/CoachVideos";
+import { Programs } from "./components/Programs";
 import { packages } from "./data/packages";
 import {
-  Flame,
-  Barbell,
-  Scales,
-  Laptop,
-  Leaf,
   Check,
   ShieldCheck,
   CheckCircle,
@@ -28,34 +24,6 @@ const heroBadges = [
   { icon: Clock, title: "Weekly Check-ins" },
   { icon: Headset, title: "24/7 Support" },
   { icon: Target, title: "Evidence-Based Coaching" },
-];
-
-const programs = [
-  {
-    icon: Flame,
-    title: "Fat Loss",
-    desc: "Sustainable fat loss through structured training and nutrition. No crash diets.",
-  },
-  {
-    icon: Barbell,
-    title: "Muscle Building",
-    desc: "Progressive strength programming designed to build lean muscle at your pace.",
-  },
-  {
-    icon: Scales,
-    title: "Body Recomposition",
-    desc: "Lose fat and build muscle at the same time with a plan tuned to your body.",
-  },
-  {
-    icon: Laptop,
-    title: "Online Coaching",
-    desc: "Full remote coaching with weekly check-ins, plan updates, and direct coach access.",
-  },
-  {
-    icon: Leaf,
-    title: "Nutrition Coaching",
-    desc: "Custom nutrition plans built around your preferences, schedule, and goals.",
-  },
 ];
 
 const differentiators = [
@@ -152,49 +120,7 @@ export default function Home() {
         </section>
 
         {/* Programs */}
-        <section id="programs" className="wheel-section px-6 py-20 sm:px-8 sm:py-28">
-          <div className="mx-auto max-w-6xl">
-            <Reveal className="max-w-xl">
-              <h2 className="font-display text-4xl sm:text-5xl">
-                Programs Built For Your Goal
-              </h2>
-              <p className="mt-4 text-muted">
-                Every program starts with an onboarding assessment, so you never
-                get a generic plan.
-              </p>
-            </Reveal>
-
-            <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {programs.map((program, i) => (
-                <Reveal
-                  key={program.title}
-                  delay={i * 0.08}
-                  className={
-                    i === 0
-                      ? "sm:col-span-2 lg:col-span-2"
-                      : i >= 3
-                        ? "sm:col-span-1 lg:col-span-2"
-                        : ""
-                  }
-                >
-                  <div
-                    className={`card-premium h-full rounded-2xl border p-7 transition-all hover:-translate-y-1.5 ${
-                      i === 0
-                        ? "border-accent/30 bg-gradient-to-br from-accent/15 via-card to-card"
-                        : "border-line bg-card"
-                    }`}
-                  >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10 text-accent">
-                      <program.icon size={24} weight="regular" />
-                    </div>
-                    <h3 className="font-display mt-5 text-2xl">{program.title}</h3>
-                    <p className="mt-2 max-w-md text-sm text-muted">{program.desc}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
+        <Programs />
 
         {/* Who It Is For */}
         <WhoItIsFor />
