@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { packages } from "@/app/data/packages";
 import { programs } from "@/app/data/programs";
 
-const MODEL = "gemini-2.0-flash";
+const MODEL = "llama-3.3-70b-versatile";
 
 function buildSystemPrompt() {
   const packagesText = packages
@@ -40,7 +40,7 @@ RULES:
 
 export async function POST(req: NextRequest) {
   try {
-    const apiKey = process.env.GEMINI_API_KEY;
+    const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
         { error: "AI chat is not configured yet." },
@@ -59,7 +59,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Message is too long." }, { status: 400 });
     }
 
-    const contents = [
+    const messages = [
+      { role: "system", content: buildSystemPrompt() },
       ...history
         .filter(
           (m: any) =>
@@ -69,33 +70,29 @@ export async function POST(req: NextRequest) {
         )
         .slice(-10)
         .map((m: any) => ({
-          role: m.role,
-          parts: [{ text: m.text }],
+          role: m.role === "model" ? "assistant" : "user",
+          content: m.text,
         })),
-      { role: "user", parts: [{ text: message }] },
+      { role: "user", content: message },
     ];
 
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${apiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          systemInstruction: {
-            parts: [{ text: buildSystemPrompt() }],
-          },
-          contents,
-          generationConfig: {
-            temperature: 0.4,
-            maxOutputTokens: 400,
-          },
-        }),
-      }
-    );
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        messages,
+        temperature: 0.4,
+        max_tokens: 400,
+      }),
+    });
 
     if (!res.ok) {
       const errText = await res.text();
-      console.error("Gemini API error:", res.status, errText);
+      console.error("Groq API error:", res.status, errText);
       return NextResponse.json(
         { error: "The AI assistant is temporarily unavailable. Please try again shortly." },
         { status: 502 }
@@ -104,7 +101,7 @@ export async function POST(req: NextRequest) {
 
     const data = await res.json();
     const reply =
-      data?.candidates?.[0]?.content?.parts?.map((p: any) => p.text).join("") ??
+      data?.choices?.[0]?.message?.content ??
       "Sorry, I couldn't generate a response. Please try rephrasing your question.";
 
     return NextResponse.json({ reply });
