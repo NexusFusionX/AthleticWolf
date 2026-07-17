@@ -93,7 +93,7 @@ export function HowCoachingWorks() {
                     </div>
 
                     {!isLast && (
-                      <div className="flex justify-center py-2 pl-16">
+                      <div className="flex w-12 justify-center py-2">
                         <ArrowDown size={16} weight="bold" className="text-accent" />
                       </div>
                     )}
