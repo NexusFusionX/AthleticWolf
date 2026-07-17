@@ -81,17 +81,15 @@ export function HowCoachingWorks() {
                 <Reveal key={step.title} delay={i * 0.08}>
                   <div className="grid grid-cols-[3rem_1fr] gap-4">
                     <div className="flex h-full flex-col items-center">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-line bg-card text-ink-soft">
+                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-line bg-card text-accent">
                         <Icon size={18} weight="light" />
                       </div>
                       {!isLast && (
-                        <div className="relative flex flex-1 items-center justify-center">
+                        <div className="relative flex flex-1 items-center justify-center py-1">
                           <div className="absolute inset-y-0 w-px bg-line" aria-hidden />
-                          <ArrowDown
-                            size={14}
-                            weight="bold"
-                            className="relative z-10 bg-paper text-accent"
-                          />
+                          <div className="relative z-10 flex h-6 w-6 items-center justify-center rounded-full bg-paper">
+                            <ArrowDown size={14} weight="bold" className="text-accent" />
+                          </div>
                         </div>
                       )}
                     </div>
