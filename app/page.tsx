@@ -264,6 +264,12 @@ export default function Home() {
               <h2 className="font-display text-4xl sm:text-5xl">
                 Questions, Answered
               </h2>
+              <p className="mt-4 text-muted">
+                Have a specific question?{" "}
+                <a href="/faq" className="font-semibold text-accent hover:underline">
+                  Ask our AI assistant →
+                </a>
+              </p>
             </Reveal>
             <Reveal delay={0.1}>
               <Faq />
