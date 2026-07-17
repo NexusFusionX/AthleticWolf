@@ -8,10 +8,13 @@ import { supabase } from "@/lib/supabase";
 function SignupContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const redirectParam = searchParams.get("redirect");
   const packageName = searchParams.get("package");
-  const redirectTo = packageName
-    ? `/quiz?package=${encodeURIComponent(packageName)}`
-    : "/";
+  const redirectTo = redirectParam
+    ? redirectParam
+    : packageName
+      ? `/quiz?package=${encodeURIComponent(packageName)}`
+      : "/";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
