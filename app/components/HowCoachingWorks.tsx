@@ -1,6 +1,6 @@
 "use client";
 
-import { ClipboardText, Phone, FileText, User, Trophy, ArrowRight } from "@phosphor-icons/react";
+import { ClipboardText, Phone, FileText, User, Trophy, ArrowRight, ArrowDown } from "@phosphor-icons/react";
 import { Reveal } from "./Reveal";
 
 const steps = [
@@ -72,24 +72,27 @@ export function HowCoachingWorks() {
           </div>
 
           {/* Mobile flow */}
-          <div className="lg:hidden space-y-4">
+          <div className="lg:hidden">
             {steps.map((step, i) => {
               const Icon = step.icon;
               return (
                 <Reveal key={step.title} delay={i * 0.08}>
-                  <div className="flex gap-4">
-                    <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-line bg-card text-accent">
-                      <Icon size={24} weight="regular" />
+                  <div>
+                    <div className="flex items-center gap-4">
+                      <div className="relative z-10 flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-line bg-card text-accent">
+                        <Icon size={24} weight="regular" />
+                      </div>
+                      <div className="flex flex-1 flex-col justify-center">
+                        <p className="font-display text-sm font-bold uppercase tracking-wider">
+                          {step.title}
+                        </p>
+                        <p className="mt-1 text-sm text-muted">{step.desc}</p>
+                      </div>
                     </div>
-                    <div className="flex flex-1 flex-col justify-center">
-                      <p className="font-display text-sm font-bold uppercase tracking-wider">
-                        {step.title}
-                      </p>
-                      <p className="mt-1 text-sm text-muted">{step.desc}</p>
-                    </div>
+
                     {i < steps.length - 1 && (
-                      <div className="flex items-center text-accent">
-                        <ArrowRight size={20} weight="bold" />
+                      <div className="flex h-10 w-16 shrink-0 items-center justify-center text-accent">
+                        <ArrowDown size={20} weight="bold" />
                       </div>
                     )}
                   </div>
