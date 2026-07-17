@@ -75,26 +75,26 @@ export function HowCoachingWorks() {
           <div className="lg:hidden">
             {steps.map((step, i) => {
               const Icon = step.icon;
+              const isLast = i === steps.length - 1;
               return (
                 <Reveal key={step.title} delay={i * 0.08}>
-                  <div>
-                    <div className="flex items-center gap-4">
-                      <div className="relative z-10 flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-line bg-card text-accent">
+                  <div className="grid grid-cols-[4rem_1fr] gap-4">
+                    <div className="flex h-full flex-col items-center">
+                      <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-2 border-line bg-card text-accent">
                         <Icon size={24} weight="regular" />
                       </div>
-                      <div className="flex flex-1 flex-col justify-center">
-                        <p className="font-display text-sm font-bold uppercase tracking-wider">
-                          {step.title}
-                        </p>
-                        <p className="mt-1 text-sm text-muted">{step.desc}</p>
-                      </div>
+                      {!isLast && (
+                        <div className="flex flex-1 items-center justify-center text-accent">
+                          <ArrowDown size={20} weight="bold" />
+                        </div>
+                      )}
                     </div>
-
-                    {i < steps.length - 1 && (
-                      <div className="flex h-10 w-16 shrink-0 items-center justify-center text-accent">
-                        <ArrowDown size={20} weight="bold" />
-                      </div>
-                    )}
+                    <div className={`flex flex-col justify-center ${isLast ? "" : "pb-6"}`}>
+                      <p className="font-display text-sm font-bold uppercase tracking-wider">
+                        {step.title}
+                      </p>
+                      <p className="mt-1 text-sm text-muted">{step.desc}</p>
+                    </div>
                   </div>
                 </Reveal>
               );
