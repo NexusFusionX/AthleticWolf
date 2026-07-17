@@ -79,26 +79,24 @@ export function HowCoachingWorks() {
               const isLast = i === steps.length - 1;
               return (
                 <Reveal key={step.title} delay={i * 0.08}>
-                  <div className="grid grid-cols-[3rem_1fr] gap-4">
-                    <div className="flex h-full flex-col items-center">
+                  <div>
+                    <div className="grid grid-cols-[3rem_1fr] gap-4">
                       <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-line bg-card text-accent">
                         <Icon size={18} weight="light" />
                       </div>
-                      {!isLast && (
-                        <div className="relative flex flex-1 items-center justify-center py-1">
-                          <div className="absolute inset-y-0 w-px bg-line" aria-hidden />
-                          <div className="relative z-10 flex h-6 w-6 items-center justify-center rounded-full bg-paper">
-                            <ArrowDown size={14} weight="bold" className="text-accent" />
-                          </div>
-                        </div>
-                      )}
+                      <div className="flex flex-col justify-center">
+                        <p className="font-display text-xs font-bold uppercase tracking-wider">
+                          {step.title}
+                        </p>
+                        <p className="mt-1 text-xs leading-relaxed text-muted">{step.desc}</p>
+                      </div>
                     </div>
-                    <div className={`flex flex-col justify-center ${isLast ? "" : "pb-5"}`}>
-                      <p className="font-display text-xs font-bold uppercase tracking-wider">
-                        {step.title}
-                      </p>
-                      <p className="mt-1 text-xs leading-relaxed text-muted">{step.desc}</p>
-                    </div>
+
+                    {!isLast && (
+                      <div className="flex justify-center py-2 pl-16">
+                        <ArrowDown size={16} weight="bold" className="text-accent" />
+                      </div>
+                    )}
                   </div>
                 </Reveal>
               );
