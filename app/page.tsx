@@ -268,31 +268,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* CTA band */}
-        <section className="wheel-section px-6 sm:px-8">
-          <div className="mx-auto max-w-6xl">
-            <Reveal>
-              <div className="flex flex-wrap items-center justify-between gap-8 rounded-3xl bg-accent px-8 py-12 text-white sm:px-14 sm:py-16">
-                <div>
-                  <h2 className="font-display text-3xl sm:text-4xl">
-                    Ready To Transform?
-                  </h2>
-                  <p className="mt-3 max-w-md text-white/90">
-                    Submit your application and we&apos;ll get back to you within
-                    24-48 hours to get you started.
-                  </p>
-                </div>
-                <a
-                  href="#apply"
-                  className="btn btn-dark px-8 py-4 text-base font-bold uppercase tracking-wide text-white"
-                >
-                  Get Started
-                </a>
-              </div>
-            </Reveal>
-          </div>
-        </section>
-
         {/* FAQ */}
         <section id="faq" className="px-6 py-20 sm:px-8 sm:py-28">
           <div className="mx-auto max-w-6xl">
