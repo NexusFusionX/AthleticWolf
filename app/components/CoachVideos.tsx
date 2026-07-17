@@ -1,25 +1,64 @@
 "use client";
 
+import { useState } from "react";
 import { Reveal } from "./Reveal";
 import { Play } from "@phosphor-icons/react";
 
 const videos = [
   {
     id: 1,
-    title: "Getting Started with Your Program",
-    thumbnail: "/media/coach/video-1.jpg",
+    title: "Push-Up Form Breakdown",
+    desc: "Master proper push-up technique for maximum chest and tricep engagement.",
+    src: "/media/coach/pushup.mp4",
   },
   {
     id: 2,
-    title: "Nutrition 101 for Coaches",
-    thumbnail: "/media/coach/video-2.jpg",
+    title: "Tricep Extension Guide",
+    desc: "Build stronger, more defined triceps with correct extension form.",
+    src: "/media/coach/tricep.mp4",
   },
   {
     id: 3,
-    title: "Building Your Ideal Physique",
-    thumbnail: "/media/coach/video-3.jpg",
+    title: "Biceps Training Guide",
+    desc: "Learn the key movements for effective bicep growth and strength.",
+    src: "/media/coach/bicep.mp4",
   },
 ];
+
+function VideoCard({ video }: { video: (typeof videos)[number] }) {
+  const [playing, setPlaying] = useState(false);
+
+  return (
+    <div className="card-premium group relative overflow-hidden rounded-2xl border border-line bg-card transition-all hover:-translate-y-1.5">
+      <div className="relative aspect-video w-full overflow-hidden bg-ink">
+        {playing ? (
+          <video
+            src={video.src}
+            controls
+            autoPlay
+            playsInline
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={() => setPlaying(true)}
+            className="flex h-full w-full items-center justify-center bg-gradient-to-br from-accent/20 to-card"
+            aria-label={`Play ${video.title}`}
+          >
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent/20 text-accent transition-transform group-hover:scale-110">
+              <Play size={32} weight="fill" />
+            </div>
+          </button>
+        )}
+      </div>
+      <div className="p-6">
+        <h3 className="font-display text-lg">{video.title}</h3>
+        <p className="mt-2 text-sm text-muted">{video.desc}</p>
+      </div>
+    </div>
+  );
+}
 
 export function CoachVideos() {
   return (
@@ -37,20 +76,7 @@ export function CoachVideos() {
         <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {videos.map((video, i) => (
             <Reveal key={video.id} delay={i * 0.08}>
-              <div className="card-premium group relative overflow-hidden rounded-2xl border border-line bg-card transition-all hover:-translate-y-1.5">
-                {/* Placeholder video thumbnail */}
-                <div className="aspect-video w-full bg-gradient-to-br from-accent/20 to-card flex items-center justify-center">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent/20 text-accent transition-transform group-hover:scale-110">
-                    <Play size={32} weight="fill" />
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="font-display text-lg">{video.title}</h3>
-                  <p className="mt-2 text-sm text-muted">
-                    Expert coaching insights delivered by our certified trainers.
-                  </p>
-                </div>
-              </div>
+              <VideoCard video={video} />
             </Reveal>
           ))}
         </div>
