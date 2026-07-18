@@ -72,7 +72,7 @@ function VideoCard({ video }: { video: (typeof videos)[number] }) {
 
 export function CoachVideos() {
   return (
-    <section className="wheel-section px-6 py-20 sm:px-8 sm:py-28">
+    <section className="px-6 py-20 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-6xl">
         <Reveal className="max-w-xl">
           <h2 className="font-display text-4xl sm:text-5xl">
