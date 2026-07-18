@@ -11,22 +11,7 @@ import { Programs } from "./components/Programs";
 import { HeroBadges } from "./components/HeroBadges";
 import { SeoText } from "./components/SeoText";
 import { packages } from "./data/packages";
-import {
-  Check,
-  ShieldCheck,
-  CheckCircle,
-  Clock,
-  Headset,
-  Target,
-} from "@phosphor-icons/react/dist/ssr";
-
-const heroBadges = [
-  { icon: ShieldCheck, title: "ISSA Certified Coach" },
-  { icon: CheckCircle, title: "Personalized Plans" },
-  { icon: Clock, title: "Weekly Check-ins" },
-  { icon: Headset, title: "24/7 Support" },
-  { icon: Target, title: "Evidence-Based Coaching" },
-];
+import { Check } from "@phosphor-icons/react/dist/ssr";
 
 const differentiators = [
   {
@@ -103,7 +88,7 @@ export default function Home() {
         </section>
 
         {/* Trust strip with icons */}
-        <HeroBadges badges={heroBadges} />
+        <HeroBadges />
 
         {/* Programs */}
         <Programs />
