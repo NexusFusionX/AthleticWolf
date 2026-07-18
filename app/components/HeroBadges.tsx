@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   ShieldCheck,
   CheckCircle,
@@ -24,12 +24,7 @@ export function HeroBadges() {
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   function goTo(index: number) {
-    const clamped = Math.max(0, Math.min(badges.length - 1, index));
-    setActive(clamped);
-    const scroller = scrollerRef.current;
-    if (!scroller) return;
-    const item = scroller.children[clamped] as HTMLElement | undefined;
-    item?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+    setActive(Math.max(0, Math.min(badges.length - 1, index)));
   }
 
   function handleScroll() {
@@ -39,6 +34,21 @@ export function HeroBadges() {
     const index = Math.round(scroller.scrollLeft / itemWidth);
     setActive(Math.max(0, Math.min(badges.length - 1, index)));
   }
+
+  // Scroll to whichever badge is active, whether set by arrows, dots, or auto-slide
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    const item = scroller?.children[active] as HTMLElement | undefined;
+    item?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+  }, [active]);
+
+  // Auto-advance every 3 seconds, looping back to the start
+  useEffect(() => {
+    const id = setInterval(() => {
+      setActive((prev) => (prev + 1) % badges.length);
+    }, 3000);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <section className="border-y border-line px-6 py-8 sm:px-8">
@@ -71,9 +81,8 @@ export function HeroBadges() {
           <div className="mt-4 flex items-center justify-center gap-4">
             <button
               type="button"
-              onClick={() => goTo(active - 1)}
-              disabled={active === 0}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 text-white transition-opacity disabled:opacity-30"
+              onClick={() => goTo((active - 1 + badges.length) % badges.length)}
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 text-white"
               aria-label="Previous"
             >
               <CaretLeft size={16} weight="bold" />
@@ -95,9 +104,8 @@ export function HeroBadges() {
 
             <button
               type="button"
-              onClick={() => goTo(active + 1)}
-              disabled={active === badges.length - 1}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 text-white transition-opacity disabled:opacity-30"
+              onClick={() => goTo((active + 1) % badges.length)}
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 text-white"
               aria-label="Next"
             >
               <CaretRight size={16} weight="bold" />
