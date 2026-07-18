@@ -43,14 +43,17 @@ export function HeroBadges() {
     }, 100);
   }
 
-  // Scroll to whichever badge is active, whether set by arrows, dots, or auto-slide
+  // Scroll to whichever badge is active, whether set by arrows, dots, or auto-slide.
+  // Uses scrollTo on the carousel itself (horizontal only) instead of
+  // scrollIntoView, which would also scroll the whole page vertically to
+  // bring the badge back into view even after the user scrolled away.
   useEffect(() => {
     const scroller = scrollerRef.current;
     const item = scroller?.children[active] as HTMLElement | undefined;
-    if (!item) return;
+    if (!scroller || !item) return;
 
     isProgrammaticScroll.current = true;
-    item.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+    scroller.scrollTo({ left: item.offsetLeft, behavior: "smooth" });
 
     const clearFlag = setTimeout(() => {
       isProgrammaticScroll.current = false;
