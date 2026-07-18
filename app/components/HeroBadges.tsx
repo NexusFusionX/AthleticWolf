@@ -43,9 +43,32 @@ export function HeroBadges() {
   return (
     <section className="border-y border-line px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-6xl">
-        {/* Mobile: carousel with arrows + dots */}
+        {/* Mobile: one badge centered at a time, arrows + dots below */}
         <div className="sm:hidden">
-          <div className="flex items-center gap-2">
+          <div
+            ref={scrollerRef}
+            onScroll={handleScroll}
+            className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {badges.map((badge) => {
+              const Icon = badge.icon;
+              return (
+                <div
+                  key={badge.title}
+                  className="flex w-full shrink-0 snap-start flex-col items-center gap-3 py-2 text-center"
+                >
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-accent">
+                    <Icon size={24} weight="regular" />
+                  </div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-white/70">
+                    {badge.title}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="mt-4 flex items-center justify-center gap-4">
             <button
               type="button"
               onClick={() => goTo(active - 1)}
@@ -56,27 +79,18 @@ export function HeroBadges() {
               <CaretLeft size={16} weight="bold" />
             </button>
 
-            <div
-              ref={scrollerRef}
-              onScroll={handleScroll}
-              className="flex flex-1 snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            >
-              {badges.map((badge) => {
-                const Icon = badge.icon;
-                return (
-                  <div
-                    key={badge.title}
-                    className="flex w-1/3 shrink-0 snap-start flex-col items-center gap-3 text-center"
-                  >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-accent">
-                      <Icon size={24} weight="regular" />
-                    </div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-white/70">
-                      {badge.title}
-                    </p>
-                  </div>
-                );
-              })}
+            <div className="flex items-center gap-2">
+              {badges.map((badge, i) => (
+                <button
+                  key={badge.title}
+                  type="button"
+                  onClick={() => goTo(i)}
+                  aria-label={`Go to ${badge.title}`}
+                  className={`h-2 rounded-full transition-all ${
+                    i === active ? "w-6 bg-accent" : "w-2 bg-white/25"
+                  }`}
+                />
+              ))}
             </div>
 
             <button
@@ -88,20 +102,6 @@ export function HeroBadges() {
             >
               <CaretRight size={16} weight="bold" />
             </button>
-          </div>
-
-          <div className="mt-4 flex items-center justify-center gap-2">
-            {badges.map((badge, i) => (
-              <button
-                key={badge.title}
-                type="button"
-                onClick={() => goTo(i)}
-                aria-label={`Go to ${badge.title}`}
-                className={`h-2 rounded-full transition-all ${
-                  i === active ? "w-6 bg-accent" : "w-2 bg-white/25"
-                }`}
-              />
-            ))}
           </div>
         </div>
 
