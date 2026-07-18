@@ -22,24 +22,40 @@ const badges = [
 export function HeroBadges() {
   const [active, setActive] = useState(0);
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const isProgrammaticScroll = useRef(false);
+  const scrollEndTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function goTo(index: number) {
     setActive(Math.max(0, Math.min(badges.length - 1, index)));
   }
 
+  // Only react to scroll once it's settled, and ignore scrolls we triggered
+  // ourselves (via scrollIntoView) so they don't fight with the active state.
   function handleScroll() {
-    const scroller = scrollerRef.current;
-    if (!scroller) return;
-    const itemWidth = scroller.children[0]?.clientWidth || 1;
-    const index = Math.round(scroller.scrollLeft / itemWidth);
-    setActive(Math.max(0, Math.min(badges.length - 1, index)));
+    if (isProgrammaticScroll.current) return;
+    if (scrollEndTimer.current) clearTimeout(scrollEndTimer.current);
+    scrollEndTimer.current = setTimeout(() => {
+      const scroller = scrollerRef.current;
+      if (!scroller) return;
+      const itemWidth = scroller.children[0]?.clientWidth || 1;
+      const index = Math.round(scroller.scrollLeft / itemWidth);
+      setActive(Math.max(0, Math.min(badges.length - 1, index)));
+    }, 100);
   }
 
   // Scroll to whichever badge is active, whether set by arrows, dots, or auto-slide
   useEffect(() => {
     const scroller = scrollerRef.current;
     const item = scroller?.children[active] as HTMLElement | undefined;
-    item?.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+    if (!item) return;
+
+    isProgrammaticScroll.current = true;
+    item.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+
+    const clearFlag = setTimeout(() => {
+      isProgrammaticScroll.current = false;
+    }, 500);
+    return () => clearTimeout(clearFlag);
   }, [active]);
 
   // Auto-advance every 3 seconds, looping back to the start
