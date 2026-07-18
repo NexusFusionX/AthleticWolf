@@ -69,51 +69,44 @@ export function ResultsCarousel() {
 
         {/* Mobile Carousel */}
         <div className="mt-14 sm:hidden">
-          <div className="relative">
-            <BeforeAfterSlider
-              beforeSrc={transformations[currentIndex].beforeSrc}
-              afterSrc={transformations[currentIndex].afterSrc}
-              beforeLabel="BEFORE"
-              afterLabel="AFTER"
-            />
+          <BeforeAfterSlider
+            beforeSrc={transformations[currentIndex].beforeSrc}
+            afterSrc={transformations[currentIndex].afterSrc}
+            beforeLabel="BEFORE"
+            afterLabel="AFTER"
+          />
 
-            {/* Navigation Arrows */}
+          {/* Arrows + dots below, like the other carousels */}
+          <div className="mt-5 flex items-center justify-center gap-4">
             <button
               onClick={prev}
-              className="absolute left-2 top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-accent/80 text-white hover:bg-accent transition-colors"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 text-white"
               aria-label="Previous transformation"
             >
-              <CaretLeft size={20} weight="fill" />
+              <CaretLeft size={16} weight="bold" />
             </button>
+
+            <div className="flex items-center gap-2">
+              {transformations.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentIndex(i)}
+                  className={`h-2 rounded-full transition-all ${
+                    i === currentIndex ? "w-6 bg-accent" : "w-2 bg-white/25"
+                  }`}
+                  aria-label={`Go to transformation ${i + 1}`}
+                />
+              ))}
+            </div>
+
             <button
               onClick={next}
-              className="absolute right-2 top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-accent/80 text-white hover:bg-accent transition-colors"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 text-white"
               aria-label="Next transformation"
             >
-              <CaretRight size={20} weight="fill" />
+              <CaretRight size={16} weight="bold" />
             </button>
           </div>
-
-          {/* Indicators */}
-          <div className="mt-6 flex items-center justify-center gap-2">
-            {transformations.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentIndex(i)}
-                className={`transition-all ${
-                  i === currentIndex
-                    ? "bg-accent h-2 w-8"
-                    : "bg-white/20 h-2 w-2"
-                } rounded-full`}
-                aria-label={`Go to transformation ${i + 1}`}
-              />
-            ))}
-          </div>
-
-          {/* Counter */}
-          <p className="mt-4 text-center text-sm text-white/60">
-            {currentIndex + 1} of {transformations.length}
-          </p>
         </div>
       </div>
     </section>
