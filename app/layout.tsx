@@ -31,9 +31,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${outfit.variable} h-full antialiased`}
+      className={`${spaceGrotesk.variable} ${outfit.variable} h-full bg-black antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="flex min-h-full flex-col bg-black">
         <div className="grain-overlay" aria-hidden />
         {children}
         <FloatingFaqWidget />

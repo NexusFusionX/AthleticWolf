@@ -36,11 +36,6 @@ export default function Home() {
       <main>
         {/* Hero */}
         <section className="relative overflow-hidden px-6 pb-20 pt-14 text-white sm:px-8 sm:pb-28 sm:pt-20">
-          {/* ambient accent glow */}
-          <div
-            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_800px_520px_at_78%_18%,rgba(228,87,46,0.09),transparent_70%)]"
-            aria-hidden
-          />
           <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
             <div>
               <span className="inline-block rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.15em] text-accent">
@@ -68,11 +63,6 @@ export default function Home() {
             </div>
 
             <div className="relative mx-auto w-full max-w-md sm:max-w-lg lg:max-w-none">
-              {/* soft glow behind the photo card */}
-              <div
-                className="absolute -inset-5 rounded-[2.5rem] bg-accent/10 blur-3xl"
-                aria-hidden
-              />
               <div className="shadow-premium relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/10">
                 <Image
                   src="/media/hero/coach-hero-portrait.jpg"
@@ -124,7 +114,7 @@ export default function Home() {
                   <div
                     className={`card-premium relative flex h-full flex-col rounded-2xl border p-8 transition-all ${
                       pkg.featured
-                        ? "border-ink bg-ink text-white lg:scale-[1.03]"
+                        ? "card-featured text-white lg:scale-[1.03]"
                         : "border-line bg-card"
                     }`}
                   >

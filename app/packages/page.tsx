@@ -39,7 +39,7 @@ export default function PackagesPage() {
                   key={pkg.name}
                   className={`card-premium relative flex flex-col rounded-2xl border p-8 transition-all ${
                     pkg.featured
-                      ? "border-ink bg-ink text-white lg:scale-[1.03] lg:-translate-y-4"
+                      ? "card-featured text-white lg:scale-[1.03] lg:-translate-y-4"
                       : "border-line bg-card"
                   }`}
                 >

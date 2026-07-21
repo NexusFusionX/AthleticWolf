@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #14181d;
-  --ink-soft: #1e242b;
-  --paper: var(--ink);
-  --card: var(--ink-soft);
-  --surface: #262c35;
+  --ink: #000000;
+  --ink-soft: #0a0a0a;
+  --paper: #000000;
+  --card: #121212;
+  --surface: #1a1a1a;
   --accent: #FF6B35;
   --accent-bright: #FF8A4D;
   --accent-dark: #D84315;
   --accent-deep: #B83A0F;
   --accent-light: #FFB366;
-  --accent-pale: #2a1a0f;
+  --accent-pale: #1a1008;
   --accent-glow: rgba(255, 107, 53, 0.3);
   --accent-glow-bright: rgba(255, 138, 77, 0.25);
   --muted: #99a1ab;
-  --line: rgba(255, 255, 255, 0.12);
+  --line: rgba(255, 255, 255, 0.14);
   --error: #e8574d;
   --foreground: #f2f3f5;
 }
@@ -39,12 +39,11 @@
 html {
   scroll-behavior: smooth;
   font-family: var(--font-sans), system-ui, sans-serif;
+  background-color: #000000;
 }
 
 body {
-  background:
-    radial-gradient(ellipse 1200px 700px at 50% -10%, rgba(255, 107, 53, 0.08), transparent),
-    var(--paper);
+  background-color: #000000;
   color: var(--foreground);
   font-family: inherit;
 }
@@ -55,38 +54,44 @@ h1, h2, h3, h4, h5, h6, .font-display {
 }
 
 .grain-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  pointer-events: none;
-  opacity: 0.035;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20width='140'%20height='140'%3E%3Cfilter%20id='n'%3E%3CfeTurbulence%20type='fractalNoise'%20baseFrequency='0.85'%20numOctaves='3'%20stitchTiles='stitch'%2F%3E%3C%2Ffilter%3E%3Crect%20width='100%25'%20height='100%25'%20filter='url(%23n)'%2F%3E%3C%2Fsvg%3E");
+  display: none;
 }
 
 .card-premium {
+  background-color: var(--card);
   box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.08),
-    0 4px 12px rgba(0, 0, 0, 0.05),
-    0 0 12px rgba(255, 107, 53, 0.08);
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 8px 28px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
   transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
-  border: 1px solid rgba(255, 107, 53, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .card-premium:hover {
-  border-color: rgba(255, 107, 53, 0.35);
+  border-color: rgba(255, 107, 53, 0.4);
   box-shadow:
-    0 2px 4px rgba(0, 0, 0, 0.08),
-    0 8px 16px rgba(0, 0, 0, 0.1),
-    0 0 24px rgba(255, 107, 53, 0.25),
-    0 0 48px rgba(255, 107, 53, 0.12);
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 12px 36px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 107, 53, 0.2),
+    0 0 32px rgba(255, 107, 53, 0.14);
   transform: translateY(-2px);
+}
+
+.card-featured {
+  background-color: var(--card);
+  border-color: rgba(255, 107, 53, 0.45) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 12px 40px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(255, 107, 53, 0.2),
+    0 0 48px rgba(255, 107, 53, 0.15);
 }
 
 .shadow-premium {
   box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.35),
-    0 12px 32px rgba(0, 0, 0, 0.35);
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 12px 36px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
 /* Button system: shared base + three variants. Press-in on :active, lift on
@@ -147,7 +152,7 @@ h1, h2, h3, h4, h5, h6, .font-display {
   }
 
   .btn-dark:hover {
-    background: var(--ink-soft);
+    background: #000000;
     transform: translateY(-1.5px);
     box-shadow:
       0 1px 0 rgba(255, 255, 255, 0.08) inset,

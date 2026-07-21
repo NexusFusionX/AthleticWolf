@@ -51,7 +51,7 @@ export function WhoItIsFor() {
             return (
               <div
                 key={category.title}
-                className="flex flex-col items-center gap-3 rounded-xl border border-line bg-card px-4 py-6 text-center transition-all hover:-translate-y-1 hover:border-accent/40"
+                className="card-premium flex flex-col items-center gap-3 rounded-xl border border-line bg-card px-4 py-6 text-center transition-all hover:-translate-y-1 hover:border-accent/40"
               >
                 <div className="flex h-11 w-11 items-center justify-center rounded-full bg-accent/10 text-accent">
                   <Icon size={20} weight="regular" />
