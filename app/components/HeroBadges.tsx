@@ -1,15 +1,10 @@
-"use client";
-
-import { useEffect, useRef, useState } from "react";
 import {
   ShieldCheck,
   CheckCircle,
   Clock,
   Headset,
   Target,
-  CaretLeft,
-  CaretRight,
-} from "@phosphor-icons/react";
+} from "@phosphor-icons/react/dist/ssr";
 
 const badges = [
   { icon: ShieldCheck, title: "ISSA Certified Coach" },
@@ -20,116 +15,29 @@ const badges = [
 ];
 
 export function HeroBadges() {
-  const [active, setActive] = useState(0);
-  const scrollerRef = useRef<HTMLDivElement>(null);
-  const isProgrammaticScroll = useRef(false);
-  const scrollEndTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  function goTo(index: number) {
-    setActive(Math.max(0, Math.min(badges.length - 1, index)));
-  }
-
-  // Only react to scroll once it's settled, and ignore scrolls we triggered
-  // ourselves (via scrollIntoView) so they don't fight with the active state.
-  function handleScroll() {
-    if (isProgrammaticScroll.current) return;
-    if (scrollEndTimer.current) clearTimeout(scrollEndTimer.current);
-    scrollEndTimer.current = setTimeout(() => {
-      const scroller = scrollerRef.current;
-      if (!scroller) return;
-      const itemWidth = scroller.children[0]?.clientWidth || 1;
-      const index = Math.round(scroller.scrollLeft / itemWidth);
-      setActive(Math.max(0, Math.min(badges.length - 1, index)));
-    }, 100);
-  }
-
-  // Scroll to whichever badge is active, whether set by arrows, dots, or auto-slide.
-  // Uses scrollTo on the carousel itself (horizontal only) instead of
-  // scrollIntoView, which would also scroll the whole page vertically to
-  // bring the badge back into view even after the user scrolled away.
-  useEffect(() => {
-    const scroller = scrollerRef.current;
-    const item = scroller?.children[active] as HTMLElement | undefined;
-    if (!scroller || !item) return;
-
-    isProgrammaticScroll.current = true;
-    scroller.scrollTo({ left: item.offsetLeft, behavior: "smooth" });
-
-    const clearFlag = setTimeout(() => {
-      isProgrammaticScroll.current = false;
-    }, 500);
-    return () => clearTimeout(clearFlag);
-  }, [active]);
-
-  // Auto-advance every 3 seconds, looping back to the start
-  useEffect(() => {
-    const id = setInterval(() => {
-      setActive((prev) => (prev + 1) % badges.length);
-    }, 3000);
-    return () => clearInterval(id);
-  }, []);
+  const mobileBadges = badges.slice(0, 3);
 
   return (
     <section className="border-y border-line px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-6xl">
-        {/* Mobile: one badge centered at a time, arrows + dots below */}
-        <div className="sm:hidden">
-          <div
-            ref={scrollerRef}
-            onScroll={handleScroll}
-            className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
-            {badges.map((badge) => {
-              const Icon = badge.icon;
-              return (
-                <div
-                  key={badge.title}
-                  className="flex w-full shrink-0 snap-start flex-col items-center gap-3 py-2 text-center"
-                >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-accent">
-                    <Icon size={24} weight="regular" />
-                  </div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-white/70">
-                    {badge.title}
-                  </p>
+        {/* Mobile: top 3 only, no carousel */}
+        <div className="grid grid-cols-3 gap-4 sm:hidden">
+          {mobileBadges.map((badge) => {
+            const Icon = badge.icon;
+            return (
+              <div
+                key={badge.title}
+                className="flex flex-col items-center gap-3 text-center"
+              >
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-accent">
+                  <Icon size={24} weight="regular" />
                 </div>
-              );
-            })}
-          </div>
-
-          <div className="mt-4 flex items-center justify-center gap-4">
-            <button
-              type="button"
-              onClick={() => goTo((active - 1 + badges.length) % badges.length)}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 text-white"
-              aria-label="Previous"
-            >
-              <CaretLeft size={16} weight="bold" />
-            </button>
-
-            <div className="flex items-center gap-2">
-              {badges.map((badge, i) => (
-                <button
-                  key={badge.title}
-                  type="button"
-                  onClick={() => goTo(i)}
-                  aria-label={`Go to ${badge.title}`}
-                  className={`h-2 rounded-full transition-all ${
-                    i === active ? "w-6 bg-accent" : "w-2 bg-white/25"
-                  }`}
-                />
-              ))}
-            </div>
-
-            <button
-              type="button"
-              onClick={() => goTo((active + 1) % badges.length)}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 text-white"
-              aria-label="Next"
-            >
-              <CaretRight size={16} weight="bold" />
-            </button>
-          </div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-white/70">
+                  {badge.title}
+                </p>
+              </div>
+            );
+          })}
         </div>
 
         {/* Desktop: all 5 in a row */}
