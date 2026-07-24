@@ -294,6 +294,22 @@ export function CheckoutFlow() {
           >
             {processing ? "Processing..." : "Complete Purchase (Test Mode) →"}
           </button>
+
+          <p className="mt-4 text-center text-xs leading-relaxed text-muted">
+            By continuing, you agree to our{" "}
+            <Link href="/terms" className="text-accent hover:text-accent-light">
+              Terms &amp; Conditions
+            </Link>
+            ,{" "}
+            <Link href="/privacy" className="text-accent hover:text-accent-light">
+              Privacy Policy
+            </Link>
+            , and{" "}
+            <Link href="/refund" className="text-accent hover:text-accent-light">
+              Refund Policy
+            </Link>
+            .
+          </p>
         </div>
       </div>
     </div>

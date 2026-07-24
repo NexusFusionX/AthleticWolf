@@ -63,28 +63,71 @@ h1, h2, h3, h4, h5, h6, .font-display {
     0 1px 0 rgba(255, 255, 255, 0.05) inset,
     0 8px 28px rgba(0, 0, 0, 0.55),
     0 0 0 1px rgba(255, 255, 255, 0.05);
-  transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+  transition:
+    box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.35s ease;
   border: 1px solid rgba(255, 255, 255, 0.12);
+  position: relative;
 }
 
-.card-premium:hover {
-  border-color: rgba(255, 107, 53, 0.4);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.06) inset,
-    0 12px 36px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(255, 107, 53, 0.2),
-    0 0 32px rgba(255, 107, 53, 0.14);
-  transform: translateY(-2px);
+@media (hover: hover) {
+  .card-premium:hover {
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.06) inset,
+      0 14px 36px rgba(0, 0, 0, 0.45),
+      0 0 28px rgba(255, 107, 53, 0.04);
+    transform: translateY(-3px);
+  }
+
+  .card-premium:hover .card-topline {
+    opacity: 1;
+  }
+
+  .card-featured:hover {
+    border-color: rgba(255, 107, 53, 0.42) !important;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.06) inset,
+      0 16px 40px rgba(0, 0, 0, 0.5),
+      0 0 36px rgba(255, 107, 53, 0.08);
+  }
+}
+
+.card-topline {
+  pointer-events: none;
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 1px;
+  opacity: 0;
+  background: linear-gradient(90deg, transparent, var(--accent-bright), transparent);
+  transition: opacity 0.45s ease;
+}
+
+.card-corner-glow {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle at 100% 0, rgba(255, 107, 53, 0.07), transparent 72%);
 }
 
 .card-featured {
-  background-color: var(--card);
-  border-color: rgba(255, 107, 53, 0.45) !important;
+  background:
+    linear-gradient(160deg, rgba(255, 107, 53, 0.06) 0%, var(--card) 45%);
+  border-color: rgba(255, 107, 53, 0.32) !important;
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.06) inset,
-    0 12px 40px rgba(0, 0, 0, 0.65),
-    0 0 0 1px rgba(255, 107, 53, 0.2),
-    0 0 48px rgba(255, 107, 53, 0.15);
+    0 10px 32px rgba(0, 0, 0, 0.55),
+    0 0 40px rgba(255, 107, 53, 0.06);
+}
+
+.card-featured .card-topline {
+  opacity: 0.7;
+  background: linear-gradient(90deg, transparent, var(--accent-bright), transparent);
 }
 
 .shadow-premium {

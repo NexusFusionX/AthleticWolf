@@ -1,7 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { PaperPlaneRight, Sparkle } from "@phosphor-icons/react";
+import { PaperPlaneRight } from "@phosphor-icons/react";
 
 type ChatMessage = {
   role: "user" | "model";
@@ -70,8 +71,14 @@ export function AiFaqChat() {
   return (
     <div className="shadow-premium mx-auto flex w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-line bg-card">
       <div className="flex items-center gap-2.5 border-b border-line bg-ink px-6 py-4 text-white">
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/20 text-accent">
-          <Sparkle size={18} weight="fill" />
+        <div className="relative h-11 w-11 overflow-hidden rounded-full border border-white/15 bg-black">
+          <Image
+            src="/brand/athletic-wolf-logo.png"
+            alt="Athletic Wolf"
+            fill
+            className="object-cover scale-110"
+            sizes="44px"
+          />
         </div>
         <div>
           <p className="font-display text-sm">Ask Athletic Wolf AI</p>

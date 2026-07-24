@@ -10,6 +10,7 @@ import { CoachVideos } from "./components/CoachVideos";
 import { Programs } from "./components/Programs";
 import { HeroBadges } from "./components/HeroBadges";
 import { SeoText } from "./components/SeoText";
+import { BrandLogo } from "./components/BrandLogo";
 import { packages } from "./data/packages";
 import { Check } from "@phosphor-icons/react/dist/ssr";
 
@@ -83,14 +84,14 @@ export default function Home() {
         {/* Programs */}
         <Programs />
 
+        {/* How Coaching Works */}
+        <HowCoachingWorks />
+
         {/* Who It Is For */}
         <WhoItIsFor />
 
         {/* Does This Sound Like You */}
         <DoesThisSoundLikeYou />
-
-        {/* How Coaching Works */}
-        <HowCoachingWorks />
 
         {/* Packages */}
         <section id="packages" className="wheel-section px-6 py-20 sm:px-8 sm:py-28">
@@ -112,24 +113,26 @@ export default function Home() {
               {packages.map((pkg, i) => (
                 <Reveal key={pkg.name} delay={i * 0.08} className="h-full">
                   <div
-                    className={`card-premium relative flex h-full flex-col rounded-2xl border p-8 transition-all ${
+                    className={`card-premium relative flex h-full flex-col rounded-2xl border p-8 ${
                       pkg.featured
-                        ? "card-featured text-white lg:scale-[1.03]"
+                        ? "card-featured text-white"
                         : "border-line bg-card"
                     }`}
                   >
+                    <span className="card-topline" aria-hidden />
+                    <span className="card-corner-glow" aria-hidden />
                     {pkg.featured && (
-                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-accent px-4 py-1 text-xs font-bold uppercase tracking-wide text-white">
+                      <span className="relative z-[1] mb-4 inline-flex w-fit items-center rounded-full bg-accent px-3 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
                         Most Popular
                       </span>
                     )}
-                    <p className="font-display text-lg tracking-wide">{pkg.name}</p>
+                    <p className="font-display relative z-[1] text-lg tracking-wide">{pkg.name}</p>
                     <p
-                      className={`mt-1 text-sm ${pkg.featured ? "text-white/55" : "text-muted"}`}
+                      className={`relative z-[1] mt-1 text-sm ${pkg.featured ? "text-white/55" : "text-muted"}`}
                     >
                       6 Month Plan
                     </p>
-                    <div className="mt-5 flex items-end gap-1">
+                    <div className="relative z-[1] mt-5 flex items-end gap-1">
                       <span className="font-display text-4xl">${pkg.price}</span>
                       <span
                         className={`mb-1 text-sm ${pkg.featured ? "text-white/55" : "text-muted"}`}
@@ -137,11 +140,11 @@ export default function Home() {
                         / month
                       </span>
                     </div>
-                    <p className={`mt-1 text-sm ${pkg.featured ? "text-white/55" : "text-muted"}`}>
+                    <p className={`relative z-[1] mt-1 text-sm ${pkg.featured ? "text-white/55" : "text-muted"}`}>
                       Value ${pkg.value}
                     </p>
 
-                    <ul className="mt-6 flex flex-1 flex-col gap-2.5">
+                    <ul className="relative z-[1] mt-6 flex flex-1 flex-col gap-2.5">
                       {pkg.features.map((feature) => (
                         <li
                           key={feature}
@@ -162,7 +165,7 @@ export default function Home() {
 
                     <a
                       href={`/packages/${pkg.slug}`}
-                      className={`btn mt-8 px-6 py-3 text-sm font-bold uppercase tracking-wide text-white ${
+                      className={`btn relative z-[1] mt-8 px-6 py-3 text-sm font-bold uppercase tracking-wide text-white ${
                         pkg.featured ? "btn-accent" : "btn-dark"
                       }`}
                     >
@@ -259,9 +262,7 @@ export default function Home() {
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-10 border-b border-white/10 pb-12 sm:grid-cols-2 lg:grid-cols-4">
             <div>
-              <p className="font-display text-xl">
-                Athletic<span className="text-accent">Wolf</span>
-              </p>
+              <BrandLogo height={80} />
               <p className="mt-4 max-w-xs text-sm text-white/55">
                 ISSA-certified online personal training and nutrition coaching,
                 built for clients worldwide. No gym required.
@@ -304,6 +305,21 @@ export default function Home() {
                     FAQ
                   </a>
                 </li>
+                <li>
+                  <a href="/privacy" className="hover:text-white">
+                    Privacy Policy
+                  </a>
+                </li>
+                <li>
+                  <a href="/refund" className="hover:text-white">
+                    Refund Policy
+                  </a>
+                </li>
+                <li>
+                  <a href="/terms" className="hover:text-white">
+                    Terms &amp; Conditions
+                  </a>
+                </li>
               </ul>
             </div>
             <div>
@@ -316,7 +332,17 @@ export default function Home() {
           </div>
           <div className="flex flex-wrap items-center justify-between gap-3 pt-6 text-xs text-white/40">
             <span>© {new Date().getFullYear()} Athletic Wolf. All rights reserved.</span>
-            <span>Train smarter. Move stronger. Live bolder.</span>
+            <div className="flex flex-wrap gap-x-4 gap-y-1">
+              <a href="/privacy" className="hover:text-white/70">
+                Privacy
+              </a>
+              <a href="/refund" className="hover:text-white/70">
+                Refunds
+              </a>
+              <a href="/terms" className="hover:text-white/70">
+                Terms
+              </a>
+            </div>
           </div>
         </div>
       </footer>

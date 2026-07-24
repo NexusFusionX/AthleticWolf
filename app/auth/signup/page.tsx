@@ -4,6 +4,7 @@ import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { BrandLogo } from "@/app/components/BrandLogo";
 
 function SignupContent() {
   const router = useRouter();
@@ -66,11 +67,11 @@ function SignupContent() {
   return (
     <div className="mx-auto flex min-h-screen max-w-md items-center justify-center p-6">
       <div className="w-full overflow-hidden shadow-premium rounded-2xl border border-line bg-card">
-        <div className="bg-ink px-8 py-7 text-white">
-          <Link href="/" className="font-display text-lg">
-            Athletic<span className="text-accent">Wolf</span>
-          </Link>
-          <p className="mt-4 text-sm font-semibold uppercase tracking-[0.18em] text-accent">
+        <div className="bg-ink px-8 py-10 text-center text-white">
+          <div className="flex justify-center">
+            <BrandLogo height={78} />
+          </div>
+          <p className="mt-6 text-sm font-semibold uppercase tracking-[0.18em] text-accent">
             Get Started
           </p>
           <h1 className="font-display mt-1.5 text-3xl">Create Account</h1>
@@ -138,6 +139,18 @@ function SignupContent() {
           >
             {loading ? "Creating account..." : "Sign Up"}
           </button>
+
+          <p className="mt-4 text-center text-xs leading-relaxed text-muted">
+            By signing up, you agree to our{" "}
+            <Link href="/terms" className="text-accent hover:text-accent-light">
+              Terms
+            </Link>{" "}
+            and{" "}
+            <Link href="/privacy" className="text-accent hover:text-accent-light">
+              Privacy Policy
+            </Link>
+            .
+          </p>
 
           <p className="mt-6 text-center text-sm text-muted">
             Already have an account?{" "}

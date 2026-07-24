@@ -4,6 +4,7 @@ import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { BrandLogo } from "@/app/components/BrandLogo";
 
 function LoginContent() {
   const router = useRouter();
@@ -42,11 +43,11 @@ function LoginContent() {
   return (
     <div className="mx-auto flex min-h-screen max-w-md items-center justify-center p-6">
       <div className="w-full overflow-hidden shadow-premium rounded-2xl border border-line bg-card">
-        <div className="bg-ink px-8 py-7 text-white">
-          <Link href="/" className="font-display text-lg">
-            Athletic<span className="text-accent">Wolf</span>
-          </Link>
-          <p className="mt-4 text-sm font-semibold uppercase tracking-[0.18em] text-accent">
+        <div className="bg-ink px-8 py-10 text-center text-white">
+          <div className="flex justify-center">
+            <BrandLogo height={78} />
+          </div>
+          <p className="mt-6 text-sm font-semibold uppercase tracking-[0.18em] text-accent">
             Log In
           </p>
           <h1 className="font-display mt-1.5 text-3xl">Access Your Plan</h1>

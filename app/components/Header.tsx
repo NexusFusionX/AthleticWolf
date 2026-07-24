@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Bell } from "@phosphor-icons/react";
+import { BrandLogo } from "./BrandLogo";
 
 export function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -35,10 +36,8 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-black">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 sm:px-8">
-        <a href="/" className="font-display text-xl text-white sm:text-2xl">
-          Athletic<span className="text-accent">Wolf</span>
-        </a>
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5 sm:px-8 sm:py-4">
+        <BrandLogo height={72} priority />
         <nav className="hidden items-center gap-7 text-sm font-medium text-white/75 lg:flex">
           <a href="#programs" className="transition-colors hover:text-white">
             Programs
@@ -62,11 +61,11 @@ export function Header() {
         {!loading && (
           <a
             href={isLoggedIn ? "/dashboard" : "/auth/login"}
-            className="btn btn-accent px-4 py-2 text-sm font-bold uppercase tracking-wide text-white sm:px-5 sm:py-2.5 relative"
+            className="btn btn-accent relative px-4 py-2 text-sm font-bold uppercase tracking-wide text-white sm:px-5 sm:py-2.5"
           >
             {isLoggedIn ? "Dashboard" : "Get Started"}
             {hasNotification && (
-              <span className="absolute -top-2 -right-2 w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center">
+              <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-yellow-500">
                 <Bell size={12} weight="bold" className="text-ink" />
               </span>
             )}
