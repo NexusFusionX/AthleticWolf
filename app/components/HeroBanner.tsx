@@ -16,17 +16,17 @@ export function HeroBanner() {
   const mediaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const section = sectionRef.current;
-    const pin = pinRef.current;
-    const copy = copyRef.current;
-    const media = mediaRef.current;
-    if (!section || !pin || !copy) return;
+    if (!sectionRef.current || !pinRef.current || !copyRef.current) return;
 
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
     function syncPinHeight() {
+      const sectionEl = sectionRef.current;
+      const pinEl = pinRef.current;
+      if (!sectionEl || !pinEl) return;
+
       const header = document.querySelector<HTMLElement>("[data-site-header]");
       const headerH = header?.offsetHeight ?? 88;
       document.documentElement.style.setProperty(
@@ -35,12 +35,12 @@ export function HeroBanner() {
       );
       // Pin = exactly the remaining first-screen height under the header
       const pinH = Math.max(window.innerHeight - headerH, 320);
-      pin.style.height = `${pinH}px`;
+      pinEl.style.height = `${pinH}px`;
       if (!reduceMotion) {
         // Track height = pin + ~one more screen of scrub travel
-        section.style.height = `${pinH + window.innerHeight}px`;
+        sectionEl.style.height = `${pinH + window.innerHeight}px`;
       } else {
-        section.style.height = `${pinH}px`;
+        sectionEl.style.height = `${pinH}px`;
       }
     }
 
@@ -51,16 +51,18 @@ export function HeroBanner() {
       return () => window.removeEventListener("resize", syncPinHeight);
     }
 
-    let frame = 0;
-
     function update() {
-      const rect = section!.getBoundingClientRect();
+      const sectionEl = sectionRef.current;
+      const copyNode = copyRef.current;
+      if (!sectionEl || !copyNode) return;
+
+      const rect = sectionEl.getBoundingClientRect();
       const headerH =
         document.querySelector<HTMLElement>("[data-site-header]")
           ?.offsetHeight ?? 88;
       // Travel while pin is stuck under the header
       const pinTravel = Math.max(
-        section!.offsetHeight - (window.innerHeight - headerH),
+        sectionEl.offsetHeight - (window.innerHeight - headerH),
         1
       );
       const raw = Math.min(Math.max(-rect.top / pinTravel, 0), 1);
@@ -70,15 +72,18 @@ export function HeroBanner() {
       const blur = p * 14;
       const rise = p * -110;
 
-      copy!.style.opacity = String(opacity);
-      copy!.style.filter = blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : "none";
-      copy!.style.transform = `translate3d(0, ${rise.toFixed(2)}px, 0)`;
+      copyNode.style.opacity = String(opacity);
+      copyNode.style.filter = blur > 0.05 ? `blur(${blur.toFixed(2)}px)` : "none";
+      copyNode.style.transform = `translate3d(0, ${rise.toFixed(2)}px, 0)`;
 
-      if (media) {
-        media.style.opacity = String(1 - p * 0.28);
-        media.style.transform = `scale(${(1 + p * 0.045).toFixed(4)})`;
+      const mediaEl = mediaRef.current;
+      if (mediaEl) {
+        mediaEl.style.opacity = String(1 - p * 0.28);
+        mediaEl.style.transform = `scale(${(1 + p * 0.045).toFixed(4)})`;
       }
     }
+
+    let frame = 0;
 
     function onScroll() {
       cancelAnimationFrame(frame);
