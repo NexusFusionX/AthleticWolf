@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 const MIN_MS = 1500;
 const MAX_MS = 15000;
@@ -9,42 +9,67 @@ const CY = 130;
 const R = 115;
 const CIRC = 2 * Math.PI * R;
 
-function tickLines() {
-  const lines = [];
-  for (let i = 0; i < 36; i++) {
-    const a = (i / 36) * Math.PI * 2;
-    const long = i % 3 === 0;
-    const inner = long ? 108 : 110;
-    const outer = 118;
-    const round = (n: number) => Math.round(n * 1000) / 1000;
-    lines.push({
-      key: i,
-      x1: round(CX + Math.cos(a) * inner),
-      y1: round(CY + Math.sin(a) * inner),
-      x2: round(CX + Math.cos(a) * outer),
-      y2: round(CY + Math.sin(a) * outer),
-      opacity: long ? 0.45 : 0.18,
-    });
-  }
-  return lines;
+/** Precomputed on one machine so SSR/client never diverge */
+const TICKS = [
+  { key: 0, x1: 238, y1: 130, x2: 248, y2: 130, opacity: 0.45 },
+  { key: 1, x1: 236.359, y1: 148.754, x2: 246.207, y2: 150.49, opacity: 0.18 },
+  { key: 2, x1: 231.487, y1: 166.938, x2: 240.884, y2: 170.358, opacity: 0.18 },
+  { key: 3, x1: 223.531, y1: 184, x2: 232.191, y2: 189, opacity: 0.45 },
+  { key: 4, x1: 212.733, y1: 199.421, x2: 220.393, y2: 205.849, opacity: 0.18 },
+  { key: 5, x1: 199.421, y1: 212.733, x2: 205.849, y2: 220.393, opacity: 0.18 },
+  { key: 6, x1: 184, y1: 223.531, x2: 189, y2: 232.191, opacity: 0.45 },
+  { key: 7, x1: 166.938, y1: 231.487, x2: 170.358, y2: 240.884, opacity: 0.18 },
+  { key: 8, x1: 148.754, y1: 236.359, x2: 150.49, y2: 246.207, opacity: 0.18 },
+  { key: 9, x1: 130, y1: 238, x2: 130, y2: 248, opacity: 0.45 },
+  { key: 10, x1: 111.246, y1: 236.359, x2: 109.51, y2: 246.207, opacity: 0.18 },
+  { key: 11, x1: 93.062, y1: 231.487, x2: 89.642, y2: 240.884, opacity: 0.18 },
+  { key: 12, x1: 76, y1: 223.531, x2: 71, y2: 232.191, opacity: 0.45 },
+  { key: 13, x1: 60.579, y1: 212.733, x2: 54.151, y2: 220.393, opacity: 0.18 },
+  { key: 14, x1: 47.267, y1: 199.421, x2: 39.607, y2: 205.849, opacity: 0.18 },
+  { key: 15, x1: 36.469, y1: 184, x2: 27.809, y2: 189, opacity: 0.45 },
+  { key: 16, x1: 28.513, y1: 166.938, x2: 19.116, y2: 170.358, opacity: 0.18 },
+  { key: 17, x1: 23.641, y1: 148.754, x2: 13.793, y2: 150.49, opacity: 0.18 },
+  { key: 18, x1: 22, y1: 130, x2: 12, y2: 130, opacity: 0.45 },
+  { key: 19, x1: 23.641, y1: 111.246, x2: 13.793, y2: 109.51, opacity: 0.18 },
+  { key: 20, x1: 28.513, y1: 93.062, x2: 19.116, y2: 89.642, opacity: 0.18 },
+  { key: 21, x1: 36.469, y1: 76, x2: 27.809, y2: 71, opacity: 0.45 },
+  { key: 22, x1: 47.267, y1: 60.579, x2: 39.607, y2: 54.151, opacity: 0.18 },
+  { key: 23, x1: 60.579, y1: 47.267, x2: 54.151, y2: 39.607, opacity: 0.18 },
+  { key: 24, x1: 76, y1: 36.469, x2: 71, y2: 27.809, opacity: 0.45 },
+  { key: 25, x1: 93.062, y1: 28.513, x2: 89.642, y2: 19.116, opacity: 0.18 },
+  { key: 26, x1: 111.246, y1: 23.641, x2: 109.51, y2: 13.793, opacity: 0.18 },
+  { key: 27, x1: 130, y1: 22, x2: 130, y2: 12, opacity: 0.45 },
+  { key: 28, x1: 148.754, y1: 23.641, x2: 150.49, y2: 13.793, opacity: 0.18 },
+  { key: 29, x1: 166.938, y1: 28.513, x2: 170.358, y2: 19.116, opacity: 0.18 },
+  { key: 30, x1: 184, y1: 36.469, x2: 189, y2: 27.809, opacity: 0.45 },
+  { key: 31, x1: 199.421, y1: 47.267, x2: 205.849, y2: 39.607, opacity: 0.18 },
+  { key: 32, x1: 212.733, y1: 60.579, x2: 220.393, y2: 54.151, opacity: 0.18 },
+  { key: 33, x1: 223.531, y1: 76, x2: 232.191, y2: 71, opacity: 0.45 },
+  { key: 34, x1: 231.487, y1: 93.062, x2: 240.884, y2: 89.642, opacity: 0.18 },
+  { key: 35, x1: 236.359, y1: 111.246, x2: 246.207, y2: 109.51, opacity: 0.18 },
+];
+
+function removeBootSplash() {
+  const boot = document.getElementById("aw-boot");
+  if (boot) boot.remove();
+  document.documentElement.classList.add("aw-boot-done");
 }
 
 export function SitePreloader() {
-  const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(true);
   const [leaving, setLeaving] = useState(false);
   const [progress, setProgress] = useState(0);
-  const ticks = useMemo(() => tickLines(), []);
+  const [showTicks, setShowTicks] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted || typeof window === "undefined") return;
+    // Hand off from the instant HTML splash to the full loader (same black bg — no homepage flash)
+    removeBootSplash();
+    setShowTicks(true);
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setVisible(false);
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
       return;
     }
 
@@ -116,9 +141,10 @@ export function SitePreloader() {
       document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
     };
-  }, [mounted]);
+  }, []);
 
-  if (!mounted || !visible) return null;
+  // SSR + first paint: keep covering the page (no homepage flash)
+  if (!visible) return null;
 
   const dashOffset = CIRC - (progress / 100) * CIRC;
 
@@ -143,7 +169,6 @@ export function SitePreloader() {
         <div className="aw-pre-glow" />
       </div>
 
-      {/* Corner brackets */}
       <span className="aw-pre-corner aw-pre-corner--tl" aria-hidden />
       <span className="aw-pre-corner aw-pre-corner--tr" aria-hidden />
       <span className="aw-pre-corner aw-pre-corner--bl" aria-hidden />
@@ -154,7 +179,6 @@ export function SitePreloader() {
       </p>
 
       <div className="aw-pre-core">
-        {/* Round logo — fixed size, no Next/Image fill (that was blowing up fullscreen) */}
         <div
           className="aw-pre-logo-round"
           style={{
@@ -206,17 +230,18 @@ export function SitePreloader() {
               </filter>
             </defs>
 
-            {ticks.map((t) => (
-              <line
-                key={t.key}
-                x1={t.x1}
-                y1={t.y1}
-                x2={t.x2}
-                y2={t.y2}
-                className="aw-pre-ring-tick"
-                opacity={t.opacity}
-              />
-            ))}
+            {showTicks &&
+              TICKS.map((t) => (
+                <line
+                  key={t.key}
+                  x1={t.x1}
+                  y1={t.y1}
+                  x2={t.x2}
+                  y2={t.y2}
+                  className="aw-pre-ring-tick"
+                  opacity={t.opacity}
+                />
+              ))}
 
             <circle className="aw-pre-ring-track" cx={CX} cy={CY} r={R} />
             <circle
