@@ -25,11 +25,8 @@ export const metadata: Metadata = {
     "ISSA-certified online personal training. Custom workout and nutrition programs, weekly check-ins, and real accountability. Coaching clients worldwide.",
 };
 
-const bootCss = `
-#aw-boot{position:fixed;inset:0;z-index:100000;background:#000;display:flex;align-items:center;justify-content:center}
-#aw-boot img{width:88px;height:88px;border-radius:50%;object-fit:cover;display:block;border:1px solid rgba(255,138,77,.35)}
-html:not(.aw-boot-done){overflow:hidden!important}
-`;
+/** Skip boot splash before paint when this tab already saw the intro */
+const bootSkipScript = `(function(){try{if(sessionStorage.getItem('aw-preloader-seen')==='1'){document.documentElement.classList.add('aw-boot-done','aw-boot-skip');}}catch(e){}})();`;
 
 export default function RootLayout({
   children,
@@ -40,13 +37,13 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${spaceGrotesk.variable} ${outfit.variable} h-full bg-black antialiased`}
+      // Skip script may add aw-boot-done / aw-boot-skip before hydrate
+      suppressHydrationWarning
     >
-      <head>
-        <style dangerouslySetInnerHTML={{ __html: bootCss }} />
-      </head>
       <body className="flex min-h-full flex-col bg-black">
-        {/* Instant cover — paints before React, so homepage never flashes */}
-        <div id="aw-boot" aria-hidden="true">
+        <script dangerouslySetInnerHTML={{ __html: bootSkipScript }} />
+        {/* Instant cover — first visit only; skipped via sessionStorage after that */}
+        <div id="aw-boot" aria-hidden="true" suppressHydrationWarning>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/brand/athletic-wolf-logo.png"

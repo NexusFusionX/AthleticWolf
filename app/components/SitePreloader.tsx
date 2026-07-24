@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 const MIN_MS = 1500;
 const MAX_MS = 15000;
+const SESSION_KEY = "aw-preloader-seen";
 const CX = 130;
 const CY = 130;
 const R = 115;
@@ -56,17 +57,38 @@ function removeBootSplash() {
 }
 
 export function SitePreloader() {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
   const [leaving, setLeaving] = useState(false);
   const [progress, setProgress] = useState(0);
   const [showTicks, setShowTicks] = useState(false);
 
   useEffect(() => {
-    // Hand off from the instant HTML splash to the full loader (same black bg — no homepage flash)
-    removeBootSplash();
+    let alreadySeen = false;
+    try {
+      alreadySeen = sessionStorage.getItem(SESSION_KEY) === "1";
+    } catch {
+      alreadySeen = false;
+    }
+
+    // Already played this tab session — never show again on Get Started / dashboard / etc.
+    if (alreadySeen || document.documentElement.classList.contains("aw-boot-skip")) {
+      removeBootSplash();
+      document.documentElement.classList.add("aw-boot-done");
+      setVisible(false);
+      return;
+    }
+
+    // Keep #aw-boot until the full loader is painted (avoids homepage flash)
+    setVisible(true);
     setShowTicks(true);
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      try {
+        sessionStorage.setItem(SESSION_KEY, "1");
+      } catch {
+        /* ignore */
+      }
+      removeBootSplash();
       setVisible(false);
       document.documentElement.style.overflow = "";
       document.body.style.overflow = "";
@@ -81,11 +103,23 @@ export function SitePreloader() {
     let finished = false;
     let pageReady = document.readyState === "complete";
     let minElapsed = false;
+    let bootHandedOff = false;
+
+    function handOffBoot() {
+      if (bootHandedOff) return;
+      bootHandedOff = true;
+      removeBootSplash();
+    }
 
     function finish() {
       if (finished) return;
       finished = true;
       cancelAnimationFrame(frame);
+      try {
+        sessionStorage.setItem(SESSION_KEY, "1");
+      } catch {
+        /* ignore */
+      }
       setProgress(100);
       setLeaving(true);
       window.setTimeout(() => {
@@ -124,6 +158,10 @@ export function SitePreloader() {
       frame = requestAnimationFrame(tick);
     }
 
+    // Two RAFs: commit preloader to DOM, then drop the HTML splash
+    const handOffId = requestAnimationFrame(() => {
+      requestAnimationFrame(handOffBoot);
+    });
     frame = requestAnimationFrame(tick);
 
     const onReady = () => {
@@ -136,6 +174,7 @@ export function SitePreloader() {
 
     return () => {
       cancelAnimationFrame(frame);
+      cancelAnimationFrame(handOffId);
       window.clearTimeout(hardCap);
       window.removeEventListener("load", onReady);
       document.documentElement.style.overflow = "";
@@ -143,7 +182,6 @@ export function SitePreloader() {
     };
   }, []);
 
-  // SSR + first paint: keep covering the page (no homepage flash)
   if (!visible) return null;
 
   const dashOffset = CIRC - (progress / 100) * CIRC;

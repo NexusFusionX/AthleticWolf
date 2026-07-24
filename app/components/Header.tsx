@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { Bell } from "@phosphor-icons/react";
 import { BrandLogo } from "./BrandLogo";
@@ -42,24 +43,24 @@ export function Header() {
           <a href="#programs" className="transition-colors hover:text-white">
             Programs
           </a>
-          <a href="/#how-it-works" className="transition-colors hover:text-white">
+          <Link href="/#how-it-works" className="transition-colors hover:text-white">
             How It Works
-          </a>
-          <a href="/packages" className="transition-colors hover:text-white">
+          </Link>
+          <Link href="/packages" className="transition-colors hover:text-white">
             Packages
-          </a>
-          <a href="/#results" className="transition-colors hover:text-white">
+          </Link>
+          <Link href="/#results" className="transition-colors hover:text-white">
             Results
-          </a>
-          <a href="/#about" className="transition-colors hover:text-white">
+          </Link>
+          <Link href="/#about" className="transition-colors hover:text-white">
             About
-          </a>
-          <a href="/#faq" className="transition-colors hover:text-white">
+          </Link>
+          <Link href="/#faq" className="transition-colors hover:text-white">
             FAQ
-          </a>
+          </Link>
         </nav>
         {!loading && (
-          <a
+          <Link
             href={isLoggedIn ? "/dashboard" : "/auth/login"}
             className="btn btn-accent relative px-4 py-2 text-sm font-bold uppercase tracking-wide text-white sm:px-5 sm:py-2.5"
           >
@@ -69,7 +70,7 @@ export function Header() {
                 <Bell size={12} weight="bold" className="text-ink" />
               </span>
             )}
-          </a>
+          </Link>
         )}
       </div>
     </header>

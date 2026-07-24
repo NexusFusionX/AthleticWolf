@@ -203,7 +203,11 @@ export default function DashboardPage() {
 
               {!plan.assessment_completed_at && (
                 <Link
-                  href={`/quiz?package=${encodeURIComponent(plan.package_name)}`}
+                  href={
+                    plan.package_name
+                      ? `/quiz?package=${encodeURIComponent(plan.package_name)}`
+                      : "/quiz"
+                  }
                   className="btn btn-accent w-full px-8 py-3.5 text-base font-bold uppercase tracking-wide text-white"
                 >
                   Complete Assessment →

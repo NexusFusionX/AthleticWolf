@@ -375,7 +375,14 @@ export function QuizWizard() {
   }
 
   if (authLoading || resumePrompt === undefined) {
-    return null;
+    return (
+      <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
+        <div className="text-center">
+          <p className="font-display text-2xl text-white">Loading assessment…</p>
+          <p className="mt-2 text-sm text-muted">One moment while we check your account.</p>
+        </div>
+      </div>
+    );
   }
 
   if (!user) {
@@ -406,10 +413,16 @@ export function QuizWizard() {
     );
   }
 
-  // Existing plan under a different package: redirecting to checkout's
-  // upgrade dialog, nothing to render here.
+  // Existing plan under a different package: redirecting to checkout
   if (existingPlan && selectedPackage && existingPlan.package_name !== selectedPackage) {
-    return null;
+    return (
+      <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
+        <div className="text-center">
+          <p className="font-display text-2xl text-white">Taking you to checkout…</p>
+          <p className="mt-2 text-sm text-muted">Preparing your package change.</p>
+        </div>
+      </div>
+    );
   }
 
   if (resumePrompt) {
