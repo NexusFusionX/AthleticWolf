@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Reveal } from "./Reveal";
 import { Play } from "@phosphor-icons/react";
 
@@ -27,24 +27,51 @@ const videos = [
 
 function VideoCard({ video }: { video: (typeof videos)[number] }) {
   const [playing, setPlaying] = useState(false);
+  const [shouldLoad, setShouldLoad] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoad(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px 0px", threshold: 0.01 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   function handlePlay() {
+    if (!shouldLoad) setShouldLoad(true);
     setPlaying(true);
-    videoRef.current?.play();
+    // play after src is attached
+    requestAnimationFrame(() => {
+      void videoRef.current?.play();
+    });
   }
 
   return (
-    <div className="card-premium group relative overflow-hidden rounded-2xl border border-line bg-card transition-all hover:-translate-y-1.5">
+    <div
+      ref={cardRef}
+      className="card-premium group relative overflow-hidden rounded-2xl border border-line bg-card transition-all hover:-translate-y-1.5"
+    >
       <div className="relative aspect-[9/16] w-full overflow-hidden bg-ink">
         <video
           ref={videoRef}
-          src={video.src}
+          src={shouldLoad ? video.src : undefined}
           controls={playing}
           playsInline
-          preload="metadata"
+          preload={shouldLoad ? "metadata" : "none"}
           onLoadedMetadata={(e) => {
-            e.currentTarget.currentTime = 0.1;
+            if (!playing) e.currentTarget.currentTime = 0.1;
           }}
           className="h-full w-full object-cover"
         />
@@ -75,9 +102,7 @@ export function CoachVideos() {
     <section className="px-6 py-20 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-6xl">
         <Reveal className="max-w-xl">
-          <h2 className="font-display text-4xl sm:text-5xl">
-            Coach Videos
-          </h2>
+          <h2 className="font-display text-4xl sm:text-5xl">Coach Videos</h2>
           <p className="mt-4 text-muted">
             Learn directly from our certified coaches with actionable insights.
           </p>

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-const MIN_MS = 3000;
+const MIN_MS = 1500;
 const MAX_MS = 15000;
 const CX = 130;
 const CY = 130;
