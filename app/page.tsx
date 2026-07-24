@@ -9,6 +9,7 @@ import { ResultsCarousel } from "./components/ResultsCarousel";
 import { CoachVideos } from "./components/CoachVideos";
 import { Programs } from "./components/Programs";
 import { HeroBadges } from "./components/HeroBadges";
+import { HeroBanner } from "./components/HeroBanner";
 import { SeoText } from "./components/SeoText";
 import { BrandLogo } from "./components/BrandLogo";
 import { packages } from "./data/packages";
@@ -31,52 +32,11 @@ const differentiators = [
 
 export default function Home() {
   return (
-    <div className="flex min-h-full flex-col">
+    <div className="flex min-h-full flex-col overflow-x-clip">
       <Header />
 
       <main>
-        {/* Hero */}
-        <section className="relative overflow-hidden px-6 pb-20 pt-14 text-white sm:px-8 sm:pb-28 sm:pt-20">
-          <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
-            <div>
-              <span className="inline-block rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.15em] text-accent">
-                Online Coaching, Worldwide
-              </span>
-
-              <h1 className="font-display mt-5 text-5xl leading-[0.95] sm:text-6xl lg:text-7xl">
-                UNLEASH THE
-                <br />
-                <span className="text-accent">INNER WOLF</span>
-              </h1>
-
-              <p className="mt-5 max-w-md text-base leading-relaxed text-white/75 sm:text-lg">
-                ISSA-certified coaching built around your life, not a template.
-              </p>
-
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4">
-                <a
-                  href="#packages"
-                  className="btn btn-accent px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-white"
-                >
-                  View Packages
-                </a>
-              </div>
-            </div>
-
-            <div className="relative mx-auto w-full max-w-md sm:max-w-lg lg:max-w-none">
-              <div className="shadow-premium relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/10">
-                <Image
-                  src="/media/hero/coach-hero-portrait.jpg"
-                  alt="Your coach at Athletic Wolf"
-                  fill
-                  priority
-                  className="object-cover"
-                  sizes="(min-width: 1024px) 540px, (min-width: 640px) 450px, 100vw"
-                />
-              </div>
-            </div>
-          </div>
-        </section>
+        <HeroBanner />
 
         {/* Trust strip with icons */}
         <HeroBadges />

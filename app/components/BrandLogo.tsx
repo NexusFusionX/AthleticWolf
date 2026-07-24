@@ -38,6 +38,16 @@ export function BrandLogo({
     );
   }
 
+  // Home uses a hard navigation so the intro loader can play on Home clicks.
+  // Other destinations stay as client Links (no loader).
+  if (href === "/") {
+    return (
+      <a href="/" className={classes} style={{ height }} aria-label="Athletic Wolf home">
+        {image}
+      </a>
+    );
+  }
+
   return (
     <Link href={href} className={classes} style={{ height }} aria-label="Athletic Wolf home">
       {image}

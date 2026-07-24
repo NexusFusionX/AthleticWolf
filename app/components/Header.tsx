@@ -36,7 +36,10 @@ export function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-black">
+    <header
+      data-site-header
+      className="sticky top-0 z-50 border-b border-white/10 bg-black"
+    >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5 sm:px-8 sm:py-4">
         <BrandLogo height={72} priority />
         <nav className="hidden items-center gap-7 text-sm font-medium text-white/75 lg:flex">

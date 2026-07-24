@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 const MIN_MS = 1500;
 const MAX_MS = 15000;
-const SESSION_KEY = "aw-preloader-seen";
 const CX = 130;
 const CY = 130;
 const R = 115;
@@ -63,15 +62,16 @@ export function SitePreloader() {
   const [showTicks, setShowTicks] = useState(false);
 
   useEffect(() => {
-    let alreadySeen = false;
-    try {
-      alreadySeen = sessionStorage.getItem(SESSION_KEY) === "1";
-    } catch {
-      alreadySeen = false;
-    }
+    const path = window.location.pathname;
+    const isHome = path === "/" || path === "";
 
-    // Already played this tab session — never show again on Get Started / dashboard / etc.
-    if (alreadySeen || document.documentElement.classList.contains("aw-boot-skip")) {
+    // Loader only on homepage full loads (open / reload / Home link).
+    // Soft navigations (Get Started, packages, etc.) keep this layout mounted
+    // and never remount the preloader — so they never replay it.
+    if (
+      !isHome ||
+      document.documentElement.classList.contains("aw-boot-skip")
+    ) {
       removeBootSplash();
       document.documentElement.classList.add("aw-boot-done");
       setVisible(false);
@@ -83,11 +83,6 @@ export function SitePreloader() {
     setShowTicks(true);
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      try {
-        sessionStorage.setItem(SESSION_KEY, "1");
-      } catch {
-        /* ignore */
-      }
       removeBootSplash();
       setVisible(false);
       document.documentElement.style.overflow = "";
@@ -115,11 +110,6 @@ export function SitePreloader() {
       if (finished) return;
       finished = true;
       cancelAnimationFrame(frame);
-      try {
-        sessionStorage.setItem(SESSION_KEY, "1");
-      } catch {
-        /* ignore */
-      }
       setProgress(100);
       setLeaving(true);
       window.setTimeout(() => {

@@ -25,8 +25,8 @@ export const metadata: Metadata = {
     "ISSA-certified online personal training. Custom workout and nutrition programs, weekly check-ins, and real accountability. Coaching clients worldwide.",
 };
 
-/** Skip boot splash before paint when this tab already saw the intro */
-const bootSkipScript = `(function(){try{if(sessionStorage.getItem('aw-preloader-seen')==='1'){document.documentElement.classList.add('aw-boot-done','aw-boot-skip');}}catch(e){}})();`;
+/** Only the homepage plays the intro. Other routes skip boot immediately. */
+const bootSkipScript = `(function(){try{var p=location.pathname;if(p!=='/'&&p!==''){document.documentElement.classList.add('aw-boot-done','aw-boot-skip');}}catch(e){}})();`;
 
 export default function RootLayout({
   children,
@@ -37,12 +37,11 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${spaceGrotesk.variable} ${outfit.variable} h-full bg-black antialiased`}
-      // Skip script may add aw-boot-done / aw-boot-skip before hydrate
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col bg-black">
         <script dangerouslySetInnerHTML={{ __html: bootSkipScript }} />
-        {/* Instant cover — first visit only; skipped via sessionStorage after that */}
+        {/* Instant cover on homepage full loads (open + reload + Home link) */}
         <div id="aw-boot" aria-hidden="true" suppressHydrationWarning>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

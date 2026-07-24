@@ -66,12 +66,14 @@ html {
   scroll-behavior: smooth;
   font-family: var(--font-sans), system-ui, sans-serif;
   background-color: #000000;
+  overflow-x: clip;
 }
 
 body {
   background-color: #000000;
   color: var(--foreground);
   font-family: inherit;
+  overflow-x: clip;
 }
 
 h1, h2, h3, h4, h5, h6, .font-display {
@@ -410,6 +412,117 @@ h1, h2, h3, h4, h5, h6, .font-display {
   box-shadow:
     0 0 24px rgba(255, 107, 53, 0.28),
     0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Hero banner (full-bleed coach composite) ── */
+.hero-banner {
+  /* Fallback before JS measures header — pin fits under header */
+  height: calc(100svh - var(--site-header-height, 5.75rem) + 100svh);
+}
+
+.hero-banner__pin {
+  background: #000;
+  /* Fallback height until JS sets exact px */
+  height: calc(100svh - var(--site-header-height, 5.75rem));
+}
+
+.hero-banner__rule {
+  transform-origin: left center;
+  animation: hero-rule-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-banner__copy > *:not(.hero-banner__rule) {
+  animation: hero-copy-in 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-banner__copy > *:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.hero-banner__copy > *:nth-child(2) {
+  animation-delay: 0.12s;
+}
+.hero-banner__copy > *:nth-child(3) {
+  animation-delay: 0.22s;
+}
+.hero-banner__copy > *:nth-child(4) {
+  animation-delay: 0.32s;
+}
+.hero-banner__copy > *:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+@keyframes hero-rule-in {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes hero-copy-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-media-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-banner {
+    height: calc(100svh - var(--site-header-height, 5.75rem)) !important;
+  }
+
+  .hero-banner__pin {
+    position: relative !important;
+    height: calc(100svh - var(--site-header-height, 5.75rem)) !important;
+  }
+
+  .hero-banner__rule,
+  .hero-banner__copy > *,
+  .hero-banner__desktop-media img {
+    animation: none !important;
+  }
+
+  .hero-banner__copy,
+  .hero-banner__desktop-media {
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-banner__desktop-media img {
+    animation: hero-desktop-media-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+}
+
+@keyframes hero-desktop-media-in {
+  from {
+    opacity: 0.35;
+    transform: scale(1.04);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* ── Site preloader — structure mirrored from arbazarif HUD, orange brand ── */
