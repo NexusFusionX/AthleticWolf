@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { FloatingFaqWidget } from "./components/FloatingFaqWidget";
 import { ScrollProgress } from "./components/ScrollProgress";
+import { SitePreloader } from "./components/SitePreloader";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -36,6 +37,7 @@ export default function RootLayout({
     >
       <body className="flex min-h-full flex-col bg-black">
         <div className="grain-overlay" aria-hidden />
+        <SitePreloader />
         <ScrollProgress />
         {children}
         <FloatingFaqWidget />
