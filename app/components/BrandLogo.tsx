@@ -15,7 +15,7 @@ export function BrandLogo({
   height = 40,
   priority = false,
 }: BrandLogoProps) {
-  const width = Math.round(height * (1024 / 788));
+  const width = height;
 
   const image = (
     <Image

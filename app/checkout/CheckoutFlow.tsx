@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Check } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { StripeCheckoutPayment } from "@/app/components/StripeCheckoutPayment";
 import { packages } from "../data/packages";
 
 const ASSESSMENT_KEY = "athletic-wolf-pending-assessment";
@@ -78,34 +79,16 @@ export function CheckoutFlow() {
 
   const actionType = getActionType();
 
-  async function handleCheckout() {
+  async function handlePaymentSuccess() {
+    localStorage.removeItem(ASSESSMENT_KEY);
+    window.location.href = "/dashboard";
+  }
+
+  function handleExistingPlanCheckout() {
     if (!pkg || !user) return;
 
     if (existingPlan) {
       setShowUpgradeDialog(true);
-      return;
-    }
-
-    setProcessing(true);
-
-    try {
-      const { error } = await supabase.from("plans").insert({
-        user_id: user.id,
-        package_name: pkg.name,
-        status: "active",
-        assessment_completed_at: new Date().toISOString(),
-        assessment_data: pendingAssessment
-          ? JSON.stringify(pendingAssessment.formData)
-          : null,
-      });
-
-      if (error) throw error;
-
-      localStorage.removeItem(ASSESSMENT_KEY);
-      window.location.href = "/dashboard";
-    } catch (err) {
-      alert("Failed to complete purchase. Please try again.");
-      setProcessing(false);
     }
   }
 
@@ -278,22 +261,34 @@ export function CheckoutFlow() {
             </div>
           )}
 
-          <div className="mt-6 rounded-xl border border-dashed border-line bg-surface p-6 text-center">
-            <p className="text-sm font-semibold">🔒 Payment Method</p>
-            <p className="mt-2 text-sm text-muted">
-              Secure payment processing isn&apos;t connected yet. Once it is,
-              you&apos;ll enter your card details here. For now, continue below
-              to proceed as if payment were complete.
-            </p>
-          </div>
+          {existingPlan ? (
+            <>
+              <div className="mt-6 rounded-xl border border-dashed border-line bg-surface p-6 text-center">
+                <p className="text-sm font-semibold">Package change</p>
+                <p className="mt-2 text-sm text-muted">
+                  You already have an active package. Use the button below to upgrade or switch — payment integration for changes comes later.
+                </p>
+              </div>
 
-          <button
-            onClick={handleCheckout}
-            disabled={processing}
-            className="btn btn-accent font-display mt-6 w-full px-8 py-3.5 text-base text-white disabled:opacity-50"
-          >
-            {processing ? "Processing..." : "Complete Purchase (Test Mode) →"}
-          </button>
+              <button
+                type="button"
+                onClick={handleExistingPlanCheckout}
+                disabled={processing}
+                className="btn btn-accent font-display mt-6 w-full px-8 py-3.5 text-base text-white disabled:opacity-50"
+              >
+                Continue with package change
+              </button>
+            </>
+          ) : (
+            <div className="mt-6">
+              <StripeCheckoutPayment
+                packageName={pkg.name}
+                amountLabel={`$${pkg.price}`}
+                assessmentData={pendingAssessment?.formData}
+                onSuccess={handlePaymentSuccess}
+              />
+            </div>
+          )}
 
           <p className="mt-4 text-center text-xs leading-relaxed text-muted">
             By continuing, you agree to our{" "}
