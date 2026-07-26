@@ -1,39 +1,44 @@
 "use client";
 
-import {
-  Briefcase,
-  Lightbulb,
-  Scales,
-  Barbell,
-  TrendUp,
-  Heart,
-} from "@phosphor-icons/react";
+import { ProcessCard } from "./ProcessCard";
 import { Reveal } from "./Reveal";
 
 const categories = [
   {
-    icon: Briefcase,
+    emoji: "💼",
     title: "Busy Professionals",
+    description:
+      "Limited time, high stress. Get efficient workouts and nutrition that fit your calendar — not the other way around.",
   },
   {
-    icon: Lightbulb,
+    emoji: "💡",
     title: "Beginners",
+    description:
+      "New to training? Clear guidance, proper form, and a plan that builds confidence from day one.",
   },
   {
-    icon: Scales,
+    emoji: "⚖️",
     title: "Weight Loss Clients",
+    description:
+      "Tired of crash diets that don't stick? Sustainable fat loss through structured training and personalized nutrition.",
   },
   {
-    icon: Barbell,
+    emoji: "🏋️",
     title: "Muscle Building Enthusiasts",
+    description:
+      "Hit a plateau or starting fresh? Hypertrophy programming with progressive overload built in.",
   },
   {
-    icon: TrendUp,
+    emoji: "📈",
     title: "Weight Gain",
+    description:
+      "Struggling to put on size? Calorie-targeted nutrition and strength training to build lean mass.",
   },
   {
-    icon: Heart,
+    emoji: "❤️",
     title: "Anyone Struggling with Consistency",
+    description:
+      "Life gets in the way. Weekly accountability, check-ins, and coach support keep you showing up.",
   },
 ];
 
@@ -52,31 +57,15 @@ export function WhoItIsFor() {
         </Reveal>
 
         <div className="process-grid mt-14">
-          {categories.map((category, i) => {
-            const Icon = category.icon;
-            return (
-              <Reveal key={category.title} delay={i * 0.06}>
-                <article className="process-card group h-full">
-                  <span
-                    className="process-card-top-line"
-                    aria-hidden
-                  />
-                  <span
-                    className="process-card-glow"
-                    aria-hidden
-                  />
-
-                  <div className="process-icon-showcase">
-                    <div className="process-icon-frame">
-                      <Icon size={44} weight="regular" className="text-accent" />
-                    </div>
-                  </div>
-
-                  <h3 className="process-card-title">{category.title}</h3>
-                </article>
-              </Reveal>
-            );
-          })}
+          {categories.map((category, i) => (
+            <Reveal key={category.title} delay={i * 0.06}>
+              <ProcessCard
+                emoji={category.emoji}
+                title={category.title}
+                description={category.description}
+              />
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>
