@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Reveal } from "./Reveal";
-import { Play } from "@phosphor-icons/react";
+import { CaretLeft, CaretRight, Play } from "@phosphor-icons/react";
 
 const videos = [
   {
@@ -52,7 +52,6 @@ function VideoCard({ video }: { video: (typeof videos)[number] }) {
   function handlePlay() {
     if (!shouldLoad) setShouldLoad(true);
     setPlaying(true);
-    // play after src is attached
     requestAnimationFrame(() => {
       void videoRef.current?.play();
     });
@@ -61,7 +60,7 @@ function VideoCard({ video }: { video: (typeof videos)[number] }) {
   return (
     <div
       ref={cardRef}
-      className="card-premium group relative overflow-hidden rounded-2xl border border-line bg-card transition-all hover:-translate-y-1.5"
+      className="video-carousel__slide card-premium group relative h-full overflow-hidden rounded-2xl border border-line bg-card transition-all hover:-translate-y-1.5"
     >
       <div className="relative aspect-[9/16] w-full overflow-hidden bg-ink">
         <video
@@ -98,9 +97,69 @@ function VideoCard({ video }: { video: (typeof videos)[number] }) {
 }
 
 export function CoachVideos() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [activePage, setActivePage] = useState(0);
+  const [perView, setPerView] = useState(2);
+
+  useEffect(() => {
+    function updatePerView() {
+      setPerView(window.innerWidth >= 1024 ? 4 : 2);
+    }
+    updatePerView();
+    window.addEventListener("resize", updatePerView);
+    return () => window.removeEventListener("resize", updatePerView);
+  }, []);
+
+  const pageCount = Math.max(1, Math.ceil(videos.length / perView));
+
+  const syncActivePage = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const slide = track.querySelector<HTMLElement>(".video-carousel__slide");
+    if (!slide) return;
+    const gap = 16;
+    const slideStep = slide.offsetWidth + gap;
+    const page = Math.round(track.scrollLeft / (slideStep * perView));
+    setActivePage(Math.min(Math.max(page, 0), pageCount - 1));
+  }, [pageCount, perView]);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    track.addEventListener("scroll", syncActivePage, { passive: true });
+    return () => track.removeEventListener("scroll", syncActivePage);
+  }, [syncActivePage]);
+
+  useEffect(() => {
+    setActivePage(0);
+    if (trackRef.current) trackRef.current.scrollLeft = 0;
+  }, [perView]);
+
+  function scrollToPage(page: number) {
+    const track = trackRef.current;
+    if (!track) return;
+    const slide = track.querySelector<HTMLElement>(".video-carousel__slide");
+    if (!slide) return;
+    const gap = 16;
+    const slideStep = slide.offsetWidth + gap;
+    track.scrollTo({
+      left: page * slideStep * perView,
+      behavior: "smooth",
+    });
+    setActivePage(page);
+  }
+
+  function prev() {
+    scrollToPage(activePage === 0 ? pageCount - 1 : activePage - 1);
+  }
+
+  function next() {
+    scrollToPage(activePage === pageCount - 1 ? 0 : activePage + 1);
+  }
+
   return (
     <section className="px-6 py-20 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-7xl">
         <Reveal className="max-w-xl">
           <h2 className="font-display text-4xl sm:text-5xl">Coach Videos</h2>
           <p className="mt-4 text-muted">
@@ -108,12 +167,51 @@ export function CoachVideos() {
           </p>
         </Reveal>
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {videos.map((video, i) => (
-            <Reveal key={video.id} delay={i * 0.08}>
-              <VideoCard video={video} />
-            </Reveal>
-          ))}
+        <div className="video-carousel mt-14">
+          <div
+            ref={trackRef}
+            className="video-carousel__track flex gap-4 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {videos.map((video) => (
+              <VideoCard key={video.id} video={video} />
+            ))}
+          </div>
+
+          {pageCount > 1 && (
+            <div className="mt-6 flex items-center justify-center gap-4">
+              <button
+                type="button"
+                onClick={prev}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line text-white transition-colors hover:border-accent/40 hover:text-accent"
+                aria-label="Previous videos"
+              >
+                <CaretLeft size={16} weight="bold" />
+              </button>
+
+              <div className="flex items-center gap-2">
+                {Array.from({ length: pageCount }).map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => scrollToPage(i)}
+                    className={`h-2 rounded-full transition-all ${
+                      i === activePage ? "w-6 bg-accent" : "w-2 bg-white/25"
+                    }`}
+                    aria-label={`Go to video page ${i + 1}`}
+                  />
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={next}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line text-white transition-colors hover:border-accent/40 hover:text-accent"
+                aria-label="Next videos"
+              >
+                <CaretRight size={16} weight="bold" />
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </section>

@@ -414,6 +414,145 @@ h1, h2, h3, h4, h5, h6, .font-display {
     0 12px 28px rgba(0, 0, 0, 0.12);
 }
 
+/* ── Process-style cards (Who This Is For — Arbaz-inspired) ── */
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 1024px) {
+  .process-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 580px) {
+  .process-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.process-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 24px 32px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.02);
+  text-align: center;
+  overflow: hidden;
+  min-height: 260px;
+  transition:
+    border-color 0.4s ease,
+    box-shadow 0.4s ease,
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) {
+  .process-card:hover {
+    border-color: rgba(255, 107, 53, 0.22);
+    box-shadow: 0 0 48px rgba(255, 107, 53, 0.06);
+    transform: translateY(-4px);
+  }
+
+  .process-card:hover .process-card-top-line {
+    transform: scaleX(1);
+  }
+
+  .process-card:hover .process-icon-frame {
+    border-color: rgba(255, 107, 53, 0.28);
+    background: rgba(255, 107, 53, 0.06);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      0 0 24px rgba(255, 107, 53, 0.08);
+  }
+}
+
+.process-card-top-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+}
+
+.process-card-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 30%,
+    rgba(255, 107, 53, 0.06) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.process-card:hover .process-card-glow {
+  opacity: 1;
+}
+
+.process-icon-showcase {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.process-icon-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 112px;
+  height: 112px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition:
+    border-color 0.4s ease,
+    background 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.process-card-title {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: clamp(0.95rem, 1.2vw, 1.15rem);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Coach video carousel ── */
+.video-carousel__track {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.video-carousel__slide {
+  flex: 0 0 calc(50% - 8px);
+  scroll-snap-align: start;
+  min-width: 0;
+}
+
+@media (min-width: 1024px) {
+  .video-carousel__slide {
+    flex: 0 0 calc(25% - 12px);
+  }
+}
+
 /* ── Hero banner (full-bleed coach composite) ── */
 .hero-banner {
   /* Fallback before JS measures header — pin fits under header */
