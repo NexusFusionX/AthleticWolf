@@ -2,29 +2,55 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { Reveal } from "./Reveal";
+import { AccentHeading } from "./AccentHeading";
 import { programs } from "../data/programs";
 
-function ProgramCard({ program }: { program: (typeof programs)[number] }) {
+type Program = (typeof programs)[number];
+
+function ProgramTitle({ program }: { program: Program }) {
+  return (
+    <h3 className="font-display text-sm font-bold uppercase leading-tight tracking-wide">
+      {program.titleBefore ? (
+        <span className="text-white">{program.titleBefore} </span>
+      ) : null}
+      <span className="text-accent">{program.titleAccent}</span>
+      {program.titleAfter ? (
+        <span className="text-white"> {program.titleAfter}</span>
+      ) : null}
+    </h3>
+  );
+}
+
+function ProgramCard({ program }: { program: Program }) {
   return (
     <Link
       href={`/programs/${program.slug}`}
-      className="card-premium block overflow-hidden rounded-xl border border-line bg-card transition-all hover:-translate-y-1.5"
+      className="program-card card-premium group flex h-full flex-col overflow-hidden rounded-xl border border-line bg-card"
     >
-      <div className="relative aspect-[3/4] w-full overflow-hidden">
+      <span className="card-topline" aria-hidden />
+      <span className="card-corner-glow" aria-hidden />
+
+      <div className="program-card__media relative aspect-[3/4] w-full overflow-hidden">
         <Image
           src={program.src}
           alt={program.title}
           fill
-          className="object-cover"
+          className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           sizes="(min-width: 1024px) 240px, (min-width: 640px) 30vw, 90vw"
         />
+        <span className="program-card__media-fade" aria-hidden />
       </div>
-      <div className="p-4">
-        <h3 className="font-display text-sm font-bold uppercase leading-tight">
-          {program.title}
-        </h3>
-        <p className="mt-2 text-xs leading-relaxed text-muted">{program.desc}</p>
+
+      <div className="program-card__body flex flex-1 flex-col p-4">
+        <ProgramTitle program={program} />
+        <p className="mt-2 flex-1 text-xs leading-relaxed text-muted">{program.desc}</p>
+        <span className="program-card__chip mt-4 inline-flex w-fit items-center gap-1.5">
+          Learn More
+          <ArrowRight size={12} weight="bold" aria-hidden />
+        </span>
       </div>
+
+      <p className="program-card__footer">{program.outcome}</p>
     </Link>
   );
 }
@@ -33,34 +59,40 @@ function ProgramRow({
   program,
   delay = 0,
 }: {
-  program: (typeof programs)[number];
+  program: Program;
   delay?: number;
 }) {
   return (
     <Reveal delay={delay}>
       <Link
         href={`/programs/${program.slug}`}
-        className="card-premium group grid grid-cols-[minmax(112px,40%)_1fr] overflow-hidden rounded-2xl border border-line bg-card"
+        className="program-card program-card--row card-premium group block overflow-hidden rounded-2xl border border-line bg-card"
       >
-        <div className="relative min-h-[148px] w-full overflow-hidden">
-          <Image
-            src={program.src}
-            alt={program.title}
-            fill
-            className="object-cover"
-            sizes="40vw"
-          />
-        </div>
+        <span className="card-topline" aria-hidden />
+        <span className="card-corner-glow" aria-hidden />
 
-        <div className="flex flex-col justify-center gap-2.5 p-4">
-          <h3 className="font-display text-sm font-bold uppercase tracking-wide">
-            {program.title}
-          </h3>
-          <p className="text-xs leading-relaxed text-muted">{program.desc}</p>
-          <span className="mt-1 inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.14em] text-accent">
-            Learn More
-            <ArrowRight size={14} weight="bold" />
-          </span>
+        <div className="program-card__row grid grid-cols-[118px_1fr] items-stretch">
+          <div className="program-card__media program-card__media--portrait relative min-h-[158px] overflow-hidden">
+            <Image
+              src={program.src}
+              alt={program.title}
+              fill
+              className="object-cover object-center"
+              sizes="118px"
+            />
+          </div>
+
+          <div className="flex flex-col justify-center gap-2 p-4">
+            <ProgramTitle program={program} />
+            <p className="text-xs leading-relaxed text-muted">{program.desc}</p>
+            <p className="text-[11px] font-semibold leading-snug text-accent-bright">
+              {program.outcome}
+            </p>
+            <span className="program-card__chip mt-1 inline-flex w-fit items-center gap-1.5">
+              Learn More
+              <ArrowRight size={12} weight="bold" aria-hidden />
+            </span>
+          </div>
         </div>
       </Link>
     </Reveal>
@@ -73,22 +105,22 @@ export function Programs() {
       <div className="mx-auto max-w-6xl">
         <Reveal>
           <div className="mx-auto mb-4 h-px w-10 bg-accent" />
-          <h2 className="font-display text-center text-2xl tracking-wide sm:text-4xl">
-            COACHING PROGRAMS
-          </h2>
+          <AccentHeading
+            accent="COACHING"
+            after="PROGRAMS"
+            className="font-display text-center text-2xl tracking-wide sm:text-4xl"
+          />
         </Reveal>
 
-        {/* Mobile: horizontal image + text rows */}
-        <div className="mt-10 flex flex-col gap-5 sm:hidden">
+        <div className="mt-10 flex flex-col gap-4 sm:hidden">
           {programs.map((program, i) => (
             <ProgramRow key={program.slug} program={program} delay={i * 0.05} />
           ))}
         </div>
 
-        {/* Desktop: previous card grid */}
         <div className="mt-10 hidden gap-4 sm:grid sm:grid-cols-3 lg:grid-cols-5">
           {programs.map((program, i) => (
-            <Reveal key={program.slug} delay={i * 0.06}>
+            <Reveal key={program.slug} delay={i * 0.06} className="h-full">
               <ProgramCard program={program} />
             </Reveal>
           ))}

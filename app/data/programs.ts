@@ -3,6 +3,9 @@ export const programs = [
     slug: "fat-loss",
     src: "/media/programs/fat-loss.jpg",
     title: "Fat Loss Coaching",
+    titleAccent: "Fat Loss",
+    titleAfter: "Coaching",
+    outcome: "Sustainable fat loss without crash diets.",
     desc: "Lose fat, improve health and confidence with sustainable nutrition & training.",
     longDesc:
       "Our Fat Loss Coaching program is built around sustainable habits, not crash diets. You'll get a structured training plan combined with a nutrition strategy tailored to your body, schedule, and preferences, so the results actually stick.",
@@ -17,6 +20,9 @@ export const programs = [
     slug: "muscle-building",
     src: "/media/programs/muscle-building.jpg",
     title: "Muscle Building Coaching",
+    titleAccent: "Muscle Building",
+    titleAfter: "Coaching",
+    outcome: "Structured hypertrophy. Progressive overload built in.",
     desc: "Build lean muscle with structured workouts and optimal nutrition.",
     longDesc:
       "Designed for clients who want to build real, lasting muscle. Progressive overload programming paired with a nutrition plan that supports recovery and growth, tailored to your training experience and available equipment.",
@@ -31,6 +37,9 @@ export const programs = [
     slug: "body-recomposition",
     src: "/media/programs/body-recomposition.jpg",
     title: "Body Recomposition",
+    titleBefore: "Body",
+    titleAccent: "Recomposition",
+    outcome: "Lose fat and build muscle at the same time.",
     desc: "Lose fat and gain muscle at the same time. Transform your body composition.",
     longDesc:
       "Body recomposition is one of the harder goals to program correctly — losing fat and building muscle simultaneously requires precise nutrition and training balance. We tailor both to your body so you see real changes in how you look, not just the scale.",
@@ -45,6 +54,9 @@ export const programs = [
     slug: "online-coaching",
     src: "/media/programs/online-coaching.jpg",
     title: "Online Coaching",
+    titleAccent: "Online",
+    titleAfter: "Coaching",
+    outcome: "Train anywhere with weekly check-ins and support.",
     desc: "Full remote coaching with weekly check-ins, plan updates, and direct coach access.",
     longDesc:
       "Everything you need to train effectively from anywhere in the world. Full remote coaching with direct access to your coach, regular plan updates, and accountability built into every week — no gym required.",
@@ -59,6 +71,9 @@ export const programs = [
     slug: "nutrition-coaching",
     src: "/media/programs/nutrition-coaching.jpg",
     title: "Nutrition Coaching",
+    titleAccent: "Nutrition",
+    titleAfter: "Coaching",
+    outcome: "Meal plans built around your life, not the other way around.",
     desc: "Custom nutrition plans built around your preferences, schedule, and goals.",
     longDesc:
       "A nutrition plan should fit your life, not the other way around. We build custom meal guidance around your preferences, schedule, and dietary needs, so you can follow it consistently and see real results.",

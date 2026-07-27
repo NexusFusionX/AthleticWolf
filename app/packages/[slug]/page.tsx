@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Header } from "@/app/components/Header";
+import { AccentHeading } from "@/app/components/AccentHeading";
 import { packages } from "@/app/data/packages";
 import { Check } from "@phosphor-icons/react/dist/ssr";
 
@@ -51,7 +52,12 @@ export default async function PackageDetailPage({
                 Most Popular
               </span>
             )}
-            <h1 className="font-display text-4xl sm:text-5xl">{pkg.name} Plan</h1>
+            <AccentHeading
+              as="h1"
+              accent={pkg.name}
+              after="Plan"
+              className="font-display text-4xl sm:text-5xl"
+            />
             <p className="mt-4 max-w-xl text-white/75">{pkg.tagline}</p>
           </div>
         </section>
@@ -59,7 +65,7 @@ export default async function PackageDetailPage({
         <section className="px-6 py-16 sm:px-8 sm:py-20">
           <div className="mx-auto grid max-w-4xl gap-10 lg:grid-cols-[1fr_320px]">
             <div>
-              <h2 className="font-display text-2xl">What&apos;s Included</h2>
+              <AccentHeading before="What's" accent="Included" className="font-display text-2xl" />
               <ul className="mt-6 flex flex-col gap-3">
                 {pkg.features.map((feature) => (
                   <li key={feature} className="flex items-start gap-3 border-b border-dashed border-line pb-3">
@@ -70,7 +76,7 @@ export default async function PackageDetailPage({
               </ul>
 
               <div className="mt-10">
-                <h2 className="font-display text-2xl">How It Works</h2>
+                <AccentHeading accent="How" after="It Works" className="font-display text-2xl" />
                 <p className="mt-3 text-muted leading-relaxed">
                   Sign in, complete a short assessment about your goals and lifestyle,
                   then check out to lock in your {pkg.name} plan. Your coach reviews your

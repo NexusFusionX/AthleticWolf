@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Header } from "@/app/components/Header";
+import { AccentHeading } from "@/app/components/AccentHeading";
 import { ClipboardText, Phone, FileText, User, Trophy } from "@phosphor-icons/react/dist/ssr";
 
 export const metadata = {
@@ -59,7 +60,13 @@ export default function HowItWorksPage() {
             >
               ← Back to Home
             </Link>
-            <h1 className="font-display text-4xl sm:text-5xl">How Coaching Works</h1>
+            <AccentHeading
+              as="h1"
+              before="HOW"
+              accent="COACHING"
+              after="WORKS"
+              className="font-display text-4xl sm:text-5xl"
+            />
             <p className="mt-4 max-w-xl text-white/75">
               A full, step-by-step look at what happens from the moment you apply
               to the results you'll see down the line.
@@ -100,7 +107,11 @@ export default function HowItWorksPage() {
             </div>
 
             <div className="mt-14 rounded-2xl border border-line bg-card p-8 text-center shadow-premium">
-              <h2 className="font-display text-2xl">Ready to get started?</h2>
+              <AccentHeading
+                accent="Ready"
+                after="to get started?"
+                className="font-display text-2xl"
+              />
               <p className="mt-2 text-muted">
                 Pick a coaching package and begin your assessment today.
               </p>

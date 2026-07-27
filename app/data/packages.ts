@@ -5,6 +5,7 @@ export const packages = [
     price: 70,
     value: 140,
     featured: false,
+    ribbon: "Start Here",
     tagline: "The essential coaching package to build the habits that stick.",
     features: [
       "1:1 Coaching",
@@ -20,6 +21,7 @@ export const packages = [
     price: 130,
     value: 260,
     featured: true,
+    ribbon: "Best Value",
     tagline: "Our most popular package — full support, plans, and daily access.",
     features: [
       "Everything in Silver",
@@ -35,6 +37,7 @@ export const packages = [
     price: 170,
     value: 340,
     featured: false,
+    ribbon: "Premium",
     tagline: "The complete experience for clients who want every detail covered.",
     features: [
       "Everything in Platinum",

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Header } from "@/app/components/Header";
 import { Faq } from "@/app/components/Faq";
 import { AiFaqChat } from "@/app/components/AiFaqChat";
+import { AccentHeading } from "@/app/components/AccentHeading";
 
 export const metadata = {
   title: "FAQ & AI Assistant | Athletic Wolf",
@@ -22,7 +23,12 @@ export default function FaqPage() {
             >
               ← Back to Home
             </Link>
-            <h1 className="font-display text-4xl sm:text-5xl">Questions, Answered</h1>
+            <AccentHeading
+              as="h1"
+              before="Questions,"
+              accent="Answered"
+              className="font-display text-4xl sm:text-5xl"
+            />
             <p className="mt-4 max-w-xl text-white/75">
               Ask our AI assistant anything about our coaching programs, or browse
               common questions below.
@@ -36,7 +42,11 @@ export default function FaqPage() {
 
         <section className="px-6 pb-20 sm:px-8 sm:pb-28">
           <div className="mx-auto max-w-3xl">
-            <h2 className="font-display text-2xl">Common Questions</h2>
+            <AccentHeading
+              before="Common"
+              accent="Questions"
+              className="font-display mb-8 text-2xl"
+            />
             <Faq />
           </div>
         </section>

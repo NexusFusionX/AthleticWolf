@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ClipboardText, Phone, FileText, User, Trophy, ArrowRight, ArrowDown } from "@phosphor-icons/react";
 import { Reveal } from "./Reveal";
+import { AccentHeading } from "./AccentHeading";
 
 const steps = [
   {
@@ -38,9 +39,12 @@ export function HowCoachingWorks() {
       <div className="mx-auto max-w-7xl">
         <Reveal>
           <div className="mx-auto mb-4 h-px w-10 bg-accent" />
-          <h2 className="font-display text-center text-2xl tracking-wide sm:text-4xl lg:text-5xl">
-            HOW COACHING WORKS
-          </h2>
+          <AccentHeading
+            before="HOW"
+            accent="COACHING"
+            after="WORKS"
+            className="font-display text-center text-2xl tracking-wide sm:text-4xl lg:text-5xl"
+          />
         </Reveal>
 
         <div className="mt-16">

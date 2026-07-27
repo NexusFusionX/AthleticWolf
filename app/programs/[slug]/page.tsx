@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Header } from "@/app/components/Header";
+import { AccentHeading } from "@/app/components/AccentHeading";
 import { programs } from "@/app/data/programs";
 import { Check } from "@phosphor-icons/react/dist/ssr";
 
@@ -45,7 +46,13 @@ export default async function ProgramDetailPage({
             >
               ← All Programs
             </Link>
-            <h1 className="font-display text-4xl sm:text-5xl">{program.title}</h1>
+            <AccentHeading
+              as="h1"
+              accent={program.titleAccent}
+              before={program.titleBefore}
+              after={program.titleAfter}
+              className="font-display text-4xl sm:text-5xl"
+            />
             <p className="mt-4 max-w-xl text-white/75">{program.desc}</p>
           </div>
         </section>
@@ -67,7 +74,11 @@ export default async function ProgramDetailPage({
                 {program.longDesc}
               </p>
 
-              <h2 className="font-display mt-10 text-2xl">What You Get</h2>
+              <AccentHeading
+                before="What You"
+                accent="Get"
+                className="font-display mt-10 text-2xl"
+              />
               <ul className="mt-6 flex flex-col gap-3">
                 {program.highlights.map((point) => (
                   <li key={point} className="flex items-start gap-3 border-b border-dashed border-line pb-3">

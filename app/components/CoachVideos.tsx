@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Reveal } from "./Reveal";
+import { AccentHeading } from "./AccentHeading";
 import { CaretLeft, CaretRight, Play } from "@phosphor-icons/react";
 
 const videos = [
@@ -161,7 +162,11 @@ export function CoachVideos() {
     <section className="px-6 py-20 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-7xl">
         <Reveal className="max-w-xl">
-          <h2 className="font-display text-4xl sm:text-5xl">Coach Videos</h2>
+          <AccentHeading
+            accent="Coach"
+            after="Videos"
+            className="font-display text-4xl sm:text-5xl"
+          />
           <p className="mt-4 text-muted">
             Learn directly from our certified coaches with actionable insights.
           </p>

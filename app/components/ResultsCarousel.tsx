@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { BeforeAfterSlider } from "./BeforeAfterSlider";
 import { Reveal } from "./Reveal";
+import { AccentHeading } from "./AccentHeading";
 import { CaretLeft, CaretRight } from "@phosphor-icons/react";
 
 const transformations = [
@@ -45,9 +46,12 @@ export function ResultsCarousel() {
     >
       <div className="mx-auto max-w-6xl">
         <Reveal className="max-w-xl">
-          <h2 className="font-display text-4xl sm:text-5xl">
-            Real Clients, Real Progress
-          </h2>
+          <AccentHeading
+            before="Real"
+            accent="Clients"
+            after=", Real Progress"
+            className="font-display text-4xl sm:text-5xl"
+          />
           <p className="mt-4 text-muted">
             Drag the slider to see each transformation for yourself.
           </p>

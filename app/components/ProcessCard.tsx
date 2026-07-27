@@ -38,7 +38,7 @@ export function ProcessCard({ emoji, title, description }: ProcessCardProps) {
   return (
     <article
       ref={cardRef}
-      className="process-card group h-full"
+      className="process-card group"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={
@@ -52,16 +52,20 @@ export function ProcessCard({ emoji, title, description }: ProcessCardProps) {
       <span className="process-card-top-line" aria-hidden />
       <span className="process-card-glow" aria-hidden />
 
-      <div className="process-icon-showcase">
-        <div className="process-icon-frame">
-          <span className="process-icon-emoji" aria-hidden suppressHydrationWarning>
-            {emoji}
-          </span>
+      <div className="process-card__body">
+        <div className="process-icon-showcase">
+          <div className="process-icon-frame">
+            <span className="process-icon-emoji" aria-hidden suppressHydrationWarning>
+              {emoji}
+            </span>
+          </div>
+        </div>
+
+        <div className="process-card__content">
+          <h3 className="process-card-title">{title}</h3>
+          <p className="process-card-desc">{description}</p>
         </div>
       </div>
-
-      <h3 className="process-card-title">{title}</h3>
-      <p className="process-card-desc">{description}</p>
     </article>
   );
 }

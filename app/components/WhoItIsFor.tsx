@@ -2,6 +2,7 @@
 
 import { ProcessCard } from "./ProcessCard";
 import { Reveal } from "./Reveal";
+import { AccentHeading } from "./AccentHeading";
 
 const categories = [
   {
@@ -44,19 +45,21 @@ const categories = [
 
 export function WhoItIsFor() {
   return (
-    <section className="wheel-section px-6 py-20 sm:px-8 sm:py-28">
+    <section className="wheel-section px-6 py-16 sm:px-8 sm:py-22">
       <div className="mx-auto max-w-7xl">
         <Reveal>
           <div className="mx-auto mb-4 h-px w-10 bg-accent" />
-          <h2 className="font-display text-center text-2xl tracking-wide sm:text-4xl lg:text-5xl">
-            WHO THIS IS FOR
-          </h2>
+          <AccentHeading
+            accent="WHO"
+            after="THIS IS FOR"
+            className="font-display text-center text-2xl tracking-wide sm:text-4xl lg:text-5xl"
+          />
           <p className="mx-auto mt-4 max-w-xl text-center text-sm text-muted sm:text-base">
             Built for real people with real schedules — not gym influencers.
           </p>
         </Reveal>
 
-        <div className="process-grid mt-14">
+        <div className="process-grid mt-10 sm:mt-12">
           {categories.map((category, i) => (
             <Reveal key={category.title} delay={i * 0.06}>
               <ProcessCard
