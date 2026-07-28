@@ -1,5 +1,8 @@
 import Image from "next/image";
 
+const HERO_ALT =
+  "Athletic Wolf ISSA-certified coach at an outdoor gym";
+
 function HeroBannerCopy() {
   return (
     <div className="hero-banner__copy flex w-full flex-col justify-start px-6 pb-10 pt-14 sm:px-8 sm:pt-16 md:justify-center md:py-16 lg:w-[min(46%,34rem)] lg:px-16 xl:pl-24">
@@ -26,10 +29,16 @@ function HeroBannerCopy() {
 
       <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4 lg:mt-10">
         <a
-          href="#packages"
-          className="btn btn-accent px-7 py-3.5 text-sm font-bold uppercase tracking-wide text-white"
+          href="/quiz"
+          className="btn btn-accent px-7 py-3.5 text-sm font-semibold text-white"
         >
-          View Packages
+          Start free assessment
+        </a>
+        <a
+          href="#results"
+          className="btn btn-outline px-7 py-3.5 text-sm font-semibold"
+        >
+          See client results
         </a>
       </div>
     </div>
@@ -38,12 +47,12 @@ function HeroBannerCopy() {
 
 export function HeroBanner() {
   return (
-    <section className="hero-banner relative bg-black text-white">
-      {/* Mobile — full 1080×1920 portrait, no crop, no overlay */}
+    <section className="hero-banner relative w-full bg-black text-white">
+      {/* Mobile — full 1080×1920 portrait, no crop */}
       <div className="hero-banner__frame hero-banner__frame--mobile relative isolate md:hidden">
         <Image
           src="/media/hero/coach-hero-mobile.png"
-          alt=""
+          alt={HERO_ALT}
           width={1080}
           height={1920}
           priority
@@ -55,21 +64,21 @@ export function HeroBanner() {
         </div>
       </div>
 
-      {/* Desktop — full-bleed horizontal banner (unchanged) */}
-      <div className="hero-banner__frame hero-banner__frame--desktop relative isolate hidden overflow-hidden md:block">
-        <div className="hero-banner__media pointer-events-none absolute inset-0" aria-hidden>
+      {/* Desktop — full-bleed: fills viewport below header, edge to edge */}
+      <div className="hero-banner__frame hero-banner__frame--desktop relative isolate hidden w-full overflow-hidden md:block">
+        <div className="hero-banner__media absolute inset-0" aria-hidden>
           <Image
-            src="/media/hero/coach-hero-gym.png"
-            alt=""
+            src="/media/hero/coach-hero-outdoor.png"
+            alt={HERO_ALT}
             fill
             priority
-            className="hero-banner__media-img hero-banner__media-img--desktop object-cover object-right"
+            className="hero-banner__media-img hero-banner__media-img--desktop object-cover"
             sizes="100vw"
           />
           <div className="hero-banner__scrim absolute inset-0" />
         </div>
 
-        <div className="hero-banner__inner relative z-10 mx-auto flex min-h-[inherit] w-full max-w-[1720px] items-center">
+        <div className="hero-banner__inner absolute inset-0 z-10 mx-auto flex w-full max-w-[1720px] items-center">
           <HeroBannerCopy />
         </div>
       </div>

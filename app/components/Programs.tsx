@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { Reveal } from "./Reveal";
+import { revealAt, type RevealVariant } from "../lib/reveal";
 import { AccentHeading } from "./AccentHeading";
 import { programs } from "../data/programs";
 
@@ -55,15 +56,25 @@ function ProgramCard({ program }: { program: Program }) {
   );
 }
 
+const PROGRAM_CARD_VARIANTS = [
+  "tilt-left",
+  "flip-up",
+  "tilt-right",
+  "zoom",
+  "rise",
+] as const;
+
 function ProgramRow({
   program,
   delay = 0,
+  variant = "up",
 }: {
   program: Program;
   delay?: number;
+  variant?: RevealVariant;
 }) {
   return (
-    <Reveal delay={delay}>
+    <Reveal delay={delay} variant={variant}>
       <Link
         href={`/programs/${program.slug}`}
         className="program-card program-card--row card-premium group block overflow-hidden rounded-2xl border border-line bg-card"
@@ -101,9 +112,9 @@ function ProgramRow({
 
 export function Programs() {
   return (
-    <section id="programs" className="wheel-section px-6 py-16 sm:px-8 sm:py-20">
+    <section id="programs" className="section-y wheel-section px-6 sm:px-8">
       <div className="mx-auto max-w-6xl">
-        <Reveal>
+        <Reveal variant="drop">
           <div className="mx-auto mb-4 h-px w-10 bg-accent" />
           <AccentHeading
             accent="COACHING"
@@ -114,13 +125,23 @@ export function Programs() {
 
         <div className="mt-10 flex flex-col gap-4 sm:hidden">
           {programs.map((program, i) => (
-            <ProgramRow key={program.slug} program={program} delay={i * 0.05} />
+            <ProgramRow
+              key={program.slug}
+              program={program}
+              delay={i * 0.05}
+              variant={i % 2 === 0 ? "left" : "right"}
+            />
           ))}
         </div>
 
         <div className="mt-10 hidden gap-4 sm:grid sm:grid-cols-3 lg:grid-cols-5">
           {programs.map((program, i) => (
-            <Reveal key={program.slug} delay={i * 0.06} className="h-full">
+            <Reveal
+              key={program.slug}
+              delay={i * 0.06}
+              variant={revealAt([...PROGRAM_CARD_VARIANTS], i)}
+              className="h-full"
+            >
               <ProgramCard program={program} />
             </Reveal>
           ))}

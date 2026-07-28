@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Outfit, Space_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -46,7 +47,11 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col bg-black">
-        <script dangerouslySetInnerHTML={{ __html: bootSkipScript }} />
+        <Script
+          id="aw-boot-skip"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: bootSkipScript }}
+        />
         {/* Instant cover on homepage full loads (open + reload + Home link) */}
         <div id="aw-boot" aria-hidden="true" suppressHydrationWarning>
           {/* eslint-disable-next-line @next/next/no-img-element */}

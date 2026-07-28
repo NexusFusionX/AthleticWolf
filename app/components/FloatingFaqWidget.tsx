@@ -11,7 +11,7 @@ export function FloatingFaqWidget() {
   return (
     <>
       {open && (
-        <div className="fixed bottom-24 right-4 z-50 w-[calc(100vw-2rem)] max-w-sm sm:right-6 sm:bottom-28">
+        <div className="fixed bottom-[calc(max(1.25rem,env(safe-area-inset-bottom))+4.5rem)] right-[max(1rem,env(safe-area-inset-right))] z-50 w-[calc(100vw-2rem)] max-w-sm sm:right-[max(1.25rem,env(safe-area-inset-right))]">
           <AiFaqChat />
         </div>
       )}
@@ -19,7 +19,7 @@ export function FloatingFaqWidget() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="fixed bottom-5 right-5 z-50 flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border border-white/15 bg-black shadow-[0_10px_28px_rgba(0,0,0,0.55),0_0_20px_rgba(255,107,53,0.25)] transition-transform duration-300 hover:scale-105 sm:bottom-6 sm:right-6 sm:h-[4.5rem] sm:w-[4.5rem]"
+        className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-[max(1.25rem,env(safe-area-inset-right))] z-50 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-white/15 bg-black shadow-[0_10px_28px_rgba(0,0,0,0.55),0_0_20px_rgba(255,107,53,0.25)] transition-transform duration-300 hover:scale-105 sm:h-16 sm:w-16"
         aria-label={open ? "Close AI assistant" : "Open AI assistant"}
       >
         {open ? (

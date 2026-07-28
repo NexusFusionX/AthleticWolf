@@ -1,6 +1,11 @@
 import Link from "next/link";
-import { ArrowRight, Check } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRight, Check, Fire } from "@phosphor-icons/react/dist/ssr";
 import { packages } from "../data/packages";
+import { Reveal } from "./Reveal";
+import { revealAt } from "../lib/reveal";
+import { PackageStartLink } from "./PackageStartLink";
+
+const PACKAGE_VARIANTS = ["rise", "zoom", "tilt-right"] as const;
 
 type Package = (typeof packages)[number];
 
@@ -12,6 +17,7 @@ function ctaClassName(slug: Package["slug"]) {
 
 export function PackageCard({ pkg }: { pkg: Package }) {
   const isHero = pkg.featured;
+  const total = pkg.price * 6;
 
   return (
     <div
@@ -19,60 +25,61 @@ export function PackageCard({ pkg }: { pkg: Package }) {
     >
       {isHero ? (
         <span className="package-card__popular">
-          <span aria-hidden>🔥</span> Most Popular
+          <Fire size={14} weight="fill" aria-hidden />
+          Most Popular
         </span>
-      ) : null}
+      ) : (
+        <span className="package-card__badge">{pkg.ribbon}</span>
+      )}
 
       <article
         className={`package-card package-card--${pkg.slug}${isHero ? " package-card--hero" : ""}`}
       >
-        {!isHero ? (
-          <span className="package-card__ribbon">{pkg.ribbon}</span>
-        ) : null}
-
-      <div className="package-card__head">
-        <p className="package-card__tier">{pkg.name}</p>
-        <p className="package-card__term">6 Month Plan</p>
-        <p className="package-card__tagline">{pkg.tagline}</p>
-      </div>
-
-      <div className="package-card__pricing">
-        <div className="package-card__price-row">
-          <span className="package-card__price">${pkg.price}</span>
-          <span className="package-card__period">/ month</span>
+        <div className="package-card__head">
+          <p className="package-card__tier">{pkg.name}</p>
+          <p className="package-card__term">6 Month Plan</p>
+          <p className="package-card__tagline">{pkg.tagline}</p>
         </div>
-        <p className="package-card__billing">6-month coaching commitment</p>
-        <span className="package-card__value-badge">Total value ${pkg.value}</span>
-      </div>
 
-      <ul className="package-card__features">
-        {pkg.features.map((feature) => (
-          <li key={feature} className="package-card__feature">
-            <span className="package-card__check" aria-hidden>
-              <Check size={12} weight="bold" />
+        <div className="package-card__pricing">
+          <div className="package-card__price-row">
+            <span className="package-card__price">${pkg.price}</span>
+            <span className="package-card__period">/ month</span>
+          </div>
+          <p className="package-card__billing">
+            ${total} total · 6-month commitment
+          </p>
+        </div>
+
+        <ul className="package-card__features">
+          {pkg.features.map((feature) => (
+            <li key={feature} className="package-card__feature">
+              <span className="package-card__check" aria-hidden>
+                <Check size={12} weight="bold" />
+              </span>
+              <span>{feature}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div className="package-card__actions">
+          <PackageStartLink
+            packageName={pkg.name}
+            className={`package-card__cta ${ctaClassName(pkg.slug)}`}
+          >
+            <span className="package-card__cta-label">
+              Start with {pkg.name}
+              <ArrowRight size={16} weight="bold" aria-hidden />
             </span>
-            <span>{feature}</span>
-          </li>
-        ))}
-      </ul>
-
-      <div className="package-card__actions">
-        <Link
-          href={`/packages/${pkg.slug}`}
-          className={`package-card__cta ${ctaClassName(pkg.slug)}`}
-        >
-          <span className="package-card__cta-label">
-            Choose {pkg.name}
-            <ArrowRight size={16} weight="bold" aria-hidden />
-          </span>
-        </Link>
-        {isHero ? (
-          <Link href="/packages" className="package-card__cta-secondary">
-            <span className="package-card__cta-label">Compare all plans</span>
+          </PackageStartLink>
+          <Link
+            href={`/packages/${pkg.slug}`}
+            className="package-card__cta-secondary"
+          >
+            <span className="package-card__cta-label">Learn more</span>
           </Link>
-        ) : null}
-      </div>
-    </article>
+        </div>
+      </article>
     </div>
   );
 }
@@ -80,8 +87,10 @@ export function PackageCard({ pkg }: { pkg: Package }) {
 export function PackageGrid({ className = "" }: { className?: string }) {
   return (
     <div className={`package-card-grid ${className}`.trim()}>
-      {packages.map((pkg) => (
-        <PackageCard key={pkg.slug} pkg={pkg} />
+      {packages.map((pkg, i) => (
+        <Reveal key={pkg.slug} delay={i * 0.08} variant={revealAt([...PACKAGE_VARIANTS], i)}>
+          <PackageCard pkg={pkg} />
+        </Reveal>
       ))}
     </div>
   );

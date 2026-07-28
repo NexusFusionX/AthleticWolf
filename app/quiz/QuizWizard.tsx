@@ -4,6 +4,14 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import {
+  attachPackageToAssessment,
+  checkoutHref,
+  clearPendingAssessment,
+  isValidCompletedAssessment,
+  readPendingAssessment,
+  savePendingAssessment,
+} from "@/app/lib/assessment";
 
 type Option = { value: string; label: string };
 
@@ -163,7 +171,6 @@ type SavedProgress = {
 };
 
 const STORAGE_KEY = "athletic-wolf-quiz-progress";
-const ASSESSMENT_KEY = "athletic-wolf-pending-assessment";
 
 function loadSavedProgress(): SavedProgress | null {
   try {
@@ -186,6 +193,7 @@ export function QuizWizard() {
   const [formData, setFormData] = useState<Record<string, FormValue>>({});
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [resumePrompt, setResumePrompt] = useState<SavedProgress | null | undefined>(
     undefined
   );
@@ -215,15 +223,27 @@ export function QuizWizard() {
 
       setAuthLoading(false);
 
-      // Already has a plan under a different package: this is a switch/upgrade,
-      // skip the assessment and let checkout's upgrade dialog handle it.
-      if (
-        authUser &&
-        plan &&
-        selectedPackage &&
-        plan.package_name !== selectedPackage
-      ) {
-        router.replace(`/checkout?package=${encodeURIComponent(selectedPackage)}`);
+      if (!authUser) return;
+
+      const completed = readPendingAssessment();
+      if (completed && !isValidCompletedAssessment(authUser.id)) {
+        clearPendingAssessment();
+      }
+
+      if (plan) {
+        if (selectedPackage && plan.package_name !== selectedPackage) {
+          router.replace(checkoutHref(selectedPackage));
+        }
+        return;
+      }
+
+      if (isValidCompletedAssessment(authUser.id)) {
+        if (selectedPackage) {
+          attachPackageToAssessment(selectedPackage);
+          router.replace(checkoutHref(selectedPackage));
+          return;
+        }
+        router.replace("/#packages");
       }
     }
     checkAuth();
@@ -338,6 +358,7 @@ export function QuizWizard() {
     }
 
     setSubmitted(true);
+    setSubmitError(null);
 
     try {
       if (user && existingPlan) {
@@ -356,16 +377,22 @@ export function QuizWizard() {
         localStorage.removeItem(STORAGE_KEY);
         router.push("/dashboard");
       } else {
-        // Brand-new customer: assessment is done, now send them to pay.
-        localStorage.setItem(
-          ASSESSMENT_KEY,
-          JSON.stringify({ package: selectedPackage, formData })
-        );
+        savePendingAssessment({
+          package: selectedPackage,
+          formData,
+          completedAt: new Date().toISOString(),
+          userId: user.id,
+        });
         localStorage.removeItem(STORAGE_KEY);
-        router.push(`/checkout?package=${encodeURIComponent(selectedPackage || "")}`);
+
+        if (selectedPackage) {
+          router.push(checkoutHref(selectedPackage));
+        } else {
+          window.location.assign("/#packages");
+        }
       }
-    } catch (err) {
-      alert("Failed to save assessment. Please try again.");
+    } catch {
+      setSubmitError("Failed to save assessment. Please try again.");
       setSubmitted(false);
     }
   }
@@ -519,6 +546,11 @@ export function QuizWizard() {
         </div>
 
         <div className="p-8">
+          {submitError && (
+            <div className="mb-6 rounded-xl border border-error/30 bg-error/10 p-4">
+              <p className="text-sm text-error">{submitError}</p>
+            </div>
+          )}
           {submitted ? (
             <div className="py-4 text-center">
               <h2 className="font-display text-3xl">Assessment Complete ✅</h2>

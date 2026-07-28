@@ -221,26 +221,29 @@ h1, h2, h3, h4, h5, h6, .font-display {
 }
 
 .package-card__ribbon {
-  position: absolute;
-  top: 1.1rem;
-  right: -2.1rem;
-  z-index: 3;
-  width: 9rem;
-  rotate: 45deg;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 0.35rem 0;
-  text-align: center;
-  font-size: 0.625rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #111;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  display: none;
 }
 
-.package-card--diamond .package-card__ribbon {
-  background: linear-gradient(135deg, #ffb366 0%, #ff8a4d 100%);
-  color: #1a0f08;
+.package-card__badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 3;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.55);
+  padding: 0.35rem 0.75rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+}
+
+.package-card--diamond .package-card__badge {
+  border-color: rgba(255, 138, 77, 0.45);
+  color: var(--accent-light);
 }
 
 .package-card__popular {
@@ -1117,38 +1120,190 @@ h1, h2, h3, h4, h5, h6, .font-display {
   }
 }
 
-/* Wheel scroll: sections roll in from the bottom and roll away over the top,
-   like segments on a rotating drum. Scroll-driven CSS only; browsers without
-   animation-timeline support simply render a normal static page. */
-/* Wheel scroll disabled — was hiding sections (opacity 0) on black bg until scroll */
-
+/* Scroll reveal — each variant has its own motion character */
 .reveal {
-  opacity: 1;
+  opacity: 0;
+  transition-property: opacity, transform, filter;
+  transition-duration: 0.75s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal--up {
+  transform: translateY(44px);
+}
+
+.reveal--down {
+  transform: translateY(-36px);
+  transition-duration: 0.7s;
+}
+
+.reveal--left {
+  transform: translateX(-56px);
+}
+
+.reveal--right {
+  transform: translateX(56px);
+}
+
+.reveal--fade {
   transform: none;
+  transition-duration: 1s;
+  transition-timing-function: ease;
+}
+
+.reveal--scale {
+  transform: translateY(24px) scale(0.94);
+}
+
+.reveal--rise {
+  transform: translateY(72px) scale(0.96);
+  transition-duration: 0.9s;
+}
+
+.reveal--zoom {
+  transform: scale(0.82);
+  transition-duration: 0.85s;
+}
+
+.reveal--pop {
+  transform: scale(0.72);
+  transition-duration: 0.65s;
+  transition-timing-function: cubic-bezier(0.34, 1.45, 0.64, 1);
+}
+
+.reveal--tilt-left {
+  transform: translateX(-44px) rotate(-2.5deg);
+}
+
+.reveal--tilt-right {
+  transform: translateX(44px) rotate(2.5deg);
+}
+
+.reveal--blur-up {
+  transform: translateY(36px);
+  filter: blur(10px);
+  transition-duration: 0.9s;
+}
+
+.reveal--drop {
+  transform: translateY(-48px);
+  transition-duration: 0.7s;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal--slide-right {
+  transform: translateX(-72px);
+  transition-duration: 0.8s;
+}
+
+.reveal--skew-up {
+  transform: translateY(40px) skewY(2deg);
+  transition-duration: 0.8s;
+}
+
+.reveal--flip-up {
+  transform: perspective(900px) translateY(52px) rotateX(10deg);
+  transform-origin: 50% 100%;
+  transition-duration: 0.85s;
 }
 
 .reveal.is-visible {
   opacity: 1;
   transform: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .reveal {
-    opacity: 1;
-    transform: translateY(12px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-  }
-
-  .reveal.is-visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  filter: blur(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     opacity: 1;
     transform: none;
+    filter: none;
+    transition: none;
+  }
+}
+
+/* Layout tokens */
+.section-y {
+  padding-block: clamp(4rem, 8vw, 7rem);
+}
+
+.section-surface {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.wheel-section {
+  /* semantic section marker for homepage blocks */
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+}
+
+.input {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  color: var(--foreground);
+  outline: none;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.input:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.25);
+}
+
+.mobile-nav-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.mobile-nav-dialog[open] {
+  display: flex;
+}
+
+/* Sticky header — solid at top, frosted glass on scroll */
+.site-header {
+  transition:
+    background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    backdrop-filter 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.site-header--top {
+  border-color: transparent;
+  background: #000;
+  box-shadow: none;
+}
+
+.site-header--scrolled {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(18px) saturate(1.25);
+  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header {
     transition: none;
   }
 }
@@ -1478,17 +1633,29 @@ h1, h2, h3, h4, h5, h6, .font-display {
 }
 
 .hero-banner__frame--desktop {
-  min-height: calc(100svh - var(--site-header-height, 5.75rem));
+  width: 100%;
+  height: calc(100dvh - var(--site-header-height, 6.5625rem));
+  min-height: calc(100dvh - var(--site-header-height, 6.5625rem));
+  max-height: calc(100dvh - var(--site-header-height, 6.5625rem));
   background: #000;
+}
+
+.hero-banner__media {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-banner__media-img--desktop {
+  object-position: 68% 20%;
 }
 
 .hero-banner__scrim {
   background: linear-gradient(
     90deg,
-    rgba(0, 0, 0, 0.92) 0%,
-    rgba(0, 0, 0, 0.72) 42%,
-    rgba(0, 0, 0, 0.2) 68%,
-    transparent 82%
+    rgba(0, 0, 0, 0.58) 0%,
+    rgba(0, 0, 0, 0.32) 36%,
+    rgba(0, 0, 0, 0.08) 56%,
+    transparent 70%
   );
 }
 

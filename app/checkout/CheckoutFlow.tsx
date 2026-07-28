@@ -5,10 +5,18 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Check } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { CheckoutSkeleton } from "@/app/components/PageSkeleton";
+import { CheckoutSteps } from "@/app/components/CheckoutSteps";
 import { StripeCheckoutPayment } from "@/app/components/StripeCheckoutPayment";
 import { packages } from "../data/packages";
 
-const ASSESSMENT_KEY = "athletic-wolf-pending-assessment";
+import {
+  ASSESSMENT_KEY,
+  attachPackageToAssessment,
+  clearPendingAssessment,
+  isValidCompletedAssessment,
+  readPendingAssessment,
+} from "@/app/lib/assessment";
 
 export function CheckoutFlow() {
   const router = useRouter();
@@ -22,6 +30,7 @@ export function CheckoutFlow() {
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [pendingAssessment, setPendingAssessment] = useState<any>(null);
   const [redirectingToQuiz, setRedirectingToQuiz] = useState(false);
+  const [upgradeError, setUpgradeError] = useState<string | null>(null);
 
   useEffect(() => {
     async function checkAuth() {
@@ -45,21 +54,15 @@ export function CheckoutFlow() {
 
       // Brand-new customer (no plan yet): assessment must be completed first.
       if (authUser && !plan && packageName) {
-        let assessment = null;
-        try {
-          const raw = localStorage.getItem(ASSESSMENT_KEY);
-          assessment = raw ? JSON.parse(raw) : null;
-        } catch {
-          assessment = null;
-        }
-
-        if (!assessment || assessment.package !== packageName) {
+        if (!isValidCompletedAssessment(authUser.id)) {
+          clearPendingAssessment();
           setRedirectingToQuiz(true);
           router.replace(`/quiz?package=${encodeURIComponent(packageName)}`);
           return;
         }
 
-        setPendingAssessment(assessment);
+        const withPackage = attachPackageToAssessment(packageName);
+        setPendingAssessment(withPackage ?? readPendingAssessment());
       }
 
       setLoading(false);
@@ -108,8 +111,8 @@ export function CheckoutFlow() {
       if (error) throw error;
 
       window.location.href = "/dashboard";
-    } catch (err) {
-      alert("Failed to upgrade. Please try again.");
+    } catch {
+      setUpgradeError("Failed to upgrade. Please try again.");
       setProcessing(false);
     }
   }
@@ -133,6 +136,12 @@ export function CheckoutFlow() {
               You already have an active <strong>{existingPlan.package_name}</strong> package. Would you like to {actionText} to <strong>{pkg.name}</strong>?
             </p>
 
+            {upgradeError && (
+              <p className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+                {upgradeError}
+              </p>
+            )}
+
             <div className="space-y-3">
               <button
                 onClick={handleUpgrade}
@@ -155,8 +164,8 @@ export function CheckoutFlow() {
     );
   }
 
-  if (redirectingToQuiz) {
-    return null;
+  if (loading || redirectingToQuiz) {
+    return <CheckoutSkeleton />;
   }
 
   if (!pkg) {
@@ -221,6 +230,8 @@ export function CheckoutFlow() {
         </div>
 
         <div className="p-8">
+          <CheckoutSteps current="payment" />
+
           <div className="rounded-xl border border-line bg-surface p-6">
             <div className="flex items-center justify-between">
               <p className="font-display text-xl">{pkg.name} Plan</p>

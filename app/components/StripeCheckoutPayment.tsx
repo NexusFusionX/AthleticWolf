@@ -27,6 +27,9 @@ function PaymentForm({
   const elements = useElements();
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const isTestMode =
+    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?.startsWith("pk_test_") ??
+    process.env.NODE_ENV === "development";
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -113,12 +116,20 @@ function PaymentForm({
         disabled={!stripe || !elements || submitting}
         className="btn btn-accent font-display w-full px-8 py-3.5 text-base text-white disabled:opacity-50"
       >
-        {submitting ? "Processing..." : `Pay ${amountLabel} (Test Mode)`}
+        {submitting
+          ? "Processing..."
+          : isTestMode
+            ? `Pay ${amountLabel} (Test)`
+            : `Pay ${amountLabel}`}
       </button>
 
-      <p className="text-center text-xs leading-relaxed text-muted">
-        Stripe Test mode — use card <span className="font-mono">4242 4242 4242 4242</span> with any future expiry and CVC.
-      </p>
+      {isTestMode && (
+        <p className="text-center text-xs leading-relaxed text-muted">
+          Stripe test mode — use card{" "}
+          <span className="font-mono">4242 4242 4242 4242</span> with any future
+          expiry and CVC.
+        </p>
+      )}
     </form>
   );
 }
@@ -200,8 +211,10 @@ export function StripeCheckoutPayment({
 
   if (loading) {
     return (
-      <div className="rounded-xl border border-line bg-surface p-6 text-center text-sm text-muted">
-        Loading secure payment form...
+      <div className="animate-pulse rounded-xl border border-line bg-surface p-6 space-y-4">
+        <div className="h-4 w-32 rounded bg-white/10" />
+        <div className="h-24 rounded-lg bg-white/10" />
+        <div className="h-12 rounded-xl bg-white/10" />
       </div>
     );
   }
@@ -220,9 +233,9 @@ export function StripeCheckoutPayment({
 
   return (
     <div className="rounded-xl border border-line bg-surface p-6">
-      <p className="text-sm font-semibold">Card payment</p>
+      <p className="text-sm font-semibold">Secure payment</p>
       <p className="mt-1 text-xs text-muted">
-        Placeholder package pricing — final amounts can change later.
+        Your card details are encrypted by Stripe.
       </p>
 
       <div className="mt-4">

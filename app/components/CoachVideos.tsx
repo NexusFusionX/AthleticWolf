@@ -161,7 +161,7 @@ export function CoachVideos() {
   return (
     <section className="px-6 py-20 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-7xl">
-        <Reveal className="max-w-xl">
+        <Reveal className="max-w-xl" variant="left">
           <AccentHeading
             accent="Coach"
             after="Videos"
@@ -172,7 +172,8 @@ export function CoachVideos() {
           </p>
         </Reveal>
 
-        <div className="video-carousel mt-14">
+        <Reveal delay={0.12} variant="right">
+          <div className="video-carousel mt-14">
           <div
             ref={trackRef}
             className="video-carousel__track flex gap-4 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
@@ -217,7 +218,8 @@ export function CoachVideos() {
               </button>
             </div>
           )}
-        </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

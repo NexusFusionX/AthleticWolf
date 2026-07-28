@@ -6,6 +6,7 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import { Check } from "@phosphor-icons/react";
 import { PlanViewer } from "@/app/components/PlanViewer";
+import { DashboardSkeleton } from "@/app/components/PageSkeleton";
 
 interface UserData {
   email: string;
@@ -88,13 +89,7 @@ export default function DashboardPage() {
   }
 
   if (loading) {
-    return (
-      <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
-        <div className="text-center">
-          <p className="text-muted">Loading your dashboard...</p>
-        </div>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   return (
@@ -104,7 +99,7 @@ export default function DashboardPage() {
           <div className="rounded-xl bg-accent/10 border border-accent/30 p-4">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 text-center">
-                <p className="font-semibold text-accent">🎉 Your coaching plan is ready!</p>
+                <p className="font-semibold text-accent">Your coaching plan is ready</p>
                 <p className="text-sm text-foreground mt-2">Your personalized plan is below. Review your weekly workouts, nutrition targets, and goals to get started.</p>
               </div>
               <button
@@ -226,16 +221,26 @@ export default function DashboardPage() {
               )}
             </div>
           ) : (
-            <div className="text-center">
-              <p className="text-muted mb-6">
-                No active coaching package yet. Purchase one to get started.
+            <div className="rounded-xl border border-dashed border-line bg-surface p-8 text-center">
+              <p className="font-display text-xl">No active package yet</p>
+              <p className="mt-2 text-sm text-muted">
+                Take the free assessment, pick a plan, and your coach will build
+                your program.
               </p>
-              <Link
-                href="/#packages"
-                className="btn btn-accent px-8 py-3.5 text-base font-bold uppercase tracking-wide text-white"
-              >
-                View Packages
-              </Link>
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+                <Link
+                  href="/quiz"
+                  className="btn btn-accent px-8 py-3.5 text-base font-semibold text-white"
+                >
+                  Start assessment
+                </Link>
+                <Link
+                  href="/#packages"
+                  className="btn btn-outline px-8 py-3.5 text-base font-semibold"
+                >
+                  View packages
+                </Link>
+              </div>
             </div>
           )}
         </div>

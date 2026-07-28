@@ -1,20 +1,23 @@
+"use client";
+
 import {
   ShieldCheck,
   CheckCircle,
   Clock,
-  Headset,
-  Target,
-} from "@phosphor-icons/react/dist/ssr";
+  GlobeHemisphereWest,
+  CalendarCheck,
+} from "@phosphor-icons/react";
+import { Reveal } from "./Reveal";
 
 const badges = [
   {
     icon: ShieldCheck,
-    heading: "Certified",
-    label: "ISSA Certified Coach",
+    heading: "ISSA",
+    label: "Certified Coach",
   },
   {
     icon: CheckCircle,
-    heading: "Personal",
+    heading: "100%",
     label: "Personalized Plans",
   },
   {
@@ -23,14 +26,14 @@ const badges = [
     label: "Check-ins Included",
   },
   {
-    icon: Headset,
-    heading: "24/7",
-    label: "Coach Support",
+    icon: CalendarCheck,
+    heading: "6-Month",
+    label: "Coaching Programs",
   },
   {
-    icon: Target,
-    heading: "Proven",
-    label: "Evidence-Based Coaching",
+    icon: GlobeHemisphereWest,
+    heading: "Worldwide",
+    label: "Online Coaching",
   },
 ];
 
@@ -56,19 +59,21 @@ export function HeroBadges() {
   const mobileBadges = badges.slice(0, 3);
 
   return (
-    <section className="border-y border-line px-6 py-8 sm:px-8">
+    <section className="border-y border-line bg-card/30 px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-6xl">
-        {/* Mobile: top 3 only */}
         <div className="grid grid-cols-3 gap-3 sm:hidden">
-          {mobileBadges.map((badge) => (
-            <BadgeItem key={badge.heading} badge={badge} />
+          {mobileBadges.map((badge, i) => (
+            <Reveal key={badge.heading} delay={i * 0.07} variant="pop">
+              <BadgeItem badge={badge} />
+            </Reveal>
           ))}
         </div>
 
-        {/* Desktop: all 5 */}
         <div className="hidden grid-cols-5 gap-6 sm:grid">
-          {badges.map((badge) => (
-            <BadgeItem key={badge.heading} badge={badge} />
+          {badges.map((badge, i) => (
+            <Reveal key={badge.heading} delay={i * 0.06} variant="pop">
+              <BadgeItem badge={badge} />
+            </Reveal>
           ))}
         </div>
       </div>

@@ -3,7 +3,7 @@ import { Reveal } from "./Reveal";
 export function SeoText() {
   return (
     <section className="px-6 py-16 sm:px-8 sm:py-20">
-      <Reveal>
+      <Reveal variant="fade">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-sm leading-relaxed text-muted">
             Athletic Wolf is an online personal training and nutrition coaching

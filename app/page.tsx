@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+import { EnvelopeSimple, InstagramLogo } from "@phosphor-icons/react/dist/ssr";
 import { Faq } from "./components/Faq";
 import { Reveal } from "./components/Reveal";
 import { Header } from "./components/Header";
@@ -34,30 +36,25 @@ const differentiators = [
 export default function Home() {
   return (
     <div className="flex min-h-full flex-col overflow-x-clip">
+      <a href="#main-content" className="skip-link">
+        Skip to content
+      </a>
       <Header />
 
-      <main>
+      <main id="main-content">
         <HeroBanner />
-
-        {/* Trust strip with icons */}
         <HeroBadges />
-
-        {/* Programs */}
         <Programs />
-
-        {/* How Coaching Works */}
         <HowCoachingWorks />
-
-        {/* Who It Is For */}
         <WhoItIsFor />
-
-        {/* Does This Sound Like You */}
         <DoesThisSoundLikeYou />
 
-        {/* Packages */}
-        <section id="packages" className="wheel-section px-6 py-20 sm:px-8 sm:py-28">
+        {/* Results before pricing — social proof first */}
+        <ResultsCarousel />
+
+        <section id="packages" className="section-y wheel-section px-6 sm:px-8">
           <div className="mx-auto max-w-6xl">
-            <Reveal className="max-w-xl">
+            <Reveal className="max-w-xl" variant="skew-up">
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
                 Membership
               </p>
@@ -76,17 +73,12 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Results Carousel */}
-        <ResultsCarousel />
-
-        {/* Coach Videos */}
         <CoachVideos />
 
-        {/* About the Coach */}
-        <section id="about" className="wheel-section px-6 py-20 sm:px-8 sm:py-28">
+        <section id="about" className="section-y wheel-section section-surface px-6 sm:px-8">
           <div className="mx-auto max-w-6xl">
             <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
-              <Reveal>
+              <Reveal variant="left">
                 <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
                   About Your Coach
                 </p>
@@ -104,7 +96,7 @@ export default function Home() {
                 </p>
               </Reveal>
 
-              <Reveal delay={0.1}>
+              <Reveal delay={0.1} variant="right">
                 <div className="shadow-premium relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-line">
                   <Image
                     src="/media/about/coach-mountain.jpg"
@@ -119,7 +111,7 @@ export default function Home() {
 
             <div className="mt-14 border-t border-line">
               {differentiators.map((item, i) => (
-                <Reveal key={item.title} delay={i * 0.06}>
+                <Reveal key={item.title} delay={i * 0.06} variant="fade">
                   <div className="grid gap-2 border-b border-line py-6 sm:grid-cols-[220px_1fr] sm:gap-10">
                     <h3 className="font-display text-xl">{item.title}</h3>
                     <p className="text-sm leading-relaxed text-muted">
@@ -132,23 +124,18 @@ export default function Home() {
           </div>
         </section>
 
-        {/* SEO Text */}
         <SeoText />
-
         <PromoMarquee />
 
-        {/* FAQ */}
-        <section id="faq" className="px-6 py-16 sm:px-8 sm:py-20">
+        <section id="faq" className="section-y px-6 sm:px-8">
           <div className="mx-auto max-w-6xl">
-            <Reveal>
+            <Reveal variant="rise">
               <Faq showIntro />
             </Reveal>
           </div>
         </section>
-
       </main>
 
-      {/* Footer */}
       <footer className="bg-ink px-6 pt-16 pb-8 text-white sm:px-8">
         <div className="mx-auto max-w-6xl">
           <div className="grid gap-10 border-b border-white/10 pb-12 sm:grid-cols-2 lg:grid-cols-4">
@@ -158,6 +145,9 @@ export default function Home() {
                 ISSA-certified online personal training and nutrition coaching,
                 built for clients worldwide. No gym required.
               </p>
+              <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-accent/80">
+                ISSA Certified Personal Trainer
+              </p>
             </div>
             <div>
               <h5 className="text-sm font-bold uppercase tracking-[0.12em] text-white/90">
@@ -165,24 +155,24 @@ export default function Home() {
               </h5>
               <ul className="mt-4 flex flex-col gap-2.5 text-sm text-white/55">
                 <li>
-                  <a href="#programs" className="hover:text-white">
+                  <Link href="/#programs" className="hover:text-white">
                     Programs
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#packages" className="hover:text-white">
+                  <Link href="/#packages" className="hover:text-white">
                     Packages
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#results" className="hover:text-white">
+                  <Link href="/#results" className="hover:text-white">
                     Results
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="#about" className="hover:text-white">
+                  <Link href="/#about" className="hover:text-white">
                     About
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -192,24 +182,24 @@ export default function Home() {
               </h5>
               <ul className="mt-4 flex flex-col gap-2.5 text-sm text-white/55">
                 <li>
-                  <a href="#faq" className="hover:text-white">
+                  <Link href="/#faq" className="hover:text-white">
                     FAQ
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/privacy" className="hover:text-white">
+                  <Link href="/privacy" className="hover:text-white">
                     Privacy Policy
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/refund" className="hover:text-white">
+                  <Link href="/refund" className="hover:text-white">
                     Refund Policy
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a href="/terms" className="hover:text-white">
+                  <Link href="/terms" className="hover:text-white">
                     Terms &amp; Conditions
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -217,22 +207,42 @@ export default function Home() {
               <h5 className="text-sm font-bold uppercase tracking-[0.12em] text-white/90">
                 Contact
               </h5>
-              <p className="mt-4 text-sm text-white/55">hello@athleticwolf.com</p>
-              <p className="mt-2 text-sm text-white/55">@athletic_wolf7</p>
+              <ul className="mt-4 flex flex-col gap-3 text-sm text-white/55">
+                <li>
+                  <a
+                    href="mailto:hello@athleticwolf.com"
+                    className="inline-flex items-center gap-2 hover:text-white"
+                  >
+                    <EnvelopeSimple size={16} weight="regular" aria-hidden />
+                    hello@athleticwolf.com
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="https://instagram.com/athletic_wolf7"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 hover:text-white"
+                  >
+                    <InstagramLogo size={16} weight="regular" aria-hidden />
+                    @athletic_wolf7
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
           <div className="flex flex-wrap items-center justify-between gap-3 pt-6 text-xs text-white/40">
             <span>© {new Date().getFullYear()} Athletic Wolf. All rights reserved.</span>
             <div className="flex flex-wrap gap-x-4 gap-y-1">
-              <a href="/privacy" className="hover:text-white/70">
+              <Link href="/privacy" className="hover:text-white/70">
                 Privacy
-              </a>
-              <a href="/refund" className="hover:text-white/70">
+              </Link>
+              <Link href="/refund" className="hover:text-white/70">
                 Refunds
-              </a>
-              <a href="/terms" className="hover:text-white/70">
+              </Link>
+              <Link href="/terms" className="hover:text-white/70">
                 Terms
-              </a>
+              </Link>
             </div>
           </div>
         </div>

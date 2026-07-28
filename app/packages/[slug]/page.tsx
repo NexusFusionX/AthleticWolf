@@ -4,6 +4,7 @@ import { Header } from "@/app/components/Header";
 import { AccentHeading } from "@/app/components/AccentHeading";
 import { packages } from "@/app/data/packages";
 import { Check } from "@phosphor-icons/react/dist/ssr";
+import { PackageStartLink } from "@/app/components/PackageStartLink";
 
 export function generateStaticParams() {
   return packages.map((pkg) => ({ slug: pkg.slug }));
@@ -93,14 +94,14 @@ export default async function PackageDetailPage({
               </div>
               <p className="mt-1 text-sm text-muted">Total value ${pkg.value}</p>
 
-              <Link
-                href={`/quiz?package=${encodeURIComponent(pkg.name)}`}
+              <PackageStartLink
+                packageName={pkg.name}
                 className={`btn mt-6 w-full px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-white ${
                   pkg.featured ? "btn-accent" : "btn-dark"
                 }`}
               >
                 Choose {pkg.name}
-              </Link>
+              </PackageStartLink>
 
               {otherPackages.length > 0 && (
                 <div className="mt-6 border-t border-line pt-4">

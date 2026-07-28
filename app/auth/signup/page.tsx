@@ -91,7 +91,7 @@ function SignupContent() {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               required
-              className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
+              className="input"
               placeholder="John Doe"
             />
           </label>
@@ -103,7 +103,7 @@ function SignupContent() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
+              className="input"
               placeholder="you@example.com"
             />
           </label>
@@ -115,7 +115,7 @@ function SignupContent() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
+              className="input"
               placeholder="••••••••"
             />
           </label>
@@ -127,7 +127,7 @@ function SignupContent() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
-              className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
+              className="input"
               placeholder="••••••••"
             />
           </label>
@@ -135,7 +135,7 @@ function SignupContent() {
           <button
             type="submit"
             disabled={loading}
-            className="btn btn-accent w-full px-8 py-3.5 text-base font-bold uppercase tracking-wide text-white disabled:opacity-50"
+            className="btn btn-accent w-full px-8 py-3.5 text-base font-semibold text-white disabled:opacity-50"
           >
             {loading ? "Creating account..." : "Sign Up"}
           </button>

@@ -45,9 +45,9 @@ const categories = [
 
 export function WhoItIsFor() {
   return (
-    <section className="wheel-section px-6 py-16 sm:px-8 sm:py-22">
+    <section className="section-y wheel-section section-surface px-6 sm:px-8">
       <div className="mx-auto max-w-7xl">
-        <Reveal>
+        <Reveal variant="blur-up">
           <div className="mx-auto mb-4 h-px w-10 bg-accent" />
           <AccentHeading
             accent="WHO"
@@ -61,7 +61,11 @@ export function WhoItIsFor() {
 
         <div className="process-grid mt-10 sm:mt-12">
           {categories.map((category, i) => (
-            <Reveal key={category.title} delay={i * 0.06}>
+            <Reveal
+              key={category.title}
+              delay={i * 0.06}
+              variant={i % 2 === 0 ? "left" : "right"}
+            >
               <ProcessCard
                 emoji={category.emoji}
                 title={category.title}

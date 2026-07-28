@@ -6,7 +6,7 @@ import { Reveal } from "./Reveal";
 export function DoesThisSoundLikeYou() {
   return (
     <section className="wheel-section w-full max-w-none bg-ink p-0 m-0">
-      <Reveal>
+      <Reveal variant="zoom">
         {/* Mobile: portrait version, shown at natural aspect ratio (no cropping) */}
         <div className="relative w-full sm:hidden">
           <Image

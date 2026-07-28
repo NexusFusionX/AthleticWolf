@@ -1,43 +1,51 @@
 "use client";
 
 import Link from "next/link";
-import { ClipboardText, Phone, FileText, User, Trophy, ArrowRight, ArrowDown } from "@phosphor-icons/react";
+import {
+  ClipboardText,
+  CreditCard,
+  FileText,
+  User,
+  Trophy,
+  ArrowRight,
+  ArrowDown,
+} from "@phosphor-icons/react";
 import { Reveal } from "./Reveal";
 import { AccentHeading } from "./AccentHeading";
 
 const steps = [
   {
     icon: ClipboardText,
-    title: "APPLY",
-    desc: "Fill out the application",
-  },
-  {
-    icon: Phone,
-    title: "CONSULTATION CALL",
-    desc: "We discuss your goals",
-  },
-  {
-    icon: FileText,
-    title: "PERSONALIZED PLAN",
-    desc: "Get a custom plan tailored to your needs",
+    title: "Take Assessment",
+    desc: "Answer a few questions about your goals, schedule, and experience.",
   },
   {
     icon: User,
-    title: "WEEKLY COACHING",
-    desc: "Weekly check-ins, reviews & support",
+    title: "Create Account",
+    desc: "Sign up, pick your package, and secure your coaching spot.",
+  },
+  {
+    icon: CreditCard,
+    title: "Secure Checkout",
+    desc: "Complete payment safely online — no hidden fees.",
+  },
+  {
+    icon: FileText,
+    title: "Get Your Plan",
+    desc: "Receive your custom workout and nutrition plan within days.",
   },
   {
     icon: Trophy,
-    title: "ACHIEVE RESULTS",
-    desc: "Transform your body and your life",
+    title: "Weekly Coaching",
+    desc: "Check-ins, plan updates, and direct coach support throughout.",
   },
 ];
 
 export function HowCoachingWorks() {
   return (
-    <section id="how-it-works" className="wheel-section px-6 py-20 sm:px-8 sm:py-28">
+    <section id="how-it-works" className="section-y wheel-section px-6 sm:px-8">
       <div className="mx-auto max-w-7xl">
-        <Reveal>
+        <Reveal variant="fade">
           <div className="mx-auto mb-4 h-px w-10 bg-accent" />
           <AccentHeading
             before="HOW"
@@ -48,12 +56,11 @@ export function HowCoachingWorks() {
         </Reveal>
 
         <div className="mt-16">
-          {/* Desktop flow */}
           <div className="hidden lg:grid lg:grid-cols-5 lg:gap-6">
             {steps.map((step, i) => {
               const Icon = step.icon;
               return (
-                <Reveal key={step.title} delay={i * 0.08}>
+                <Reveal key={step.title} delay={i * 0.08} variant="slide-right">
                   <div className="relative flex flex-col items-center text-center">
                     <div className="relative z-10 flex h-20 w-20 shrink-0 items-center justify-center rounded-full border-2 border-line bg-card text-accent">
                       <Icon size={32} weight="regular" />
@@ -65,7 +72,7 @@ export function HowCoachingWorks() {
                       </div>
                     )}
 
-                    <p className="font-display mt-4 text-sm font-bold uppercase tracking-wider">
+                    <p className="font-display mt-4 text-sm font-bold tracking-wide">
                       {step.title}
                     </p>
                     <p className="mt-2 max-w-[140px] text-center text-xs text-muted">
@@ -77,23 +84,24 @@ export function HowCoachingWorks() {
             })}
           </div>
 
-          {/* Mobile flow */}
           <div className="mx-auto max-w-sm lg:hidden">
             {steps.map((step, i) => {
               const Icon = step.icon;
               const isLast = i === steps.length - 1;
               return (
-                <Reveal key={step.title} delay={i * 0.08}>
+                <Reveal key={step.title} delay={i * 0.08} variant="down">
                   <div>
                     <div className="grid grid-cols-[3rem_1fr] gap-4">
                       <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-line bg-card text-accent">
                         <Icon size={18} weight="light" />
                       </div>
                       <div className="flex flex-col justify-center">
-                        <p className="font-display text-xs font-bold uppercase tracking-wider">
+                        <p className="font-display text-xs font-bold tracking-wide">
                           {step.title}
                         </p>
-                        <p className="mt-1 text-xs leading-relaxed text-muted">{step.desc}</p>
+                        <p className="mt-1 text-xs leading-relaxed text-muted">
+                          {step.desc}
+                        </p>
                       </div>
                     </div>
 
@@ -111,10 +119,10 @@ export function HowCoachingWorks() {
 
         <div className="mt-12 text-center">
           <Link
-            href="/how-it-works"
-            className="text-sm font-semibold text-accent hover:underline"
+            href="/quiz"
+            className="btn btn-accent px-6 py-3 text-sm font-semibold text-white"
           >
-            View Full Step-By-Step Details →
+            Start your assessment
           </Link>
         </div>
       </div>
