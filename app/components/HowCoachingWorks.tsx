@@ -119,7 +119,7 @@ export function HowCoachingWorks() {
 
         <div className="mt-12 text-center">
           <Link
-            href="/quiz"
+            href="/quiz?start=1"
             className="btn btn-accent px-6 py-3 text-sm font-semibold text-white"
           >
             Start your assessment

@@ -63,7 +63,7 @@ function VideoCard({ video }: { video: (typeof videos)[number] }) {
       ref={cardRef}
       className="video-carousel__slide card-premium group relative h-full overflow-hidden rounded-2xl border border-line bg-card transition-all hover:-translate-y-1.5"
     >
-      <div className="relative aspect-[9/16] w-full overflow-hidden bg-ink">
+      <div className="relative aspect-[9/16] w-full overflow-hidden bg-ink video-card__media sm:aspect-[9/16] max-sm:aspect-[4/5] max-sm:max-h-[280px]">
         <video
           ref={videoRef}
           src={shouldLoad ? video.src : undefined}
@@ -159,7 +159,7 @@ export function CoachVideos() {
   }
 
   return (
-    <section className="px-6 py-20 sm:px-8 sm:py-28">
+    <section id="coach-videos" className="px-6 py-20 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-7xl">
         <Reveal className="max-w-xl" variant="left">
           <AccentHeading

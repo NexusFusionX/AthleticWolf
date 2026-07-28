@@ -24,10 +24,14 @@ export function PackageCard({ pkg }: { pkg: Package }) {
       className={`package-card-shell${isHero ? " package-card-shell--hero" : ""}`}
     >
       {isHero ? (
-        <span className="package-card__popular">
-          <Fire size={14} weight="fill" aria-hidden />
-          Most Popular
-        </span>
+        <>
+          <span className="package-card__patti package-card__patti--left" aria-hidden />
+          <span className="package-card__patti package-card__patti--right" aria-hidden />
+          <span className="package-card__popular">
+            <Fire size={14} weight="fill" aria-hidden />
+            Most Popular
+          </span>
+        </>
       ) : (
         <span className="package-card__badge">{pkg.ribbon}</span>
       )}

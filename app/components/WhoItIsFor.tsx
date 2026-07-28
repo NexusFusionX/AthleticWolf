@@ -63,8 +63,9 @@ export function WhoItIsFor() {
           {categories.map((category, i) => (
             <Reveal
               key={category.title}
-              delay={i * 0.06}
-              variant={i % 2 === 0 ? "left" : "right"}
+              delay={i * 0.05}
+              variant="fade"
+              className="h-full"
             >
               <ProcessCard
                 emoji={category.emoji}

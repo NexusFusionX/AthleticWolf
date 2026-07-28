@@ -1,13 +1,10 @@
-"use client";
-
 import {
   ShieldCheck,
   CheckCircle,
   Clock,
   GlobeHemisphereWest,
   CalendarCheck,
-} from "@phosphor-icons/react";
-import { Reveal } from "./Reveal";
+} from "@phosphor-icons/react/dist/ssr";
 
 const badges = [
   {
@@ -59,21 +56,17 @@ export function HeroBadges() {
   const mobileBadges = badges.slice(0, 3);
 
   return (
-    <section className="border-y border-line bg-card/30 px-6 py-8 sm:px-8">
+    <section className="border-y border-line px-6 py-8 sm:px-8">
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-3 gap-3 sm:hidden">
-          {mobileBadges.map((badge, i) => (
-            <Reveal key={badge.heading} delay={i * 0.07} variant="pop">
-              <BadgeItem badge={badge} />
-            </Reveal>
+          {mobileBadges.map((badge) => (
+            <BadgeItem key={badge.heading} badge={badge} />
           ))}
         </div>
 
         <div className="hidden grid-cols-5 gap-6 sm:grid">
-          {badges.map((badge, i) => (
-            <Reveal key={badge.heading} delay={i * 0.06} variant="pop">
-              <BadgeItem badge={badge} />
-            </Reveal>
+          {badges.map((badge) => (
+            <BadgeItem key={badge.heading} badge={badge} />
           ))}
         </div>
       </div>

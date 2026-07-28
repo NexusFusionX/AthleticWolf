@@ -82,8 +82,8 @@ function ProgramRow({
         <span className="card-topline" aria-hidden />
         <span className="card-corner-glow" aria-hidden />
 
-        <div className="program-card__row grid grid-cols-[118px_1fr] items-stretch">
-          <div className="program-card__media program-card__media--portrait relative min-h-[158px] overflow-hidden">
+        <div className="program-card__row grid grid-cols-[7.5rem_1fr] items-stretch sm:grid-cols-[118px_1fr]">
+          <div className="program-card__media program-card__media--portrait relative min-h-[9.5rem] overflow-hidden sm:min-h-[158px]">
             <Image
               src={program.src}
               alt={program.title}
@@ -93,9 +93,9 @@ function ProgramRow({
             />
           </div>
 
-          <div className="flex flex-col justify-center gap-2 p-4">
+          <div className="flex min-w-0 flex-col justify-center gap-1.5 p-3.5 sm:gap-2 sm:p-4">
             <ProgramTitle program={program} />
-            <p className="text-xs leading-relaxed text-muted">{program.desc}</p>
+            <p className="line-clamp-2 text-xs leading-relaxed text-muted">{program.desc}</p>
             <p className="text-[11px] font-semibold leading-snug text-accent-bright">
               {program.outcome}
             </p>
@@ -123,13 +123,13 @@ export function Programs() {
           />
         </Reveal>
 
-        <div className="mt-10 flex flex-col gap-4 sm:hidden">
+        <div className="mt-10 flex flex-col gap-3 sm:hidden">
           {programs.map((program, i) => (
             <ProgramRow
               key={program.slug}
               program={program}
-              delay={i * 0.05}
-              variant={i % 2 === 0 ? "left" : "right"}
+              delay={i * 0.04}
+              variant="fade"
             />
           ))}
         </div>
@@ -139,7 +139,7 @@ export function Programs() {
             <Reveal
               key={program.slug}
               delay={i * 0.06}
-              variant={revealAt([...PROGRAM_CARD_VARIANTS], i)}
+              variant={revealAt([...PROGRAM_CARD_VARIANTS], i) as RevealVariant}
               className="h-full"
             >
               <ProgramCard program={program} />

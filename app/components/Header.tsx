@@ -101,11 +101,12 @@ export function Header() {
     setMenuOpen(false);
   }
 
+  const quizStartHref = "/quiz?start=1";
   const ctaHref = !isLoggedIn
-    ? `/auth/login?redirect=${encodeURIComponent("/quiz")}`
+    ? `/auth/login?redirect=${encodeURIComponent(quizStartHref)}`
     : hasActivePlan
       ? "/dashboard"
-      : "/quiz";
+      : quizStartHref;
   const ctaLabel = isLoggedIn && hasActivePlan ? "Dashboard" : "Get Started";
 
   return (

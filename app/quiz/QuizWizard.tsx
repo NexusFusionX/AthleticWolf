@@ -188,6 +188,7 @@ export function QuizWizard() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const selectedPackage = searchParams.get("package");
+  const startFresh = searchParams.get("start") === "1";
 
   const [current, setCurrent] = useState(0);
   const [formData, setFormData] = useState<Record<string, FormValue>>({});
@@ -202,6 +203,13 @@ export function QuizWizard() {
   const [authLoading, setAuthLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
   const [existingPlan, setExistingPlan] = useState<any>(null);
+
+  useEffect(() => {
+    if (startFresh) {
+      clearPendingAssessment();
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }, [startFresh]);
 
   useEffect(() => {
     async function checkAuth() {
@@ -236,18 +244,9 @@ export function QuizWizard() {
         }
         return;
       }
-
-      if (isValidCompletedAssessment(authUser.id)) {
-        if (selectedPackage) {
-          attachPackageToAssessment(selectedPackage);
-          router.replace(checkoutHref(selectedPackage));
-          return;
-        }
-        router.replace("/#packages");
-      }
     }
     checkAuth();
-  }, [selectedPackage, router]);
+  }, [selectedPackage, router, startFresh]);
 
   useEffect(() => {
     const saved = loadSavedProgress();
