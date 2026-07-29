@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+const LOGO_SRC = "/brand/athletic-wolf-wordmark.png";
+
 type BrandLogoProps = {
   href?: string;
   className?: string;
@@ -15,41 +17,36 @@ export function BrandLogo({
   height = 40,
   priority = false,
 }: BrandLogoProps) {
-  const width = height;
-
   const image = (
     <Image
-      src="/brand/athletic-wolf-logo.png"
+      src={LOGO_SRC}
       alt="Athletic Wolf"
-      width={width}
-      height={height}
+      width={1024}
+      height={1024}
       priority={priority}
-      className="h-full w-auto object-contain"
+      unoptimized
+      className="block w-auto max-w-none object-contain"
+      style={{ height: `${height}px` }}
     />
   );
 
-  const classes = `inline-flex items-center ${className}`.trim();
+  const classes = `inline-flex shrink-0 items-center ${className}`.trim();
 
   if (!href) {
-    return (
-      <span className={classes} style={{ height }}>
-        {image}
-      </span>
-    );
+    return <span className={classes}>{image}</span>;
   }
 
   // Home uses a hard navigation so the intro loader can play on Home clicks.
-  // Other destinations stay as client Links (no loader).
   if (href === "/") {
     return (
-      <a href="/" className={classes} style={{ height }} aria-label="Athletic Wolf home">
+      <a href="/" className={classes} aria-label="Athletic Wolf home">
         {image}
       </a>
     );
   }
 
   return (
-    <Link href={href} className={classes} style={{ height }} aria-label="Athletic Wolf home">
+    <Link href={href} className={classes} aria-label="Athletic Wolf home">
       {image}
     </Link>
   );

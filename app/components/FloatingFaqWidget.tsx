@@ -19,7 +19,7 @@ export function FloatingFaqWidget() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-[max(1.25rem,env(safe-area-inset-right))] z-50 flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-white/15 bg-black shadow-[0_10px_28px_rgba(0,0,0,0.55),0_0_20px_rgba(255,107,53,0.25)] transition-transform duration-300 hover:scale-105 sm:h-16 sm:w-16"
+        className="fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-[max(1.25rem,env(safe-area-inset-right))] z-50 flex h-14 items-center justify-center overflow-hidden rounded-xl border border-white/15 bg-black px-2.5 shadow-[0_10px_28px_rgba(0,0,0,0.55),0_0_20px_rgba(255,107,53,0.25)] transition-transform duration-300 hover:scale-105 sm:h-16 sm:px-3"
         aria-label={open ? "Close AI assistant" : "Open AI assistant"}
       >
         {open ? (
@@ -28,11 +28,11 @@ export function FloatingFaqWidget() {
           </span>
         ) : (
           <Image
-            src="/brand/athletic-wolf-logo.png"
+            src="/brand/athletic-wolf-wordmark.png"
             alt="Athletic Wolf"
-            width={72}
-            height={72}
-            className="h-full w-full object-cover scale-110"
+            width={120}
+            height={40}
+            className="h-8 w-auto object-contain sm:h-9"
             priority
           />
         )}

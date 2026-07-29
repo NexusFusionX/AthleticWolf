@@ -42,7 +42,7 @@ export function SiteFooter() {
       <div className="mx-auto max-w-6xl px-6 pt-14 pb-8 sm:px-8">
         <div className="grid gap-10 border-b border-white/10 pb-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-4">
-            <BrandLogo height={72} />
+            <BrandLogo height={80} className="min-w-[11.5rem]" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/55">
               ISSA-certified online personal training and nutrition coaching for
               clients worldwide.

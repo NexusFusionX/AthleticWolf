@@ -1,166 +1,116 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Reveal } from "./Reveal";
 import { AccentHeading } from "./AccentHeading";
-import { CaretLeft, CaretRight, Play } from "@phosphor-icons/react";
+import { Play } from "@phosphor-icons/react";
 
-const videos = [
-  {
-    id: 1,
-    title: "Push-Up Form Breakdown",
-    desc: "Master proper push-up technique for maximum chest and tricep engagement.",
-    src: "/media/coach/pushup.mp4",
-  },
-  {
-    id: 2,
-    title: "Tricep Extension Guide",
-    desc: "Build stronger, more defined triceps with correct extension form.",
-    src: "/media/coach/tricep.mp4",
-  },
-  {
-    id: 3,
-    title: "Biceps Training Guide",
-    desc: "Learn the key movements for effective bicep growth and strength.",
-    src: "/media/coach/bicep.mp4",
-  },
-];
+const YOUTUBE_VIDEO_ID = "2DOaUdGEOmM";
 
-function VideoCard({ video }: { video: (typeof videos)[number] }) {
+const COACH_VIDEO = {
+  title: "Fat Loss in 10 Mins | Daily Home Routine",
+  channel: "Athletic Wolf",
+  channelUrl: "https://www.youtube.com/@AthleticWolf",
+  watchUrl: `https://www.youtube.com/watch?v=${YOUTUBE_VIDEO_ID}`,
+  thumbnails: [
+    `https://i.ytimg.com/vi/${YOUTUBE_VIDEO_ID}/sddefault.jpg`,
+    `https://i.ytimg.com/vi/${YOUTUBE_VIDEO_ID}/hqdefault.jpg`,
+    `https://i.ytimg.com/vi/${YOUTUBE_VIDEO_ID}/mqdefault.jpg`,
+  ],
+  embedSrc: `https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&rel=0`,
+} as const;
+
+function YouTubeMark({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 90 20"
+      aria-hidden
+      className={className}
+      fill="currentColor"
+    >
+      <path d="M27.2 4.2h-4.5v11.6h4.5c3.1 0 5.3-1.6 5.3-5.8 0-4.2-2.2-5.8-5.3-5.8zm-.3 9.7h-2.2V6.1h2.2c2 0 3.1 1 3.1 3.9 0 2.9-1.1 3.9-3.1 3.9zM41.8 4.2l-3.8 11.6h-2.3L31.9 4.2h2.4l2.1 7.1 2.1-7.1h2.3zM52.6 4.2h2.2v11.6h-2.2V4.2zM63.4 4.2c3.4 0 5.6 2.2 5.6 5.8s-2.2 5.8-5.6 5.8h-4.5V4.2h4.5zm0 9.7c2 0 3.1-1.2 3.1-3.9s-1.1-3.9-3.1-3.9h-2.2v7.8h2.2zM77.8 4.2l3.5 11.6h-2.3l-.7-2.2h-3.9l-.7 2.2h-2.3l3.5-11.6h2.9zm-1.5 7.1l-1.2-3.8-1.2 3.8h2.4zM11.9 2.5C11.3 1 10.1 0 8.5 0H2.2C.6 0-.6 1.1-1.2 2.5 0 0-1.2 4.1-1.2 6.5v7c0 2.4 1.2 4 1.2 4 .6 1.4 1.8 2.5 3.4 2.5h6.3c1.6 0 2.8-1.1 3.4-2.5 0 0 1.2-1.6 1.2-4v-7c0-2.4-1.2-4-1.2-4zM7.3 14.5V5.5L12.5 10 7.3 14.5z" />
+    </svg>
+  );
+}
+
+function YouTubePlayer() {
   const [playing, setPlaying] = useState(false);
-  const [shouldLoad, setShouldLoad] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
+  const [thumbnailIndex, setThumbnailIndex] = useState(0);
 
-  useEffect(() => {
-    const el = cardRef.current;
-    if (!el) return;
+  const thumbnail = COACH_VIDEO.thumbnails[thumbnailIndex];
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShouldLoad(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "200px 0px", threshold: 0.01 }
+  function handleThumbnailError() {
+    setThumbnailIndex((current) =>
+      current < COACH_VIDEO.thumbnails.length - 1 ? current + 1 : current
     );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  function handlePlay() {
-    if (!shouldLoad) setShouldLoad(true);
-    setPlaying(true);
-    requestAnimationFrame(() => {
-      void videoRef.current?.play();
-    });
   }
 
   return (
-    <div
-      ref={cardRef}
-      className="video-carousel__slide card-premium group relative h-full overflow-hidden rounded-2xl border border-line bg-card transition-all hover:-translate-y-1.5"
-    >
-      <div className="relative aspect-[9/16] w-full overflow-hidden bg-ink video-card__media sm:aspect-[9/16] max-sm:aspect-[4/5] max-sm:max-h-[280px]">
-        <video
-          ref={videoRef}
-          src={shouldLoad ? video.src : undefined}
-          controls={playing}
-          playsInline
-          preload={shouldLoad ? "metadata" : "none"}
-          onLoadedMetadata={(e) => {
-            if (!playing) e.currentTarget.currentTime = 0.1;
-          }}
-          className="h-full w-full object-cover"
-        />
-
-        {!playing && (
+    <div className="coach-video card-premium overflow-hidden rounded-2xl border border-line bg-card">
+      <div className="coach-video__media relative aspect-video w-full overflow-hidden bg-black">
+        {playing ? (
+          <iframe
+            src={COACH_VIDEO.embedSrc}
+            title={COACH_VIDEO.title}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            className="absolute inset-0 h-full w-full border-0"
+          />
+        ) : (
           <button
             type="button"
-            onClick={handlePlay}
-            className="absolute inset-0 flex items-center justify-center bg-black/20 transition-colors hover:bg-black/30"
-            aria-label={`Play ${video.title}`}
+            onClick={() => setPlaying(true)}
+            className="group absolute inset-0 flex w-full items-center justify-center"
+            aria-label={`Play ${COACH_VIDEO.title} on YouTube`}
           >
-            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-accent/90 text-white shadow-lg transition-transform group-hover:scale-110">
-              <Play size={32} weight="fill" />
-            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={thumbnail}
+              alt={COACH_VIDEO.title}
+              onError={handleThumbnailError}
+              className="absolute inset-0 h-full w-full object-cover object-center"
+            />
+            <span className="absolute inset-0 bg-black/20 transition-colors group-hover:bg-black/30" />
+            <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[#ff0000] text-white shadow-lg transition-transform group-hover:scale-110 sm:h-16 sm:w-16">
+              <Play size={28} weight="fill" aria-hidden className="ml-0.5" />
+            </span>
           </button>
         )}
       </div>
-      <div className="p-6">
-        <h3 className="font-display text-lg">{video.title}</h3>
-        <p className="mt-2 text-sm text-muted">{video.desc}</p>
+
+      <div className="coach-video__meta px-5 py-4 sm:px-6 sm:py-5">
+        <h3 className="font-display text-lg sm:text-xl">{COACH_VIDEO.title}</h3>
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
+          <a
+            href={COACH_VIDEO.channelUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-white transition-colors hover:text-accent"
+          >
+            {COACH_VIDEO.channel}
+          </a>
+          <span className="text-white/25" aria-hidden>
+            ·
+          </span>
+          <a
+            href={COACH_VIDEO.watchUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 font-semibold text-[#ff0000] transition-opacity hover:opacity-80"
+          >
+            <YouTubeMark className="h-4 w-auto" />
+            <span>Watch on YouTube</span>
+          </a>
+        </div>
       </div>
     </div>
   );
 }
 
 export function CoachVideos() {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [activePage, setActivePage] = useState(0);
-  const [perView, setPerView] = useState(2);
-
-  useEffect(() => {
-    function updatePerView() {
-      setPerView(window.innerWidth >= 1024 ? 4 : 2);
-    }
-    updatePerView();
-    window.addEventListener("resize", updatePerView);
-    return () => window.removeEventListener("resize", updatePerView);
-  }, []);
-
-  const pageCount = Math.max(1, Math.ceil(videos.length / perView));
-
-  const syncActivePage = useCallback(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    const slide = track.querySelector<HTMLElement>(".video-carousel__slide");
-    if (!slide) return;
-    const gap = 16;
-    const slideStep = slide.offsetWidth + gap;
-    const page = Math.round(track.scrollLeft / (slideStep * perView));
-    setActivePage(Math.min(Math.max(page, 0), pageCount - 1));
-  }, [pageCount, perView]);
-
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    track.addEventListener("scroll", syncActivePage, { passive: true });
-    return () => track.removeEventListener("scroll", syncActivePage);
-  }, [syncActivePage]);
-
-  useEffect(() => {
-    setActivePage(0);
-    if (trackRef.current) trackRef.current.scrollLeft = 0;
-  }, [perView]);
-
-  function scrollToPage(page: number) {
-    const track = trackRef.current;
-    if (!track) return;
-    const slide = track.querySelector<HTMLElement>(".video-carousel__slide");
-    if (!slide) return;
-    const gap = 16;
-    const slideStep = slide.offsetWidth + gap;
-    track.scrollTo({
-      left: page * slideStep * perView,
-      behavior: "smooth",
-    });
-    setActivePage(page);
-  }
-
-  function prev() {
-    scrollToPage(activePage === 0 ? pageCount - 1 : activePage - 1);
-  }
-
-  function next() {
-    scrollToPage(activePage === pageCount - 1 ? 0 : activePage + 1);
-  }
-
   return (
     <section id="coach-videos" className="px-6 py-20 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-4xl">
         <Reveal className="max-w-xl" variant="left">
           <AccentHeading
             accent="Coach"
@@ -168,56 +118,13 @@ export function CoachVideos() {
             className="font-display text-4xl sm:text-5xl"
           />
           <p className="mt-4 text-muted">
-            Learn directly from our certified coaches with actionable insights.
+            Learn directly from your coach — streamed in high quality on YouTube.
           </p>
         </Reveal>
 
         <Reveal delay={0.12} variant="right">
-          <div className="video-carousel mt-14">
-          <div
-            ref={trackRef}
-            className="video-carousel__track flex gap-4 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          >
-            {videos.map((video) => (
-              <VideoCard key={video.id} video={video} />
-            ))}
-          </div>
-
-          {pageCount > 1 && (
-            <div className="mt-6 flex items-center justify-center gap-4">
-              <button
-                type="button"
-                onClick={prev}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line text-white transition-colors hover:border-accent/40 hover:text-accent"
-                aria-label="Previous videos"
-              >
-                <CaretLeft size={16} weight="bold" />
-              </button>
-
-              <div className="flex items-center gap-2">
-                {Array.from({ length: pageCount }).map((_, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => scrollToPage(i)}
-                    className={`h-2 rounded-full transition-all ${
-                      i === activePage ? "w-6 bg-accent" : "w-2 bg-white/25"
-                    }`}
-                    aria-label={`Go to video page ${i + 1}`}
-                  />
-                ))}
-              </div>
-
-              <button
-                type="button"
-                onClick={next}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line text-white transition-colors hover:border-accent/40 hover:text-accent"
-                aria-label="Next videos"
-              >
-                <CaretRight size={16} weight="bold" />
-              </button>
-            </div>
-          )}
+          <div className="mt-10 sm:mt-12">
+            <YouTubePlayer />
           </div>
         </Reveal>
       </div>

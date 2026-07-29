@@ -115,7 +115,7 @@ export function Header() {
       className={`site-header sticky top-0 z-50 border-b ${scrolled ? "site-header--scrolled" : "site-header--top"}`}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-3.5 sm:px-8 sm:py-4">
-        <BrandLogo height={72} priority />
+        <BrandLogo height={80} priority className="min-w-[11.5rem]" />
 
         <nav
           className="hidden items-center gap-7 text-sm font-medium text-white/75 lg:flex"
@@ -180,7 +180,7 @@ export function Header() {
       >
         <div className="flex h-full flex-col px-6 pb-8 pt-6">
           <div className="flex items-center justify-between">
-            <BrandLogo height={64} />
+            <BrandLogo height={72} className="min-w-[10.5rem]" />
             <button
               type="button"
               onClick={closeMenu}

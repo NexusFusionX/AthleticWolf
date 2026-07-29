@@ -56,10 +56,10 @@ export default function RootLayout({
         <div id="aw-boot" aria-hidden="true" suppressHydrationWarning>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/brand/athletic-wolf-logo.png"
+            src="/brand/athletic-wolf-wordmark.png"
             alt=""
-            width={88}
-            height={88}
+            width={224}
+            height={72}
           />
         </div>
         <div className="grain-overlay" aria-hidden />

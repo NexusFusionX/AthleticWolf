@@ -149,10 +149,10 @@ export function SitePreloader() {
         <div className="aw-preloader--logo__logo">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/brand/athletic-wolf-logo.png"
+            src="/brand/athletic-wolf-wordmark.png"
             alt="Athletic Wolf"
-            width={88}
-            height={88}
+            width={224}
+            height={72}
           />
         </div>
       </div>

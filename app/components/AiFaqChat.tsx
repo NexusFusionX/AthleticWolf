@@ -71,12 +71,13 @@ export function AiFaqChat() {
   return (
     <div className="shadow-premium mx-auto flex w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-line bg-card">
       <div className="flex items-center gap-2.5 border-b border-line bg-ink px-6 py-4 text-white">
-        <div className="relative h-11 w-11 overflow-hidden rounded-full border border-white/15 bg-black">
+        <div className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-white/15 bg-black">
           <Image
-            src="/brand/athletic-wolf-logo.png"
+            src="/brand/athletic-wolf-wordmark.png"
             alt="Athletic Wolf"
-            fill
-            className="object-cover scale-110"
+            width={88}
+            height={88}
+            className="h-9 w-auto object-contain"
             sizes="44px"
           />
         </div>

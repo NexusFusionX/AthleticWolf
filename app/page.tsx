@@ -85,10 +85,11 @@ export default function Home() {
               <Reveal delay={0.1} variant="right">
                 <div className="shadow-premium relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-line">
                   <Image
-                    src="/media/about/coach-mountain.jpg"
-                    alt="Athletic Wolf coach training outdoors"
+                    src="/media/about/coach-about.png"
+                    alt="Athletic Wolf coach"
                     fill
-                    className="object-cover object-[center_20%]"
+                    quality={92}
+                    className="h-full w-full object-cover object-center"
                     sizes="(min-width: 1024px) 40rem, 100vw"
                   />
                 </div>

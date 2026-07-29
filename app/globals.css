@@ -47,12 +47,12 @@
   justify-content: center;
 }
 #aw-boot img {
-  width: 88px;
-  height: 88px;
-  border-radius: 50%;
-  object-fit: cover;
+  width: auto;
+  height: 4.5rem;
+  max-width: min(78vw, 14rem);
+  border-radius: 0;
+  object-fit: contain;
   display: block;
-  border: 1px solid rgba(255, 138, 77, 0.35);
 }
 html.aw-boot-done #aw-boot,
 html.aw-boot-skip #aw-boot {
@@ -1342,27 +1342,19 @@ h1, h2, h3, h4, h5, h6, .font-display {
   display: flex;
 }
 
-/* Sticky header — solid at top, frosted glass on scroll */
+/* Sticky header — always solid black */
 .site-header {
-  transition:
-    background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    backdrop-filter 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.site-header--top {
-  border-color: transparent;
   background: #000;
-  box-shadow: none;
+  transition: border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.site-header--top,
 .site-header--scrolled {
   border-color: rgba(255, 255, 255, 0.08);
-  background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(18px) saturate(1.25);
-  -webkit-backdrop-filter: blur(18px) saturate(1.25);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
+  background: #000;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1698,8 +1690,20 @@ h1, h2, h3, h4, h5, h6, .font-display {
 /* ── Hero banner ── */
 .hero-banner__frame--mobile {
   width: 100%;
-  height: auto;
+  overflow: hidden;
   background: #000;
+  container-type: size;
+  container-name: mobile-hero;
+  aspect-ratio: 4 / 3;
+}
+
+.hero-banner__frame--mobile .hero-banner__media-img--mobile {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  object-position: center;
 }
 
 .hero-banner__frame--desktop {
@@ -1731,9 +1735,10 @@ h1, h2, h3, h4, h5, h6, .font-display {
 }
 
 .hero-banner__inner--mobile {
-  align-items: flex-start;
-  justify-content: center;
-  padding: 1.25rem 1rem 0;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 4cqh 4.5cqw;
+  overflow: hidden;
 }
 
 .hero-banner__inner--desktop {
@@ -1745,6 +1750,95 @@ h1, h2, h3, h4, h5, h6, .font-display {
 .hero-banner__copy--desktop {
   pointer-events: auto;
   max-width: min(34rem, 46vw);
+}
+
+.hero-banner__copy--mobile {
+  pointer-events: auto;
+  display: flex;
+  height: 100%;
+  width: min(62cqw, 14.5rem);
+  max-width: 62%;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+  overflow: hidden;
+}
+
+.hero-banner__copy--mobile .hero-banner__badge {
+  width: fit-content;
+  margin: 0 0 0.65rem;
+  padding: 0.45rem 0.7rem;
+  font-size: max(0.5625rem, 2.2cqh);
+  letter-spacing: 0.14em;
+  line-height: 1.3;
+}
+
+.hero-banner__copy--mobile .hero-banner__title {
+  margin: 0 0 0.7rem;
+  font-size: max(1.15rem, 4.4cqh);
+  line-height: 1.02;
+}
+
+.hero-banner__copy--mobile .hero-banner__lead {
+  margin: 0 0 0.75rem;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: max(0.625rem, 2.25cqh);
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.hero-banner__copy--mobile .hero-banner__bullets {
+  margin: 0 0 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  list-style: none;
+  padding: 0;
+}
+
+.hero-banner__copy--mobile .hero-banner__bullets li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  font-size: max(0.5625rem, 2cqh);
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.hero-banner__copy--mobile .hero-banner__actions {
+  margin: 0 0 0.65rem;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.hero-banner__copy--mobile .hero-banner__btn {
+  width: 100%;
+  min-height: 2rem;
+  justify-content: center;
+  padding: 0.5rem 0.65rem;
+  font-size: max(0.625rem, 2.5cqh);
+  line-height: 1.25;
+  border-radius: 0.625rem;
+  white-space: normal;
+  text-align: center;
+}
+
+.hero-banner__copy--mobile .hero-banner__btn.btn-outline {
+  gap: 0.4rem;
+}
+
+.hero-banner__copy--mobile .hero-banner__trust {
+  margin: 0;
+  font-size: max(0.5rem, 1.85cqh);
+  line-height: 1.35;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .hero-banner__badge {
@@ -1764,24 +1858,6 @@ h1, h2, h3, h4, h5, h6, .font-display {
 .hero-banner__title {
   margin-top: 1.25rem;
   font-size: clamp(2rem, 3.8vw, 3.75rem);
-}
-
-.hero-banner__panel {
-  pointer-events: auto;
-}
-
-.hero-banner__panel--mobile {
-  width: 100%;
-  max-width: 24rem;
-  border-radius: 1.25rem;
-  padding: 1.25rem 1.15rem 1.35rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(8, 8, 8, 0.82);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow:
-    0 24px 64px rgba(0, 0, 0, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .hero-banner__reveal {
@@ -1810,29 +1886,6 @@ h1, h2, h3, h4, h5, h6, .font-display {
 
 .hero-banner__copy--desktop .hero-banner__trust {
   animation-delay: 0.42s;
-}
-
-.hero-banner__panel .hero-banner__eyebrow,
-.hero-banner__panel h1,
-.hero-banner__panel p,
-.hero-banner__panel .btn {
-  animation: hero-copy-in 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.hero-banner__panel .hero-banner__eyebrow {
-  animation-delay: 0.05s;
-}
-
-.hero-banner__panel h1 {
-  animation-delay: 0.12s;
-}
-
-.hero-banner__panel p {
-  animation-delay: 0.22s;
-}
-
-.hero-banner__panel .btn {
-  animation-delay: 0.32s;
 }
 
 @media (min-width: 1280px) {
@@ -1882,10 +1935,6 @@ h1, h2, h3, h4, h5, h6, .font-display {
 @media (prefers-reduced-motion: reduce) {
   .hero-banner__rule,
   .hero-banner__reveal,
-  .hero-banner__panel .hero-banner__eyebrow,
-  .hero-banner__panel h1,
-  .hero-banner__panel p,
-  .hero-banner__panel .btn,
   .hero-banner__media img {
     animation: none !important;
   }
@@ -2377,18 +2426,19 @@ h1, h2, h3, h4, h5, h6, .font-display {
 .aw-preloader--logo__logo {
   position: relative;
   z-index: 1;
-  width: 88px;
-  height: 88px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 1px solid rgba(255, 138, 77, 0.35);
-  box-shadow: 0 0 24px rgba(255, 107, 53, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: 4.5rem;
+  max-width: 12.5rem;
 }
 
 .aw-preloader--logo__logo img {
-  width: 100%;
+  width: auto;
   height: 100%;
-  object-fit: cover;
+  max-width: 100%;
+  object-fit: contain;
   display: block;
 }
 
@@ -2406,11 +2456,11 @@ h1, h2, h3, h4, h5, h6, .font-display {
   padding: 0.35rem 0.55rem;
 }
 
-/* ── Video cards shorter on mobile ── */
-@media (max-width: 639px) {
-  .video-card__media {
-    max-height: 280px;
-  }
+/* ── Coach video (YouTube embed) ── */
+.coach-video__media iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 /* ── Kick-off / our process ── */
