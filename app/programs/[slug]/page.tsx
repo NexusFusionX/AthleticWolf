@@ -65,8 +65,9 @@ export default async function ProgramDetailPage({
                   src={program.src}
                   alt={program.title}
                   fill
-                  className="object-cover"
-                  sizes="(min-width: 1024px) 700px, 100vw"
+                  quality={92}
+                  className="h-full w-full object-cover object-center"
+                  sizes="(min-width: 1024px) 900px, 100vw"
                 />
               </div>
 

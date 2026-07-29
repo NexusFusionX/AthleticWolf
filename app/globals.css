@@ -1018,6 +1018,13 @@ h1, h2, h3, h4, h5, h6, .font-display {
   pointer-events: none;
 }
 
+.program-card__media img {
+  height: 100% !important;
+  width: 100% !important;
+  object-fit: cover;
+  object-position: center;
+}
+
 .program-card__body {
   position: relative;
   z-index: 1;

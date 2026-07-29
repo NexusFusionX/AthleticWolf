@@ -1,7 +1,7 @@
 export const programs = [
   {
     slug: "fat-loss",
-    src: "/media/programs/fat-loss.jpg",
+    src: "/media/programs/fat-loss.png",
     title: "Fat Loss Coaching",
     titleAccent: "Fat Loss",
     titleAfter: "Coaching",
@@ -18,7 +18,7 @@ export const programs = [
   },
   {
     slug: "muscle-building",
-    src: "/media/programs/muscle-building.jpg",
+    src: "/media/programs/muscle-building.png",
     title: "Muscle Building Coaching",
     titleAccent: "Muscle Building",
     titleAfter: "Coaching",
@@ -35,7 +35,7 @@ export const programs = [
   },
   {
     slug: "body-recomposition",
-    src: "/media/programs/body-recomposition.jpg",
+    src: "/media/programs/body-recomposition.png",
     title: "Body Recomposition",
     titleBefore: "Body",
     titleAccent: "Recomposition",
@@ -52,7 +52,7 @@ export const programs = [
   },
   {
     slug: "online-coaching",
-    src: "/media/programs/online-coaching.jpg",
+    src: "/media/programs/online-coaching.png",
     title: "Online Coaching",
     titleAccent: "Online",
     titleAfter: "Coaching",
@@ -69,7 +69,7 @@ export const programs = [
   },
   {
     slug: "nutrition-coaching",
-    src: "/media/programs/nutrition-coaching.jpg",
+    src: "/media/programs/nutrition-coaching.png",
     title: "Nutrition Coaching",
     titleAccent: "Nutrition",
     titleAfter: "Coaching",

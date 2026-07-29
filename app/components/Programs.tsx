@@ -36,8 +36,9 @@ function ProgramCard({ program }: { program: Program }) {
           src={program.src}
           alt={program.title}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-          sizes="(min-width: 1024px) 240px, (min-width: 640px) 30vw, 90vw"
+          quality={92}
+          className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
+          sizes="(min-width: 1024px) 480px, (min-width: 640px) 33vw, 50vw"
         />
         <span className="program-card__media-fade" aria-hidden />
       </div>
@@ -88,8 +89,9 @@ function ProgramRow({
               src={program.src}
               alt={program.title}
               fill
-              className="object-cover object-center"
-              sizes="118px"
+              quality={92}
+              className="h-full w-full object-cover object-center"
+              sizes="(min-width: 640px) 320px, 240px"
             />
           </div>
 
