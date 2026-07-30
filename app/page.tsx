@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Faq } from "./components/Faq";
 import { Reveal } from "./components/Reveal";
 import { Header } from "./components/Header";
@@ -16,7 +17,6 @@ import { AccentHeading } from "./components/AccentHeading";
 import { PackageGrid } from "./components/PackageCard";
 import { Testimonials } from "./components/Testimonials";
 import { KickoffGuide } from "./components/KickoffGuide";
-import { SiteFooter } from "./components/SiteFooter";
 
 export default function Home() {
   return (
@@ -75,11 +75,17 @@ export default function Home() {
                 />
                 <p className="mt-6 text-lg leading-relaxed text-muted">
                   Athletic Wolf is built on a simple belief: everyone has an
-                  athlete inside them. As an ISSA-certified coach, every program
-                  combines science-backed training, nutrition guidance, and real
-                  accountability, delivered fully online to clients wherever
-                  they are.
+                  athlete inside them. As an ISSA-certified coach with 10+ years
+                  of experience, every program combines science-backed training,
+                  nutrition guidance, and real accountability, delivered fully
+                  online to clients wherever they are.
                 </p>
+                <Link
+                  href="/about"
+                  className="btn btn-outline mt-8 inline-flex px-6 py-3 text-sm font-bold uppercase tracking-wide"
+                >
+                  Learn more
+                </Link>
               </Reveal>
 
               <Reveal delay={0.1} variant="right">
@@ -111,8 +117,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-
-      <SiteFooter />
     </div>
   );
 }

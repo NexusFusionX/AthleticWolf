@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { packages } from "@/app/data/packages";
 import { getAuthedUser } from "@/lib/supabase-server";
+import { getUpgradeDifferenceCents } from "@/app/lib/package-change";
 import { getCheckoutAmountCents, getStripe, isStripeConfigured } from "@/lib/stripe";
 
 export async function POST(request: NextRequest) {
@@ -21,6 +22,14 @@ export async function POST(request: NextRequest) {
     paymentIntentId?: string;
     packageName?: string;
     assessmentData?: unknown;
+    checkoutContact?: {
+      firstName?: string;
+      lastName?: string;
+      contactChannel?: "phone" | "email";
+      phone?: string;
+      email?: string;
+      preferredContact?: string;
+    };
   };
 
   try {
@@ -29,7 +38,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const { paymentIntentId, packageName, assessmentData } = body;
+  const { paymentIntentId, packageName, assessmentData, checkoutContact } = body;
 
   if (!paymentIntentId || !packageName) {
     return NextResponse.json(
@@ -60,32 +69,113 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Payment does not match this package" }, { status: 403 });
     }
 
-    if (paymentIntent.amount !== getCheckoutAmountCents(pkg.price)) {
-      return NextResponse.json({ error: "Payment amount mismatch" }, { status: 403 });
-    }
+    const changeType = paymentIntent.metadata.changeType ?? "new";
 
     const { data: existingPlan } = await supabase
       .from("plans")
-      .select("id")
+      .select("id, package_name")
       .eq("user_id", user.id)
       .maybeSingle();
 
-    if (existingPlan) {
-      return NextResponse.json({ error: "Plan already exists" }, { status: 409 });
+    let expectedAmount: number;
+
+    if (changeType === "upgrade") {
+      if (!existingPlan) {
+        return NextResponse.json({ error: "No active package found" }, { status: 404 });
+      }
+
+      const upgradeAmount = getUpgradeDifferenceCents(
+        existingPlan.package_name,
+        packageName
+      );
+
+      if (!upgradeAmount) {
+        return NextResponse.json({ error: "Invalid upgrade amount" }, { status: 400 });
+      }
+
+      expectedAmount = upgradeAmount;
+    } else {
+      if (existingPlan) {
+        return NextResponse.json({ error: "Plan already exists" }, { status: 409 });
+      }
+
+      expectedAmount = getCheckoutAmountCents(pkg.price);
     }
 
-    const { error } = await supabase.from("plans").insert({
-      user_id: user.id,
-      package_name: pkg.name,
-      status: "active",
-      assessment_completed_at: new Date().toISOString(),
-      assessment_data:
-        assessmentData != null ? JSON.stringify(assessmentData) : null,
-    });
+    if (paymentIntent.amount !== expectedAmount) {
+      return NextResponse.json({ error: "Payment amount mismatch" }, { status: 403 });
+    }
 
-    if (error) throw error;
+    const hasAssessment = assessmentData != null;
 
-    return NextResponse.json({ success: true });
+    const checkoutPayload = checkoutContact?.firstName
+      ? {
+          firstName: checkoutContact.firstName.trim(),
+          lastName: checkoutContact.lastName?.trim() ?? "",
+          contactChannel: checkoutContact.contactChannel,
+          phone:
+            checkoutContact.contactChannel === "phone"
+              ? checkoutContact.phone?.trim() ?? ""
+              : "",
+          email:
+            checkoutContact.contactChannel === "email"
+              ? checkoutContact.email?.trim() ?? ""
+              : user.email ?? "",
+          preferredContact: checkoutContact.preferredContact,
+          accountEmail: user.email ?? "",
+        }
+      : null;
+
+    if (changeType === "upgrade" && existingPlan) {
+      const { error } = await supabase
+        .from("plans")
+        .update({
+          package_name: pkg.name,
+          status: "active",
+          ...(checkoutPayload
+            ? { checkout_data: JSON.stringify(checkoutPayload) }
+            : {}),
+        })
+        .eq("id", existingPlan.id);
+
+      if (error) throw error;
+    } else {
+      const { error } = await supabase.from("plans").insert({
+        user_id: user.id,
+        package_name: pkg.name,
+        status: hasAssessment ? "active" : "assessment_pending",
+        assessment_completed_at: hasAssessment ? new Date().toISOString() : null,
+        assessment_data: hasAssessment ? JSON.stringify(assessmentData) : null,
+        ...(checkoutPayload ? { checkout_data: JSON.stringify(checkoutPayload) } : {}),
+      });
+
+      if (error) throw error;
+    }
+
+    if (checkoutContact?.firstName) {
+      const fullName = [checkoutContact.firstName.trim(), checkoutContact.lastName?.trim()]
+        .filter(Boolean)
+        .join(" ");
+      await supabase.auth.updateUser({
+        data: {
+          first_name: checkoutContact.firstName.trim(),
+          last_name: checkoutContact.lastName?.trim() || null,
+          full_name: fullName || checkoutContact.firstName.trim(),
+          phone:
+            checkoutContact.contactChannel === "phone"
+              ? checkoutContact.phone?.trim() ?? null
+              : null,
+          contact_email:
+            checkoutContact.contactChannel === "email"
+              ? checkoutContact.email?.trim() ?? null
+              : null,
+          contact_channel: checkoutContact.contactChannel,
+          preferred_contact: checkoutContact.preferredContact ?? null,
+        },
+      });
+    }
+
+    return NextResponse.json({ success: true, changeType });
   } catch (error) {
     console.error("Stripe complete-order error:", error);
     return NextResponse.json(

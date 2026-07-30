@@ -1,177 +1,373 @@
 "use client";
 
 import Link from "next/link";
+import { ArrowLeft } from "@phosphor-icons/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Check } from "@phosphor-icons/react";
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { useEffect, useMemo, useState } from "react";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import { CheckoutSkeleton } from "@/app/components/PageSkeleton";
 import { CheckoutSteps } from "@/app/components/CheckoutSteps";
 import { StripeCheckoutPayment } from "@/app/components/StripeCheckoutPayment";
+import { CheckoutPackagePicker } from "@/app/components/CheckoutPackagePicker";
+import { CheckoutContactFields } from "@/app/components/CheckoutContactFields";
+import { CheckoutAccountFields } from "@/app/components/CheckoutAccountFields";
+import { CheckoutInlineLogin } from "@/app/components/CheckoutInlineLogin";
+import { CheckoutOrderSummary } from "@/app/components/CheckoutOrderSummary";
+import { CheckoutTrustBadges } from "@/app/components/CheckoutTrustBadges";
 import { packages } from "../data/packages";
-
+import { clearPendingAssessment } from "@/app/lib/assessment";
 import {
-  ASSESSMENT_KEY,
-  attachPackageToAssessment,
-  clearPendingAssessment,
-  isValidCompletedAssessment,
-  readPendingAssessment,
-} from "@/app/lib/assessment";
+  type CheckoutContact,
+  isCheckoutContactComplete,
+} from "@/app/lib/checkout-contact";
+import {
+  findPackageByName,
+  formatUsd,
+  getPackageChangeType,
+} from "@/app/lib/package-change";
+
+const DEFAULT_PACKAGE =
+  packages.find((p) => p.featured)?.name ?? packages[0].name;
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+type CheckoutStep = "plan" | "payment";
+type GuestAuthMode = "signup" | "login";
+
+function splitFullName(fullName: string) {
+  const parts = fullName.trim().split(/\s+/);
+  if (parts.length === 0) return { firstName: "", lastName: "" };
+  if (parts.length === 1) return { firstName: parts[0], lastName: "" };
+  return {
+    firstName: parts[0],
+    lastName: parts.slice(1).join(" "),
+  };
+}
 
 export function CheckoutFlow() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const packageName = searchParams.get("package");
-  const pkg = packages.find((p) => p.name === packageName);
+  const packageFromUrl = searchParams.get("package");
+  const initialPackage =
+    packages.find((p) => p.name === packageFromUrl)?.name ?? DEFAULT_PACKAGE;
+
+  const [selectedPackageName, setSelectedPackageName] = useState(initialPackage);
+  const pkg = packages.find((p) => p.name === selectedPackageName);
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [existingPlan, setExistingPlan] = useState<any>(null);
-  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
-  const [pendingAssessment, setPendingAssessment] = useState<any>(null);
-  const [redirectingToQuiz, setRedirectingToQuiz] = useState(false);
-  const [upgradeError, setUpgradeError] = useState<string | null>(null);
+  const [changeError, setChangeError] = useState<string | null>(null);
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [authLoadError, setAuthLoadError] = useState<string | null>(null);
+  const [checkoutStep, setCheckoutStep] = useState<CheckoutStep>("plan");
+  const [guestAuthMode, setGuestAuthMode] = useState<GuestAuthMode>("signup");
+  const [accountEmail, setAccountEmail] = useState("");
+  const [accountPassword, setAccountPassword] = useState("");
+  const [contact, setContact] = useState<CheckoutContact>({
+    firstName: "",
+    lastName: "",
+    contactChannel: "phone",
+    phone: "",
+    email: "",
+    preferredContact: "WhatsApp",
+  });
+
+  const contactComplete = useMemo(
+    () => isCheckoutContactComplete(contact),
+    [contact]
+  );
+
+  const actionType = existingPlan && pkg
+    ? getPackageChangeType(existingPlan.package_name, pkg.name)
+    : null;
+  const currentPackage = existingPlan
+    ? findPackageByName(existingPlan.package_name)
+    : null;
+  const upgradeDifference =
+    currentPackage && pkg && actionType === "upgrade"
+      ? pkg.price - currentPackage.price
+      : null;
+
+  const resolvedAccountEmail =
+    contact.contactChannel === "email"
+      ? contact.email.trim()
+      : accountEmail.trim();
+
+  const accountReady =
+    Boolean(user) ||
+    (guestAuthMode === "login"
+      ? EMAIL_PATTERN.test(resolvedAccountEmail) && accountPassword.length >= 6
+      : EMAIL_PATTERN.test(resolvedAccountEmail) && accountPassword.length >= 6);
+
+  const canContinuePlanStep =
+    contactComplete &&
+    (Boolean(user) ||
+      (guestAuthMode === "signup" && accountReady && !user)) &&
+    actionType !== "same";
+
+  const totalDueToday =
+    actionType === "upgrade" && upgradeDifference != null
+      ? upgradeDifference
+      : actionType === "downgrade"
+        ? 0
+        : pkg?.price ?? 0;
+
+  const paymentAmountLabel =
+    actionType === "upgrade" && upgradeDifference != null
+      ? formatUsd(upgradeDifference)
+      : pkg
+        ? formatUsd(pkg.price)
+        : "$0";
+
+  useEffect(() => {
+    if (!packageFromUrl) {
+      router.replace(
+        `/checkout?package=${encodeURIComponent(DEFAULT_PACKAGE)}`,
+        { scroll: false }
+      );
+    }
+  }, [packageFromUrl, router]);
+
+  useEffect(() => {
+    if (packageFromUrl && packageFromUrl !== selectedPackageName) {
+      const match = packages.find((p) => p.name === packageFromUrl);
+      if (match) {
+        setSelectedPackageName(match.name);
+      }
+    }
+  }, [packageFromUrl, selectedPackageName]);
+
+  useEffect(() => {
+    if (contact.contactChannel === "email" && contact.email) {
+      setAccountEmail(contact.email);
+    }
+  }, [contact.contactChannel, contact.email]);
 
   useEffect(() => {
     async function checkAuth() {
-      const {
-        data: { user: authUser },
-      } = await supabase.auth.getUser();
-      setUser(authUser);
-
-      let plan = null;
-      if (authUser) {
-        const { data: existingPlanData } = await supabase
-          .from("plans")
-          .select("*")
-          .eq("user_id", authUser.id)
-          .single();
-        plan = existingPlanData ?? null;
-        if (plan) {
-          setExistingPlan(plan);
-        }
+      if (!isSupabaseConfigured()) {
+        setAuthLoadError(
+          "Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to .env.local."
+        );
+        setLoading(false);
+        return;
       }
 
-      // Brand-new customer (no plan yet): assessment must be completed first.
-      if (authUser && !plan && packageName) {
-        if (!isValidCompletedAssessment(authUser.id)) {
-          clearPendingAssessment();
-          setRedirectingToQuiz(true);
-          router.replace(`/quiz?package=${encodeURIComponent(packageName)}`);
-          return;
+      try {
+        const {
+          data: { session },
+          error: sessionError,
+        } = await supabase.auth.getSession();
+
+        if (sessionError) {
+          throw sessionError;
         }
 
-        const withPackage = attachPackageToAssessment(packageName);
-        setPendingAssessment(withPackage ?? readPendingAssessment());
-      }
+        const authUser = session?.user ?? null;
+        setUser(authUser);
 
-      setLoading(false);
+        if (authUser?.email) {
+          setAccountEmail(authUser.email);
+        }
+
+        if (authUser?.user_metadata) {
+          const meta = authUser.user_metadata;
+          const fromMeta = splitFullName(
+            (meta.full_name as string) || (meta.name as string) || ""
+          );
+          setContact((prev) => ({
+            ...prev,
+            firstName: prev.firstName || fromMeta.firstName,
+            lastName: prev.lastName || fromMeta.lastName,
+            phone: prev.phone || (meta.phone as string) || "",
+          }));
+        }
+
+        if (authUser) {
+          const { data: existingPlanData, error: planError } = await supabase
+            .from("plans")
+            .select("*")
+            .eq("user_id", authUser.id)
+            .maybeSingle();
+
+          if (planError) {
+            console.error("Checkout plan lookup failed:", planError);
+          } else if (existingPlanData) {
+            setExistingPlan(existingPlanData);
+          }
+        }
+      } catch (error) {
+        console.error("Checkout auth load failed:", error);
+        setAuthLoadError(
+          "Could not reach authentication service. Check your internet connection and Supabase settings, then refresh."
+        );
+      } finally {
+        setLoading(false);
+      }
     }
     checkAuth();
-  }, [packageName, router]);
+  }, []);
 
-  // Determine if this is an upgrade or downgrade
-  const getActionType = () => {
-    if (!existingPlan || !pkg) return null;
-    const existingPkg = packages.find((p) => p.name === existingPlan.package_name);
-    if (!existingPkg) return null;
-    if (pkg.price > existingPkg.price) return "upgrade";
-    if (pkg.price < existingPkg.price) return "downgrade";
-    return "same";
-  };
-
-  const actionType = getActionType();
-
-  async function handlePaymentSuccess() {
-    localStorage.removeItem(ASSESSMENT_KEY);
-    window.location.href = "/dashboard";
+  function handlePackageSelect(packageName: string) {
+    setSelectedPackageName(packageName);
+    router.replace(`/checkout?package=${encodeURIComponent(packageName)}`, {
+      scroll: false,
+    });
   }
 
-  function handleExistingPlanCheckout() {
-    if (!pkg || !user) return;
-
-    if (existingPlan) {
-      setShowUpgradeDialog(true);
-    }
+  async function loadExistingPlan(authUserId: string) {
+    const { data: existingPlanData } = await supabase
+      .from("plans")
+      .select("*")
+      .eq("user_id", authUserId)
+      .maybeSingle();
+    setExistingPlan(existingPlanData ?? null);
   }
 
-  async function handleUpgrade() {
-    if (!pkg || !user || !existingPlan) return;
+  async function handleGuestSignIn() {
+    setAuthError(null);
     setProcessing(true);
 
     try {
-      const { error } = await supabase
-        .from("plans")
-        .update({
-          package_name: pkg.name,
-          status: "active",
-        })
-        .eq("id", existingPlan.id);
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: resolvedAccountEmail,
+        password: accountPassword,
+      });
 
-      if (error) throw error;
+      if (error) {
+        setAuthError(error.message);
+        setProcessing(false);
+        return;
+      }
 
-      window.location.href = "/dashboard";
+      setUser(data.user);
+      if (data.user) {
+        await loadExistingPlan(data.user.id);
+      }
+      setGuestAuthMode("signup");
+      setProcessing(false);
     } catch {
-      setUpgradeError("Failed to upgrade. Please try again.");
+      setAuthError("Could not sign in. Please try again.");
       setProcessing(false);
     }
   }
 
-  if (showUpgradeDialog && existingPlan && pkg) {
-    const isUpgrade = actionType === "upgrade";
-    const isDowngrade = actionType === "downgrade";
-    const actionText = isUpgrade ? "upgrade" : isDowngrade ? "downgrade" : "switch";
-    const actionCapital = isUpgrade ? "Upgrade" : isDowngrade ? "Downgrade" : "Switch";
-    const loadingText = isUpgrade ? "Upgrading..." : isDowngrade ? "Downgrading..." : "Switching...";
+  async function handleContinueToPayment() {
+    if (!pkg || !canContinuePlanStep) return;
 
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-6">
-        <div className="w-full max-w-md overflow-hidden shadow-premium rounded-2xl border border-line bg-card">
-          <div className="bg-ink px-8 py-7 text-white">
-            <h2 className="font-display text-2xl">Active Package Detected</h2>
-          </div>
+    setAuthError(null);
+    setChangeError(null);
 
-          <div className="p-8">
-            <p className="text-muted mb-6">
-              You already have an active <strong>{existingPlan.package_name}</strong> package. Would you like to {actionText} to <strong>{pkg.name}</strong>?
-            </p>
+    if (!user) {
+      if (guestAuthMode !== "signup") {
+        setAuthError("Sign in first, then continue to payment.");
+        return;
+      }
 
-            {upgradeError && (
-              <p className="mb-4 rounded-lg border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200">
-                {upgradeError}
-              </p>
-            )}
+      setProcessing(true);
 
-            <div className="space-y-3">
-              <button
-                onClick={handleUpgrade}
-                disabled={processing}
-                className="btn btn-accent w-full px-8 py-3.5 text-base font-bold uppercase tracking-wide text-white disabled:opacity-50"
-              >
-                {processing ? loadingText : `${actionCapital} to ${pkg.name}`}
-              </button>
+      try {
+        const fullName = [contact.firstName.trim(), contact.lastName.trim()]
+          .filter(Boolean)
+          .join(" ");
 
-              <button
-                onClick={() => window.location.href = "/dashboard"}
-                className="btn btn-outline w-full px-8 py-3.5 text-base font-bold uppercase tracking-wide disabled:opacity-50"
-              >
-                Keep Current Package
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+        const { data, error } = await supabase.auth.signUp({
+          email: resolvedAccountEmail,
+          password: accountPassword,
+          options: {
+            data: {
+              first_name: contact.firstName.trim(),
+              last_name: contact.lastName.trim() || null,
+              full_name: fullName || contact.firstName.trim(),
+            },
+          },
+        });
+
+        if (error) {
+          setAuthError(error.message);
+          setProcessing(false);
+          return;
+        }
+
+        setUser(data.user);
+        if (data.user) {
+          await loadExistingPlan(data.user.id);
+        }
+      } catch {
+        setAuthError("Could not create your account. Please try again.");
+        setProcessing(false);
+        return;
+      }
+
+      setProcessing(false);
+    }
+
+    setCheckoutStep("payment");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  if (loading || redirectingToQuiz) {
+  async function handlePaymentSuccess() {
+    clearPendingAssessment();
+    if (existingPlan) {
+      window.location.href = "/dashboard";
+      return;
+    }
+    window.location.href = `/quiz?package=${encodeURIComponent(selectedPackageName)}`;
+  }
+
+  async function handleDowngradeConfirm() {
+    if (!pkg || !user || !existingPlan || actionType !== "downgrade") return;
+
+    setProcessing(true);
+    setChangeError(null);
+
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session?.access_token) {
+        setChangeError("Your session expired. Please sign in again.");
+        setProcessing(false);
+        return;
+      }
+
+      const response = await fetch("/api/plans/change-package", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          packageName: pkg.name,
+          checkoutContact: contact,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setChangeError(data.error ?? "Could not change your package.");
+        setProcessing(false);
+        return;
+      }
+
+      window.location.href = "/dashboard";
+    } catch {
+      setChangeError("Something went wrong. Please try again.");
+      setProcessing(false);
+    }
+  }
+
+  if (loading) {
     return <CheckoutSkeleton />;
   }
 
   if (!pkg) {
     return (
-      <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
-        <div className="w-full shadow-premium rounded-2xl border border-line bg-card p-10 text-center">
+      <div className="checkout-shell">
+        <div className="checkout-card checkout-card--centered">
           <h1 className="font-display text-3xl">No Package Selected</h1>
           <p className="mt-3 text-muted">
             Head back to the packages section and pick a plan to check out.
@@ -187,135 +383,227 @@ export function CheckoutFlow() {
     );
   }
 
-  if (!user && !loading) {
-    return (
-      <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
-        <div className="w-full shadow-premium rounded-2xl border border-line bg-card p-10 text-center">
-          <h1 className="font-display text-3xl">Sign In Required</h1>
-          <p className="mt-3 text-muted">
-            You need to create an account or log in to complete your order.
-          </p>
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <Link
-              href={`/auth/signup?redirect=/checkout?package=${encodeURIComponent(packageName || "")}`}
-              className="btn btn-accent px-6 py-3 text-sm font-bold uppercase tracking-wide text-white"
-            >
-              Create Account
-            </Link>
-            <Link
-              href={`/auth/login?redirect=/checkout?package=${encodeURIComponent(packageName || "")}`}
-              className="btn btn-outline px-6 py-3 text-sm font-bold uppercase tracking-wide"
-            >
-              Sign In
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const summary = (
+    <CheckoutOrderSummary
+      packageName={pkg.name}
+      pricePerMonth={pkg.price}
+      totalDueToday={totalDueToday}
+      changeType={actionType}
+      currentPackageName={existingPlan?.package_name}
+    />
+  );
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
-      <div className="w-full overflow-hidden shadow-premium rounded-2xl border border-line bg-card">
-        <div className="bg-ink px-8 py-7 text-white">
-          <Link href="/" className="font-display text-lg">
-            Athletic<span className="text-accent">Wolf</span>
-          </Link>
-          <p className="mt-4 text-sm font-semibold uppercase tracking-[0.18em] text-accent">
-            Checkout
-          </p>
-          <h1 className="font-display mt-1.5 text-3xl sm:text-4xl">
-            Complete Your Order
-          </h1>
-        </div>
-
-        <div className="p-8">
-          <CheckoutSteps current="payment" />
-
-          <div className="rounded-xl border border-line bg-surface p-6">
-            <div className="flex items-center justify-between">
-              <p className="font-display text-xl">{pkg.name} Plan</p>
-              {pkg.featured && (
-                <span className="rounded-full bg-accent px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
-                  Most Popular
-                </span>
-              )}
-            </div>
-            <p className="mt-1 text-sm text-muted">6 Month Coaching Package</p>
-            <div className="mt-4 flex items-end gap-1">
-              <span className="font-display text-3xl">${pkg.price}</span>
-              <span className="mb-0.5 text-sm text-muted">/ month</span>
-            </div>
-            <p className="mt-1 text-sm text-muted">Total value ${pkg.value}</p>
-
-            <ul className="mt-5 flex flex-col gap-2 border-t border-line pt-5">
-              {pkg.features.map((feature) => (
-                <li key={feature} className="flex items-start gap-2.5 text-sm">
-                  <Check
-                    size={16}
-                    weight="bold"
-                    className="mt-0.5 shrink-0 text-accent"
-                    aria-hidden
-                  />
-                  <span>{feature}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {pendingAssessment && (
-            <div className="mt-6 flex items-center gap-2.5 rounded-xl border border-accent/30 bg-accent/10 px-4 py-3">
-              <Check size={18} weight="bold" className="shrink-0 text-accent" />
-              <p className="text-sm font-semibold text-accent">
-                Assessment complete — you&apos;re ready to check out.
-              </p>
-            </div>
-          )}
-
-          {existingPlan ? (
-            <>
-              <div className="mt-6 rounded-xl border border-dashed border-line bg-surface p-6 text-center">
-                <p className="text-sm font-semibold">Package change</p>
-                <p className="mt-2 text-sm text-muted">
-                  You already have an active package. Use the button below to upgrade or switch — payment integration for changes comes later.
-                </p>
-              </div>
-
+    <div className="checkout-shell">
+      <div className="checkout-card">
+        <header className="checkout-header">
+          <div className="checkout-header__top">
+            {checkoutStep === "payment" ? (
               <button
                 type="button"
-                onClick={handleExistingPlanCheckout}
-                disabled={processing}
-                className="btn btn-accent font-display mt-6 w-full px-8 py-3.5 text-base text-white disabled:opacity-50"
+                onClick={() => setCheckoutStep("plan")}
+                className="checkout-back"
               >
-                Continue with package change
+                <ArrowLeft size={16} weight="bold" aria-hidden />
+                Back
               </button>
-            </>
-          ) : (
-            <div className="mt-6">
-              <StripeCheckoutPayment
-                packageName={pkg.name}
-                amountLabel={`$${pkg.price}`}
-                assessmentData={pendingAssessment?.formData}
-                onSuccess={handlePaymentSuccess}
-              />
-            </div>
-          )}
+            ) : (
+              <Link href="/#packages" className="checkout-back">
+                <ArrowLeft size={16} weight="bold" aria-hidden />
+                Back
+              </Link>
+            )}
+            <Link href="/" className="checkout-header__brand font-display">
+              Athletic<span className="text-accent">Wolf</span>
+            </Link>
+          </div>
 
-          <p className="mt-4 text-center text-xs leading-relaxed text-muted">
-            By continuing, you agree to our{" "}
-            <Link href="/terms" className="text-accent hover:text-accent-light">
-              Terms &amp; Conditions
-            </Link>
-            ,{" "}
-            <Link href="/privacy" className="text-accent hover:text-accent-light">
-              Privacy Policy
-            </Link>
-            , and{" "}
-            <Link href="/refund" className="text-accent hover:text-accent-light">
-              Refund Policy
-            </Link>
-            .
-          </p>
+          <CheckoutSteps current={checkoutStep} />
+
+          <div className="checkout-header__copy">
+            <p className="checkout-header__eyebrow">Checkout</p>
+            <h1 className="checkout-header__title font-display">
+              {checkoutStep === "plan"
+                ? "Account & plan"
+                : actionType === "downgrade"
+                  ? "Confirm package change"
+                  : "Secure payment"}
+            </h1>
+          </div>
+        </header>
+
+        <div className="checkout-layout">
+          <div className="checkout-main">
+            {authLoadError ? (
+              <p className="checkout-error">{authLoadError}</p>
+            ) : null}
+
+            {checkoutStep === "plan" ? (
+              <>
+                <CheckoutContactFields value={contact} onChange={setContact} />
+
+                {!user ? (
+                  guestAuthMode === "login" ? (
+                    <CheckoutInlineLogin
+                      email={resolvedAccountEmail}
+                      password={accountPassword}
+                      loading={processing}
+                      error={authError}
+                      onEmailChange={setAccountEmail}
+                      onPasswordChange={setAccountPassword}
+                      onSubmit={handleGuestSignIn}
+                      onCreateAccountClick={() => {
+                        setGuestAuthMode("signup");
+                        setAuthError(null);
+                      }}
+                    />
+                  ) : (
+                    <CheckoutAccountFields
+                      email={resolvedAccountEmail}
+                      password={accountPassword}
+                      hideEmail={contact.contactChannel === "email"}
+                      onEmailChange={setAccountEmail}
+                      onPasswordChange={setAccountPassword}
+                      onSignInClick={() => {
+                        setGuestAuthMode("login");
+                        setAuthError(null);
+                      }}
+                    />
+                  )
+                ) : null}
+
+                <CheckoutPackagePicker
+                  selectedName={selectedPackageName}
+                  onSelect={handlePackageSelect}
+                />
+
+                {existingPlan && actionType === "same" ? (
+                  <p className="checkout-note">
+                    You are already on the {existingPlan.package_name} package.
+                    Pick a different plan above to upgrade or downgrade.
+                  </p>
+                ) : null}
+
+                {existingPlan && actionType === "downgrade" ? (
+                  <p className="checkout-note">
+                    Downgrading to {pkg.name} does not require payment. Confirm
+                    on the next step. Refunds for price differences are handled
+                    manually — see our{" "}
+                    <Link href="/refund" className="text-accent hover:text-accent-light">
+                      Refund Policy
+                    </Link>
+                    .
+                  </p>
+                ) : null}
+
+                {(authError || changeError) && guestAuthMode === "signup" ? (
+                  <p className="checkout-error">{authError ?? changeError}</p>
+                ) : null}
+
+                {!canContinuePlanStep && actionType !== "same" ? (
+                  <p className="checkout-hint">
+                    {!contactComplete
+                      ? "Complete your personal details to continue."
+                      : !user && !accountReady
+                        ? guestAuthMode === "login"
+                          ? "Sign in to continue."
+                          : "Add a valid email and password to create your account."
+                        : "Ready when you are."}
+                  </p>
+                ) : null}
+
+                <button
+                  type="button"
+                  onClick={handleContinueToPayment}
+                  disabled={processing || !canContinuePlanStep}
+                  className="btn btn-accent font-display checkout-continue w-full px-8 py-3.5 text-base text-white disabled:opacity-50"
+                >
+                  {processing
+                    ? "Please wait..."
+                    : actionType === "downgrade"
+                      ? "Continue to confirm"
+                      : "Continue to payment"}
+                </button>
+              </>
+            ) : (
+              <>
+                {existingPlan && actionType === "upgrade" && upgradeDifference != null ? (
+                  <div className="checkout-note checkout-note--panel">
+                    <p className="font-semibold">Package upgrade</p>
+                    <p className="mt-2 text-sm text-muted">
+                      Upgrading from {existingPlan.package_name} to {pkg.name}.
+                      You pay {formatUsd(upgradeDifference)} today — the monthly
+                      price difference only.
+                    </p>
+                  </div>
+                ) : null}
+
+                {changeError ? (
+                  <p className="checkout-error">{changeError}</p>
+                ) : null}
+
+                {actionType === "downgrade" ? (
+                  <div className="checkout-payment-panel">
+                    <p className="text-sm font-semibold">Confirm downgrade</p>
+                    <p className="mt-2 text-sm text-muted">
+                      Your plan will switch to {pkg.name} immediately. No payment
+                      is collected on this step.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={handleDowngradeConfirm}
+                      disabled={processing}
+                      className="btn btn-accent font-display mt-6 w-full px-8 py-3.5 text-base text-white disabled:opacity-50"
+                    >
+                      {processing
+                        ? "Updating package..."
+                        : `Confirm downgrade to ${pkg.name}`}
+                    </button>
+                  </div>
+                ) : (
+                  <StripeCheckoutPayment
+                    key={`${selectedPackageName}-${actionType ?? "new"}`}
+                    packageName={pkg.name}
+                    amountLabel={paymentAmountLabel}
+                    paymentDescription={
+                      actionType === "upgrade" && existingPlan
+                        ? `Upgrade payment for ${pkg.name}. Difference from your ${existingPlan.package_name} plan.`
+                        : undefined
+                    }
+                    checkoutContact={contact}
+                    contactComplete
+                    onSuccess={handlePaymentSuccess}
+                  />
+                )}
+              </>
+            )}
+
+            <p className="checkout-legal">
+              By continuing, you agree to our{" "}
+              <Link href="/terms" className="text-accent hover:text-accent-light">
+                Terms &amp; Conditions
+              </Link>
+              ,{" "}
+              <Link href="/privacy" className="text-accent hover:text-accent-light">
+                Privacy Policy
+              </Link>
+              , and{" "}
+              <Link href="/refund" className="text-accent hover:text-accent-light">
+                Refund Policy
+              </Link>
+              .
+            </p>
+          </div>
+
+          <aside className="checkout-sidebar">
+            <div className="checkout-sidebar__summary">{summary}</div>
+            <CheckoutTrustBadges />
+          </aside>
+        </div>
+
+        <div className="checkout-mobile-summary">
+          {summary}
+          <CheckoutTrustBadges />
         </div>
       </div>
     </div>

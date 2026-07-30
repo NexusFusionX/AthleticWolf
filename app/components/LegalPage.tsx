@@ -35,23 +35,6 @@ export function LegalPage({
           </div>
         </section>
       </main>
-
-      <footer className="border-t border-line px-6 py-8 text-center text-xs text-muted sm:px-8">
-        <div className="mx-auto flex max-w-3xl flex-wrap items-center justify-center gap-x-5 gap-y-2">
-          <Link href="/privacy" className="hover:text-foreground">
-            Privacy Policy
-          </Link>
-          <Link href="/refund" className="hover:text-foreground">
-            Refund Policy
-          </Link>
-          <Link href="/terms" className="hover:text-foreground">
-            Terms &amp; Conditions
-          </Link>
-        </div>
-        <p className="mt-4">
-          © {new Date().getFullYear()} Athletic Wolf. All rights reserved.
-        </p>
-      </footer>
     </div>
   );
 }

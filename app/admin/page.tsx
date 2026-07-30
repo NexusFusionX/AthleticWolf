@@ -6,6 +6,7 @@ import { Check, X } from "@phosphor-icons/react";
 import { supabase } from "@/lib/supabase";
 import { PlanWizard } from "@/app/components/PlanWizard";
 import { AdminCustomerDetail } from "@/app/components/AdminCustomerDetail";
+import { getCustomerContact, type PlanCheckoutData } from "@/app/lib/plan-customer";
 
 interface Plan {
   id: string;
@@ -17,13 +18,7 @@ interface Plan {
   plan_ready_at: string | null;
   plan_content: string | null;
   assessment_data: string | null;
-}
-
-interface UserProfile {
-  id: string;
-  email: string;
-  full_name: string;
-  phone?: string;
+  checkout_data: string | null;
 }
 
 interface PlanWithStatus extends Plan {
@@ -40,6 +35,10 @@ function AdminContent() {
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
+  const [authContacts, setAuthContacts] = useState<Record<string, PlanCheckoutData>>(
+    {}
+  );
+  const [contactsWarning, setContactsWarning] = useState<string | null>(null);
 
   const ADMIN_USERNAME = "mrmoiz";
   const ADMIN_PASSWORD = "ulpdgwlc";
@@ -68,7 +67,25 @@ function AdminContent() {
         .select("*")
         .order("created_at", { ascending: false });
 
-      setPlans((plansData as Plan[]) || []);
+      const rows = (plansData as Plan[]) || [];
+      setPlans(rows);
+
+      if (rows.length > 0) {
+        const res = await fetch("/api/admin/customer-contacts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userIds: rows.map((p) => p.user_id) }),
+        });
+        const data = await res.json();
+        if (data.contacts) {
+          setAuthContacts(data.contacts);
+        }
+        if (data.error) {
+          setContactsWarning(data.error);
+        } else {
+          setContactsWarning(null);
+        }
+      }
     } finally {
       setLoading(false);
     }
@@ -191,6 +208,7 @@ function AdminContent() {
     return (
       <AdminCustomerDetail
         plan={selectedPlan}
+        authContact={authContacts[selectedPlan.user_id] ?? null}
         onBack={() => setSelectedPlanId(null)}
         onSuccess={loadPlans}
       />
@@ -227,6 +245,12 @@ function AdminContent() {
             </p>
           </div>
 
+          {contactsWarning && (
+            <div className="border-b border-yellow-500/30 bg-yellow-500/10 px-8 py-3 text-sm text-yellow-200">
+              {contactsWarning}
+            </div>
+          )}
+
           {plans.length === 0 ? (
             <div className="p-8 text-center">
               <p className="text-muted">No customers yet.</p>
@@ -238,6 +262,9 @@ function AdminContent() {
                   <tr className="border-b border-line bg-surface/50">
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted">
                       Name
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted">
+                      Phone
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted">
                       Package
@@ -255,19 +282,15 @@ function AdminContent() {
                 </thead>
                 <tbody>
                   {plans.map((plan) => {
-                    let customerName = "Unknown";
-                    if (plan.assessment_data) {
-                      try {
-                        const data = JSON.parse(plan.assessment_data);
-                        customerName = data.name || "Unknown";
-                      } catch (e) {
-                        customerName = "Unknown";
-                      }
-                    }
+                    const contact = getCustomerContact(
+                      plan,
+                      authContacts[plan.user_id] ?? null
+                    );
 
                     return (
                     <tr key={plan.id} className="border-b border-line hover:bg-surface/30 transition cursor-pointer" onClick={() => setSelectedPlanId(plan.id)}>
-                      <td className="px-6 py-4 text-sm font-semibold">{customerName}</td>
+                      <td className="px-6 py-4 text-sm font-semibold">{contact.name}</td>
+                      <td className="px-6 py-4 text-sm text-muted">{contact.phone}</td>
                       <td className="px-6 py-4 text-sm font-semibold">{plan.package_name}</td>
                       <td className="px-6 py-4 text-sm">
                         {plan.assessment_completed_at ? (

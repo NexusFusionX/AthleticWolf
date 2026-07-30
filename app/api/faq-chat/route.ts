@@ -20,7 +20,7 @@ function buildSystemPrompt() {
 
 BUSINESS INFO:
 - Fully online, ISSA-certified 1:1 personal training and nutrition coaching. No gym membership required, works worldwide.
-- Every client completes a short intake assessment (goals, experience, schedule, equipment, dietary preferences, injuries) before their coach builds a personalized plan.
+- After checkout, every client completes a short intake assessment (goals, experience, schedule, equipment, dietary preferences, injuries) so their coach can build a personalized plan.
 - Plans are typically ready within 24-48 hours after checkout.
 - Packages are 6-month coaching packages, billed monthly.
 

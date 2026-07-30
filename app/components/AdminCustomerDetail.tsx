@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { ArrowLeft } from "@phosphor-icons/react";
-import { supabase } from "@/lib/supabase";
 import { PlanWizard } from "./PlanWizard";
+import { getCustomerContact, type PlanCheckoutData } from "@/app/lib/plan-customer";
 
 interface Plan {
   id: string;
@@ -13,63 +13,31 @@ interface Plan {
   plan_ready_at: string | null;
   plan_content: string | null;
   assessment_data: string | null;
+  checkout_data: string | null;
 }
 
 interface AssessmentAnswers {
-  goal?: string;
-  experience?: string;
-  frequency?: string;
-  equipment?: string;
-  injuries?: string;
-  diet?: string;
-  sleep?: string;
-  stress?: string;
-  [key: string]: string | undefined;
+  [key: string]: string | string[] | undefined;
 }
 
 interface CustomerDetailProps {
   plan: Plan;
+  authContact?: PlanCheckoutData | null;
   onBack: () => void;
   onSuccess: () => void;
 }
 
-export function AdminCustomerDetail({ plan, onBack, onSuccess }: CustomerDetailProps) {
-  const [customerEmail, setCustomerEmail] = useState("Loading...");
-  const [customerName, setCustomerName] = useState("Loading...");
-  const [assessmentAnswers, setAssessmentAnswers] = useState<AssessmentAnswers | null>(null);
-  const [loadingCustomer, setLoadingCustomer] = useState(true);
-
-  useEffect(() => {
-    async function loadCustomerData() {
-      try {
-        // Parse assessment data to get customer name and email
-        let email = "Unknown";
-        let name = "Unknown";
-
-        if (plan.assessment_data) {
-          try {
-            const answers = JSON.parse(plan.assessment_data);
-            setAssessmentAnswers(answers);
-
-            // Extract name and email from assessment data
-            if (answers.name) name = answers.name;
-            if (answers.email) email = answers.email;
-          } catch (err) {
-            console.error("Failed to parse assessment data:", err);
-          }
-        }
-
-        setCustomerName(name);
-        setCustomerEmail(email);
-      } catch (err) {
-        console.error("Error loading customer:", err);
-      } finally {
-        setLoadingCustomer(false);
-      }
-    }
-
-    loadCustomerData();
-  }, [plan]);
+export function AdminCustomerDetail({
+  plan,
+  authContact = null,
+  onBack,
+  onSuccess,
+}: CustomerDetailProps) {
+  const contact = useMemo(
+    () => getCustomerContact(plan, authContact),
+    [plan, authContact]
+  );
+  const assessmentAnswers = contact.assessment as AssessmentAnswers | null;
 
   return (
     <div className="min-h-screen bg-paper px-6 py-12 sm:px-8">
@@ -82,36 +50,61 @@ export function AdminCustomerDetail({ plan, onBack, onSuccess }: CustomerDetailP
           Back to Customers
         </button>
 
-        {/* Customer Info Card */}
         <div className="mb-8 rounded-2xl border border-line bg-card p-8">
           <p className="text-xs font-bold uppercase tracking-[0.15em] text-accent mb-3">
-            Customer Information
+            Checkout Contact
           </p>
-          <div className="grid sm:grid-cols-3 gap-6">
+          <p className="mb-5 text-sm text-muted">
+            From checkout — available even if assessment is not done yet.
+          </p>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             <div>
               <p className="text-xs text-muted uppercase mb-1">Name</p>
-              <p className="font-display text-lg">{customerName}</p>
+              <p className="font-display text-lg">{contact.name}</p>
             </div>
             <div>
-              <p className="text-xs text-muted uppercase mb-1">Email</p>
-              <p className="font-semibold text-sm break-all">{customerEmail}</p>
+              <p className="text-xs text-muted uppercase mb-1">Account email</p>
+              <p className="font-semibold text-sm break-all">{contact.email}</p>
+            </div>
+            {contact.checkout?.contactChannel === "phone" && contact.phone !== "—" && (
+              <div>
+                <p className="text-xs text-muted uppercase mb-1">Phone</p>
+                <p className="font-semibold text-sm">{contact.phone}</p>
+              </div>
+            )}
+            {contact.checkout?.contactChannel === "email" && contact.checkout.email && (
+              <div>
+                <p className="text-xs text-muted uppercase mb-1">Contact email</p>
+                <p className="font-semibold text-sm break-all">{contact.checkout.email}</p>
+              </div>
+            )}
+            <div>
+              <p className="text-xs text-muted uppercase mb-1">Preferred contact</p>
+              <p className="font-semibold text-sm">{contact.preferredContact}</p>
             </div>
             <div>
               <p className="text-xs text-muted uppercase mb-1">Package</p>
               <p className="font-display text-lg">{plan.package_name}</p>
             </div>
           </div>
+          {contact.name === "Unknown" &&
+            contact.phone === "—" &&
+            !contact.checkout?.email && (
+            <p className="mt-5 text-sm text-yellow-200/90">
+              No checkout contact saved for this customer yet. They may have
+              purchased before checkout contact fields were added.
+            </p>
+          )}
         </div>
 
-        {/* Assessment Section */}
         {plan.assessment_completed_at && assessmentAnswers && (
           <div className="mb-8 rounded-2xl border border-line bg-card p-8">
             <p className="text-xs font-bold uppercase tracking-[0.15em] text-accent mb-6">
-              ✓ Assessment Responses
+              Assessment Responses
             </p>
             <div className="grid sm:grid-cols-2 gap-6">
               {Object.entries(assessmentAnswers)
-                .filter(([key]) => !["name", "email"].includes(key)) // Skip name/email as they're in header
+                .filter(([key]) => !["name", "email"].includes(key))
                 .map(([key, value]) => (
                   <div key={key}>
                     <p className="text-xs text-muted uppercase mb-1.5 tracking-wider font-semibold">
@@ -131,12 +124,11 @@ export function AdminCustomerDetail({ plan, onBack, onSuccess }: CustomerDetailP
         {!plan.assessment_completed_at && (
           <div className="mb-8 rounded-2xl border border-yellow-500/30 bg-yellow-500/10 p-8">
             <p className="text-sm text-yellow-500 font-semibold">
-              ⚠ Assessment not yet completed by customer
+              Assessment not completed yet — use checkout contact above to follow up.
             </p>
           </div>
         )}
 
-        {/* Plan Creation Section */}
         <PlanWizard
           planId={plan.id}
           onSuccess={() => {

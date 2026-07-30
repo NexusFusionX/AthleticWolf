@@ -9,18 +9,25 @@ import {
   useStripe,
 } from "@stripe/react-stripe-js";
 import { supabase } from "@/lib/supabase";
+import type { CheckoutContact } from "@/app/lib/checkout-contact";
 
 type StripeCheckoutPaymentProps = {
   packageName: string;
   amountLabel: string;
+  paymentDescription?: string;
   assessmentData?: unknown;
+  checkoutContact?: CheckoutContact;
+  contactComplete?: boolean;
   onSuccess: () => void;
 };
 
 function PaymentForm({
   packageName,
   amountLabel,
+  paymentDescription,
   assessmentData,
+  checkoutContact,
+  contactComplete = true,
   onSuccess,
 }: StripeCheckoutPaymentProps) {
   const stripe = useStripe();
@@ -77,6 +84,7 @@ function PaymentForm({
           paymentIntentId: paymentIntent.id,
           packageName,
           assessmentData,
+          checkoutContact,
         }),
       });
 
@@ -99,6 +107,10 @@ function PaymentForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {paymentDescription && (
+        <p className="text-sm text-muted">{paymentDescription}</p>
+      )}
+
       <PaymentElement
         options={{
           layout: "tabs",
@@ -113,7 +125,7 @@ function PaymentForm({
 
       <button
         type="submit"
-        disabled={!stripe || !elements || submitting}
+        disabled={!stripe || !elements || submitting || !contactComplete}
         className="btn btn-accent font-display w-full px-8 py-3.5 text-base text-white disabled:opacity-50"
       >
         {submitting
@@ -137,7 +149,10 @@ function PaymentForm({
 export function StripeCheckoutPayment({
   packageName,
   amountLabel,
+  paymentDescription,
   assessmentData,
+  checkoutContact,
+  contactComplete = true,
   onSuccess,
 }: StripeCheckoutPaymentProps) {
   const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
@@ -258,7 +273,10 @@ export function StripeCheckoutPayment({
           <PaymentForm
             packageName={packageName}
             amountLabel={amountLabel}
+            paymentDescription={paymentDescription}
             assessmentData={assessmentData}
+            checkoutContact={checkoutContact}
+            contactComplete={contactComplete}
             onSuccess={onSuccess}
           />
         </Elements>

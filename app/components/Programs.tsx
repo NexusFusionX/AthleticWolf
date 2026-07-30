@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { Reveal } from "./Reveal";
-import { revealAt, type RevealVariant } from "../lib/reveal";
+import type { RevealVariant } from "../lib/reveal";
 import { AccentHeading } from "./AccentHeading";
 import { programs } from "../data/programs";
 
@@ -57,13 +57,7 @@ function ProgramCard({ program }: { program: Program }) {
   );
 }
 
-const PROGRAM_CARD_VARIANTS = [
-  "tilt-left",
-  "flip-up",
-  "tilt-right",
-  "zoom",
-  "rise",
-] as const;
+const DESKTOP_PROGRAM_REVEAL: RevealVariant = "up";
 
 function ProgramRow({
   program,
@@ -141,7 +135,7 @@ export function Programs() {
             <Reveal
               key={program.slug}
               delay={i * 0.06}
-              variant={revealAt([...PROGRAM_CARD_VARIANTS], i) as RevealVariant}
+              variant={DESKTOP_PROGRAM_REVEAL}
               className="h-full"
             >
               <ProgramCard program={program} />

@@ -3,9 +3,9 @@ import { Suspense } from "react";
 import { QuizWizard } from "./QuizWizard";
 
 export const metadata: Metadata = {
-  title: "Find Your Training Plan | Athletic Wolf",
+  title: "Intake Assessment | Athletic Wolf",
   description:
-    "Quick assessment to match you with the right Athletic Wolf coaching plan.",
+    "Complete your post-checkout intake assessment so your coach can build your personalized plan.",
 };
 
 export default function QuizPage() {

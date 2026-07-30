@@ -15,19 +15,19 @@ import { AccentHeading } from "./AccentHeading";
 
 const steps = [
   {
-    icon: ClipboardText,
-    title: "Take Assessment",
-    desc: "Answer a few questions about your goals, schedule, and experience.",
-  },
-  {
     icon: User,
-    title: "Create Account",
-    desc: "Sign up, pick your package, and secure your coaching spot.",
+    title: "Choose Your Package",
+    desc: "Pick Silver, Platinum, or Diamond — the level of support that fits you.",
   },
   {
     icon: CreditCard,
     title: "Secure Checkout",
-    desc: "Complete payment safely online — no hidden fees.",
+    desc: "Create your account and complete payment safely online.",
+  },
+  {
+    icon: ClipboardText,
+    title: "Complete Assessment",
+    desc: "Answer a few questions about your goals, schedule, and experience.",
   },
   {
     icon: FileText,
@@ -119,10 +119,10 @@ export function HowCoachingWorks() {
 
         <div className="mt-12 text-center">
           <Link
-            href="/quiz?start=1"
+            href="/packages"
             className="btn btn-accent px-6 py-3 text-sm font-semibold text-white"
           >
-            Start your assessment
+            View coaching packages
           </Link>
         </div>
       </div>

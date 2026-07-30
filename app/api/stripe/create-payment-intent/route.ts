@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { packages } from "@/app/data/packages";
 import { getAuthedUser } from "@/lib/supabase-server";
+import {
+  getPackageChangeType,
+  getUpgradeDifferenceCents,
+} from "@/app/lib/package-change";
 import { getCheckoutAmountCents, getStripe, isStripeConfigured } from "@/lib/stripe";
 
 export async function POST(request: NextRequest) {
@@ -33,37 +37,83 @@ export async function POST(request: NextRequest) {
 
   const { data: existingPlan } = await supabase
     .from("plans")
-    .select("id")
+    .select("id, package_name")
     .eq("user_id", user.id)
     .maybeSingle();
 
+  let amount: number;
+  let description: string;
+  let metadata: Record<string, string>;
+
   if (existingPlan) {
-    return NextResponse.json(
-      { error: "You already have an active package." },
-      { status: 409 }
+    const changeType = getPackageChangeType(existingPlan.package_name, pkg.name);
+
+    if (!changeType || changeType === "same") {
+      return NextResponse.json(
+        { error: "You are already on this package." },
+        { status: 409 }
+      );
+    }
+
+    if (changeType === "downgrade") {
+      return NextResponse.json(
+        {
+          error:
+            "Downgrades do not require payment. Confirm the package change to continue.",
+          changeType: "downgrade",
+        },
+        { status: 402 }
+      );
+    }
+
+    const upgradeAmount = getUpgradeDifferenceCents(
+      existingPlan.package_name,
+      pkg.name
     );
+
+    if (!upgradeAmount) {
+      return NextResponse.json(
+        { error: "Could not calculate upgrade amount." },
+        { status: 400 }
+      );
+    }
+
+    amount = upgradeAmount;
+    description = `Athletic Wolf — upgrade to ${pkg.name} (price difference)`;
+    metadata = {
+      userId: user.id,
+      packageName: pkg.name,
+      packageSlug: pkg.slug,
+      changeType: "upgrade",
+      previousPackageName: existingPlan.package_name,
+    };
+  } else {
+    amount = getCheckoutAmountCents(pkg.price);
+    description = `Athletic Wolf — ${pkg.name} (placeholder checkout amount)`;
+    metadata = {
+      userId: user.id,
+      packageName: pkg.name,
+      packageSlug: pkg.slug,
+      changeType: "new",
+    };
   }
 
   try {
     const stripe = getStripe();
-    const amount = getCheckoutAmountCents(pkg.price);
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency: "usd",
       automatic_payment_methods: { enabled: true },
-      metadata: {
-        userId: user.id,
-        packageName: pkg.name,
-        packageSlug: pkg.slug,
-      },
-      description: `Athletic Wolf — ${pkg.name} (placeholder checkout amount)`,
+      metadata,
+      description,
     });
 
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret,
       amount,
       currency: "usd",
+      changeType: metadata.changeType,
     });
   } catch (error) {
     console.error("Stripe create-payment-intent error:", error);

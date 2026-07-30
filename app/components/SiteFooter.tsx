@@ -1,48 +1,121 @@
 import Link from "next/link";
-import { EnvelopeSimple, InstagramLogo } from "@phosphor-icons/react/dist/ssr";
+import {
+  EnvelopeSimple,
+  Headset,
+  InstagramLogo,
+  ShieldCheck,
+  WhatsappLogo,
+} from "@phosphor-icons/react/dist/ssr";
 import { BrandLogo } from "./BrandLogo";
+import { SiteFooterCTA } from "./SiteFooterCTA";
+import { getWhatsAppUrl, SITE_CONTACT } from "@/app/lib/site-contact";
 
 const EXPLORE_LINKS = [
   { href: "/#programs", label: "Programs" },
-  { href: "/#packages", label: "Packages" },
+  { href: "/packages", label: "Packages" },
+  { href: "/how-it-works", label: "How It Works" },
   { href: "/#results", label: "Results" },
   { href: "/#testimonials", label: "Reviews" },
-  { href: "/#about", label: "About" },
+  { href: "/about", label: "About" },
 ] as const;
 
 const SUPPORT_LINKS = [
-  { href: "/#faq", label: "FAQ" },
+  { href: "/faq", label: "FAQ & Help" },
   { href: "/privacy", label: "Privacy Policy" },
   { href: "/refund", label: "Refund Policy" },
   { href: "/terms", label: "Terms & Conditions" },
 ] as const;
 
-export function SiteFooter() {
-  return (
-    <footer className="site-footer">
-      <div className="site-footer__accent-bar" aria-hidden />
+const ACCOUNT_LINKS = [
+  { href: "/auth/login", label: "Client login" },
+  { href: "/auth/signup", label: "Create account" },
+  { href: "/dashboard", label: "Dashboard" },
+] as const;
 
-      <div className="site-footer__cta mx-auto max-w-6xl px-6 pt-14 sm:px-8">
-        <div className="site-footer__cta-inner rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-8 text-center sm:px-10 sm:py-10">
-          <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-            Ready to start?
-          </p>
-          <h2 className="font-display mt-3 text-2xl font-bold text-white sm:text-3xl">
-            Your coach is one assessment away.
-          </h2>
-          <Link
-            href="/auth/login?redirect=%2Fquiz%3Fstart%3D1"
-            className="btn btn-accent mt-6 inline-flex px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white"
-          >
-            Get Started
-          </Link>
+function FooterLinkColumn({
+  title,
+  links,
+}: {
+  title: string;
+  links: ReadonlyArray<{ href: string; label: string }>;
+}) {
+  return (
+    <div>
+      <h5 className="text-xs font-bold uppercase tracking-[0.12em] text-white/90">
+        {title}
+      </h5>
+      <ul className="mt-4 flex flex-col gap-2.5 text-sm text-white/55">
+        {links.map((link) => (
+          <li key={link.href}>
+            <Link href={link.href} className="transition-colors hover:text-white">
+              {link.label}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export function SiteFooter() {
+  const year = new Date().getFullYear();
+
+  return (
+    <footer className="site-footer mt-auto w-full shrink-0 bg-black text-white">
+      <div
+        className="h-[3px] w-full bg-gradient-to-r from-transparent via-accent to-transparent"
+        aria-hidden
+      />
+
+      <div className="mx-auto w-full max-w-6xl px-6 pt-14 sm:px-8">
+        <SiteFooterCTA />
+      </div>
+
+      <div className="mx-auto mt-10 grid w-full max-w-6xl gap-4 px-6 sm:grid-cols-3 sm:px-8">
+        <Link
+          href="/refund"
+          className="flex items-start gap-3 rounded-xl border border-white/10 p-4 transition-colors hover:border-accent/40"
+        >
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
+            <ShieldCheck size={20} weight="duotone" aria-hidden />
+          </span>
+          <span>
+            <span className="block text-sm font-bold text-white">Refund policy</span>
+            <span className="mt-0.5 block text-xs leading-relaxed text-white/55">
+              Clear terms before you commit.
+            </span>
+          </span>
+        </Link>
+
+        <div className="flex items-start gap-3 rounded-xl border border-white/10 p-4">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
+            <Headset size={20} weight="duotone" aria-hidden />
+          </span>
+          <span>
+            <span className="block text-sm font-bold text-white">Coach follow-up</span>
+            <span className="mt-0.5 block text-xs leading-relaxed text-white/55">
+              We reach out within 24 hours after checkout.
+            </span>
+          </span>
+        </div>
+
+        <div className="flex items-start gap-3 rounded-xl border border-white/10 p-4">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
+            <ShieldCheck size={20} weight="duotone" aria-hidden />
+          </span>
+          <span>
+            <span className="block text-sm font-bold text-white">Secure checkout</span>
+            <span className="mt-0.5 block text-xs leading-relaxed text-white/55">
+              Payments encrypted and processed by Stripe.
+            </span>
+          </span>
         </div>
       </div>
 
-      <div className="mx-auto max-w-6xl px-6 pt-14 pb-8 sm:px-8">
+      <div className="mx-auto w-full max-w-6xl px-6 pb-8 pt-14 sm:px-8">
         <div className="grid gap-10 border-b border-white/10 pb-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-4">
-            <BrandLogo height={80} className="min-w-[11.5rem]" />
+            <BrandLogo height={88} />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/55">
               ISSA-certified online personal training and nutrition coaching for
               clients worldwide.
@@ -53,63 +126,62 @@ export function SiteFooter() {
           </div>
 
           <div className="lg:col-span-2 lg:col-start-6">
-            <h5 className="site-footer__heading">Explore</h5>
-            <ul className="site-footer__links">
-              {EXPLORE_LINKS.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href}>{link.label}</Link>
-                </li>
-              ))}
-            </ul>
+            <FooterLinkColumn title="Explore" links={EXPLORE_LINKS} />
           </div>
 
           <div className="lg:col-span-2">
-            <h5 className="site-footer__heading">Support</h5>
-            <ul className="site-footer__links">
-              {SUPPORT_LINKS.map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href}>{link.label}</Link>
-                </li>
-              ))}
-            </ul>
+            <FooterLinkColumn title="Support" links={SUPPORT_LINKS} />
           </div>
 
-          <div className="lg:col-span-3">
-            <h5 className="site-footer__heading">Contact</h5>
-            <ul className="site-footer__links">
+          <div className="lg:col-span-2">
+            <FooterLinkColumn title="Account" links={ACCOUNT_LINKS} />
+          </div>
+
+          <div className="lg:col-span-2">
+            <h5 className="text-xs font-bold uppercase tracking-[0.12em] text-white/90">
+              Contact
+            </h5>
+            <ul className="mt-4 flex flex-col gap-2.5 text-sm text-white/55">
               <li>
-                <a href="mailto:hello@athleticwolf.com">
+                <a
+                  href={`mailto:${SITE_CONTACT.email}`}
+                  className="inline-flex items-center gap-2 transition-colors hover:text-white"
+                >
                   <EnvelopeSimple size={16} weight="regular" aria-hidden />
-                  hello@athleticwolf.com
+                  {SITE_CONTACT.email}
                 </a>
               </li>
               <li>
                 <a
-                  href="https://instagram.com/athletic_wolf7"
+                  href={getWhatsAppUrl()}
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 transition-colors hover:text-white"
+                >
+                  <WhatsappLogo size={16} weight="regular" aria-hidden />
+                  {SITE_CONTACT.whatsappDisplay}
+                </a>
+              </li>
+              <li>
+                <a
+                  href={SITE_CONTACT.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 transition-colors hover:text-white"
                 >
                   <InstagramLogo size={16} weight="regular" aria-hidden />
-                  @athletic_wolf7
+                  {SITE_CONTACT.instagramHandle}
                 </a>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-6 text-xs text-white/40">
-          <span>© {new Date().getFullYear()} Athletic Wolf. All rights reserved.</span>
-          <div className="flex flex-wrap gap-x-4 gap-y-1">
-            <Link href="/privacy" className="hover:text-white/70">
-              Privacy
-            </Link>
-            <Link href="/refund" className="hover:text-white/70">
-              Refunds
-            </Link>
-            <Link href="/terms" className="hover:text-white/70">
-              Terms
-            </Link>
-          </div>
+        <div className="flex flex-col gap-2 pt-6 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between">
+          <span>© {year} Athletic Wolf. All rights reserved.</span>
+          <span className="text-white/30">
+            Online coaching worldwide · Custom training &amp; nutrition plans
+          </span>
         </div>
       </div>
     </footer>

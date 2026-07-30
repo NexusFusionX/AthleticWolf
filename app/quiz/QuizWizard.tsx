@@ -4,169 +4,17 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { clearPendingAssessment, checkoutHref } from "@/app/lib/assessment";
 import {
-  attachPackageToAssessment,
-  checkoutHref,
-  clearPendingAssessment,
-  isValidCompletedAssessment,
-  readPendingAssessment,
-  savePendingAssessment,
-} from "@/app/lib/assessment";
-
-type Option = { value: string; label: string };
-
-type Field =
-  | {
-      name: string;
-      label: string;
-      type: "text" | "email" | "number";
-      required?: boolean;
-      placeholder?: string;
-      min?: number;
-      max?: number;
-      error?: string;
-    }
-  | {
-      name: string;
-      label: string;
-      type: "textarea";
-      required?: boolean;
-      placeholder?: string;
-    }
-  | {
-      name: string;
-      label: string;
-      type: "radio" | "checkbox";
-      required?: boolean;
-      options: Option[];
-      twoCol?: boolean;
-      error?: string;
-    };
-
-const steps: { label: string; fields: Field[] }[] = [
-  {
-    label: "Your Goal",
-    fields: [
-      {
-        name: "name",
-        label: "What's your name?",
-        type: "text",
-        required: true,
-        placeholder: "e.g. Ahmed Khan",
-        error: "Please enter your name.",
-      },
-      {
-        name: "goal",
-        label: "What's your main fitness goal?",
-        type: "radio",
-        required: true,
-        error: "Please select a goal to continue.",
-        options: [
-          { value: "Lose weight", label: "🔥 Lose weight" },
-          { value: "Build muscle", label: "💪 Build muscle" },
-          { value: "Improve endurance", label: "🏃 Improve endurance" },
-          { value: "General health", label: "❤️ General health & mobility" },
-        ],
-      },
-      {
-        name: "age",
-        label: "Your age",
-        type: "number",
-        required: true,
-        placeholder: "e.g. 28",
-        min: 12,
-        max: 90,
-        error: "Please enter a valid age (12-90).",
-      },
-    ],
-  },
-  {
-    label: "Training Style",
-    fields: [
-      {
-        name: "level",
-        label: "How would you rate your experience level?",
-        type: "radio",
-        required: true,
-        twoCol: true,
-        error: "Please select your experience level.",
-        options: [
-          { value: "Beginner", label: "Beginner" },
-          { value: "Intermediate", label: "Intermediate" },
-          { value: "Advanced", label: "Advanced" },
-          { value: "Returning after break", label: "Returning after a break" },
-        ],
-      },
-      {
-        name: "days",
-        label: "How many days per week can you train?",
-        type: "radio",
-        required: true,
-        twoCol: true,
-        error: "Please choose how often you can train.",
-        options: [
-          { value: "1-2 days", label: "1-2 days" },
-          { value: "3-4 days", label: "3-4 days" },
-          { value: "5-6 days", label: "5-6 days" },
-          { value: "Every day", label: "Every day" },
-        ],
-      },
-      {
-        name: "equipment",
-        label: "What equipment do you have access to?",
-        type: "checkbox",
-        required: true,
-        twoCol: true,
-        error: "Please select at least one option.",
-        options: [
-          { value: "Full gym", label: "Full gym" },
-          { value: "Dumbbells at home", label: "Dumbbells at home" },
-          { value: "Resistance bands", label: "Resistance bands" },
-          { value: "Bodyweight only", label: "Bodyweight only" },
-        ],
-      },
-    ],
-  },
-  {
-    label: "Final Details",
-    fields: [
-      {
-        name: "diet",
-        label: "Do you follow any diet preference?",
-        type: "radio",
-        required: true,
-        twoCol: true,
-        error: "Please select a diet preference.",
-        options: [
-          { value: "No preference", label: "No preference" },
-          { value: "High protein", label: "High protein" },
-          { value: "Vegetarian", label: "Vegetarian" },
-          { value: "Keto / low carb", label: "Keto / low carb" },
-        ],
-      },
-      {
-        name: "injuries",
-        label: "Any injuries or health conditions we should know about? (optional)",
-        type: "textarea",
-        placeholder: "e.g. lower back pain, knee injury...",
-      },
-      {
-        name: "email",
-        label: "Where should we send your plan?",
-        type: "email",
-        required: true,
-        placeholder: "you@example.com",
-        error: "Please enter a valid email address.",
-      },
-    ],
-  },
-];
-
-type FormValue = string | string[];
+  ASSESSMENT_STEPS,
+  type AssessmentFormValue,
+} from "@/app/lib/assessment-steps";
+import { AssessmentFields } from "@/app/components/assessment/AssessmentFields";
+import { AssessmentShell } from "@/app/components/assessment/AssessmentShell";
 
 type SavedProgress = {
   step: number;
-  formData: Record<string, FormValue>;
+  formData: Record<string, AssessmentFormValue>;
   packageName: string | null;
 };
 
@@ -191,7 +39,7 @@ export function QuizWizard() {
   const startFresh = searchParams.get("start") === "1";
 
   const [current, setCurrent] = useState(0);
-  const [formData, setFormData] = useState<Record<string, FormValue>>({});
+  const [formData, setFormData] = useState<Record<string, AssessmentFormValue>>({});
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -203,6 +51,7 @@ export function QuizWizard() {
   const [authLoading, setAuthLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
   const [existingPlan, setExistingPlan] = useState<any>(null);
+  const [accessAllowed, setAccessAllowed] = useState(false);
 
   useEffect(() => {
     if (startFresh) {
@@ -229,21 +78,28 @@ export function QuizWizard() {
         setExistingPlan(plan);
       }
 
-      setAuthLoading(false);
-
-      if (!authUser) return;
-
-      const completed = readPendingAssessment();
-      if (completed && !isValidCompletedAssessment(authUser.id)) {
-        clearPendingAssessment();
-      }
-
-      if (plan) {
-        if (selectedPackage && plan.package_name !== selectedPackage) {
-          router.replace(checkoutHref(selectedPackage));
-        }
+      if (!authUser) {
+        setAuthLoading(false);
         return;
       }
+
+      if (startFresh || !plan) {
+        router.replace("/packages");
+        return;
+      }
+
+      if (plan.assessment_completed_at) {
+        router.replace("/dashboard");
+        return;
+      }
+
+      if (selectedPackage && plan.package_name !== selectedPackage) {
+        router.replace(checkoutHref(selectedPackage));
+        return;
+      }
+
+      setAccessAllowed(true);
+      setAuthLoading(false);
     }
     checkAuth();
   }, [selectedPackage, router, startFresh]);
@@ -296,7 +152,7 @@ export function QuizWizard() {
     setHydrated(true);
   }
 
-  function setValue(name: string, value: FormValue) {
+  function setValue(name: string, value: AssessmentFormValue) {
     setFormData((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: false }));
   }
@@ -313,7 +169,7 @@ export function QuizWizard() {
   }
 
   function validateStep(idx: number) {
-    const step = steps[idx];
+    const step = ASSESSMENT_STEPS[idx];
     const newErrors: Record<string, boolean> = {};
     let ok = true;
 
@@ -351,7 +207,7 @@ export function QuizWizard() {
   async function handleNext() {
     if (!validateStep(current)) return;
 
-    if (current < steps.length - 1) {
+    if (current < ASSESSMENT_STEPS.length - 1) {
       setCurrent((c) => c + 1);
       return;
     }
@@ -361,13 +217,12 @@ export function QuizWizard() {
 
     try {
       if (user && existingPlan) {
-        // Re-doing the assessment for an existing package: update directly,
-        // no payment step needed since they've already purchased.
         const { error } = await supabase
           .from("plans")
           .update({
             assessment_completed_at: new Date().toISOString(),
             assessment_data: JSON.stringify(formData),
+            status: "active",
           })
           .eq("id", existingPlan.id);
 
@@ -376,19 +231,7 @@ export function QuizWizard() {
         localStorage.removeItem(STORAGE_KEY);
         router.push("/dashboard");
       } else {
-        savePendingAssessment({
-          package: selectedPackage,
-          formData,
-          completedAt: new Date().toISOString(),
-          userId: user.id,
-        });
-        localStorage.removeItem(STORAGE_KEY);
-
-        if (selectedPackage) {
-          router.push(checkoutHref(selectedPackage));
-        } else {
-          window.location.assign("/#packages");
-        }
+        router.push("/packages");
       }
     } catch {
       setSubmitError("Failed to save assessment. Please try again.");
@@ -400,7 +243,7 @@ export function QuizWizard() {
     if (current > 0) setCurrent((c) => c - 1);
   }
 
-  if (authLoading || resumePrompt === undefined) {
+  if (authLoading || !accessAllowed || resumePrompt === undefined) {
     return (
       <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
         <div className="text-center">
@@ -418,7 +261,7 @@ export function QuizWizard() {
         <div className="w-full shadow-premium rounded-2xl border border-line bg-card p-10 text-center">
           <h1 className="font-display text-3xl">Sign In Required</h1>
           <p className="mt-3 text-muted">
-            You need to create an account or log in to start your assessment.
+            Sign in to complete your post-purchase intake assessment.
           </p>
           <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Link
@@ -469,7 +312,7 @@ export function QuizWizard() {
           <div className="p-8 text-center">
             <p className="text-muted">
               You have an assessment in progress: Step {resumePrompt.step + 1}{" "}
-              of {steps.length}
+              of {ASSESSMENT_STEPS.length}
               {resumePrompt.packageName
                 ? ` for the ${resumePrompt.packageName} Plan`
                 : ""}
@@ -499,52 +342,40 @@ export function QuizWizard() {
 
   return (
     <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
-      <div className="w-full overflow-hidden shadow-premium rounded-2xl border border-line bg-card">
-        <div className="bg-ink px-8 py-7 text-white">
-          <Link href="/" className="font-display text-lg">
-            Athletic<span className="text-accent">Wolf</span>
-          </Link>
-          <p className="mt-4 text-sm font-semibold uppercase tracking-[0.18em] text-accent">
-            Free Assessment
-          </p>
-          <h1 className="font-display mt-1.5 text-3xl sm:text-4xl">
-            Find Your Training Plan
-          </h1>
-          {selectedPackage && (
-            <span className="mt-3 inline-block rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white/90">
-              Applying for the {selectedPackage} Plan
-            </span>
-          )}
-
-          {!submitted && (
-            <>
-              <div className="mt-5 flex gap-2">
-                {steps.map((_, i) => (
-                  <div
-                    key={i}
-                    className={`h-1.5 flex-1 rounded-full transition-colors ${
-                      i <= current ? "bg-accent" : "bg-white/20"
-                    }`}
-                  />
-                ))}
-              </div>
-              <div className="mt-2.5 flex items-center justify-between">
-                <p className="text-xs uppercase tracking-[0.14em] text-white/60">
-                  Step {current + 1} of {steps.length}: {steps[current].label}
-                </p>
+      <div className="w-full shadow-premium">
+        <AssessmentShell
+          currentStep={current}
+          packageName={selectedPackage || existingPlan?.package_name}
+          brandHref="/"
+          showProgress={!submitted}
+          onStartOver={resetProgress}
+          footer={
+            !submitted ? (
+              <div className="flex items-center justify-between border-t border-line px-8 py-5">
+                {current > 0 ? (
+                  <button
+                    type="button"
+                    onClick={handleBack}
+                    className="btn border border-line px-6 py-3 text-sm font-semibold hover:border-accent/60"
+                  >
+                    ← Back
+                  </button>
+                ) : (
+                  <span />
+                )}
                 <button
                   type="button"
-                  onClick={resetProgress}
-                  className="text-xs font-semibold uppercase tracking-[0.1em] text-white/50 underline-offset-2 transition-colors hover:text-white hover:underline"
+                  onClick={handleNext}
+                  className="btn btn-accent font-display px-7 py-3 text-base text-white"
                 >
-                  Start Over
+                  {current === ASSESSMENT_STEPS.length - 1
+                    ? "Get My Plan →"
+                    : "Next Step →"}
                 </button>
               </div>
-            </>
-          )}
-        </div>
-
-        <div className="p-8">
+            ) : undefined
+          }
+        >
           {submitError && (
             <div className="mb-6 rounded-xl border border-error/30 bg-error/10 p-4">
               <p className="text-sm text-error">{submitError}</p>
@@ -553,9 +384,7 @@ export function QuizWizard() {
           {submitted ? (
             <div className="py-4 text-center">
               <h2 className="font-display text-3xl">Assessment Complete ✅</h2>
-              <p className="mt-3 text-muted">
-                Taking you to the next step...
-              </p>
+              <p className="mt-3 text-muted">Taking you to your dashboard...</p>
               <Link
                 href="/"
                 className="btn btn-dark mt-6 px-6 py-3 text-sm font-bold uppercase tracking-wide text-white"
@@ -564,128 +393,15 @@ export function QuizWizard() {
               </Link>
             </div>
           ) : (
-            <div className="flex flex-col gap-7">
-              {steps[current].fields.map((field) => (
-                <div key={field.name}>
-                  <label className="mb-2.5 block text-sm font-semibold">
-                    {field.label}
-                    {field.required && (
-                      <span className="ml-0.5 text-accent">*</span>
-                    )}
-                  </label>
-
-                  {(field.type === "text" ||
-                    field.type === "email" ||
-                    field.type === "number") && (
-                    <input
-                      type={field.type}
-                      value={(formData[field.name] as string) ?? ""}
-                      onChange={(e) => setValue(field.name, e.target.value)}
-                      placeholder={field.placeholder}
-                      min={field.min}
-                      max={field.max}
-                      className={`w-full rounded-xl border bg-surface px-3.5 py-3 text-sm outline-none transition-colors ${
-                        errors[field.name]
-                          ? "border-error"
-                          : "border-line focus:border-accent"
-                      }`}
-                    />
-                  )}
-
-                  {field.type === "textarea" && (
-                    <textarea
-                      value={(formData[field.name] as string) ?? ""}
-                      onChange={(e) => setValue(field.name, e.target.value)}
-                      placeholder={field.placeholder}
-                      rows={3}
-                      className="w-full resize-y rounded-xl border border-line bg-surface px-3.5 py-3 text-sm outline-none transition-colors focus:border-accent"
-                    />
-                  )}
-
-                  {(field.type === "radio" || field.type === "checkbox") && (
-                    <div
-                      className={`grid gap-2.5 ${
-                        field.twoCol ? "sm:grid-cols-2" : ""
-                      }`}
-                    >
-                      {field.options.map((opt) => {
-                        const isChecked =
-                          field.type === "checkbox"
-                            ? ((formData[field.name] as string[]) ?? []).includes(
-                                opt.value
-                              )
-                            : formData[field.name] === opt.value;
-                        return (
-                          <label
-                            key={opt.value}
-                            className={`flex cursor-pointer items-center gap-3 rounded-xl border px-3.5 py-3 text-sm transition-colors ${
-                              isChecked
-                                ? "border-accent bg-accent/10"
-                                : "border-line bg-surface hover:border-accent/60"
-                            }`}
-                          >
-                            <input
-                              type={field.type}
-                              name={field.name}
-                              checked={isChecked}
-                              onChange={() =>
-                                field.type === "checkbox"
-                                  ? toggleCheckbox(field.name, opt.value)
-                                  : setValue(field.name, opt.value)
-                              }
-                              className="sr-only"
-                            />
-                            <span
-                              className={`h-[18px] w-[18px] shrink-0 border-2 ${
-                                field.type === "checkbox"
-                                  ? "rounded-[5px]"
-                                  : "rounded-full"
-                              } ${
-                                isChecked
-                                  ? "border-accent bg-accent shadow-[inset_0_0_0_3px_#fff]"
-                                  : "border-line"
-                              }`}
-                            />
-                            <span className={isChecked ? "font-semibold" : ""}>
-                              {opt.label}
-                            </span>
-                          </label>
-                        );
-                      })}
-                    </div>
-                  )}
-
-                  {errors[field.name] && "error" in field && field.error && (
-                    <p className="mt-2 text-xs text-error">{field.error}</p>
-                  )}
-                </div>
-              ))}
-            </div>
+            <AssessmentFields
+              fields={ASSESSMENT_STEPS[current].fields}
+              formData={formData}
+              errors={errors}
+              onSetValue={setValue}
+              onToggleCheckbox={toggleCheckbox}
+            />
           )}
-        </div>
-
-        {!submitted && (
-          <div className="flex items-center justify-between border-t border-line px-8 py-5">
-            {current > 0 ? (
-              <button
-                type="button"
-                onClick={handleBack}
-                className="btn border border-line px-6 py-3 text-sm font-semibold hover:border-accent/60"
-              >
-                ← Back
-              </button>
-            ) : (
-              <span />
-            )}
-            <button
-              type="button"
-              onClick={handleNext}
-              className="btn btn-accent font-display px-7 py-3 text-base text-white"
-            >
-              {current === steps.length - 1 ? "Get My Plan →" : "Next Step →"}
-            </button>
-          </div>
-        )}
+        </AssessmentShell>
       </div>
     </div>
   );

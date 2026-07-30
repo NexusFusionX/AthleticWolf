@@ -6,9 +6,16 @@ type ProcessCardProps = {
   emoji: string;
   title: string;
   description: string;
+  mobileDescription?: string;
 };
 
-export function ProcessCard({ emoji, title, description }: ProcessCardProps) {
+export function ProcessCard({
+  emoji,
+  title,
+  description,
+  mobileDescription,
+}: ProcessCardProps) {
+  const compactDescription = mobileDescription ?? description;
   const cardRef = useRef<HTMLElement>(null);
 
   const handleMouseMove = useCallback((event: React.MouseEvent<HTMLElement>) => {
@@ -63,7 +70,10 @@ export function ProcessCard({ emoji, title, description }: ProcessCardProps) {
 
         <div className="process-card__content">
           <h3 className="process-card-title">{title}</h3>
-          <p className="process-card-desc">{description}</p>
+          <p className="process-card-desc process-card-desc--full">{description}</p>
+          <p className="process-card-desc process-card-desc--compact">
+            {compactDescription}
+          </p>
         </div>
       </div>
     </article>

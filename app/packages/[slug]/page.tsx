@@ -79,9 +79,10 @@ export default async function PackageDetailPage({
               <div className="mt-10">
                 <AccentHeading accent="How" after="It Works" className="font-display text-2xl" />
                 <p className="mt-3 text-muted leading-relaxed">
-                  Sign in, complete a short assessment about your goals and lifestyle,
-                  then check out to lock in your {pkg.name} plan. Your coach reviews your
-                  assessment and prepares a fully personalized program within 24-48 hours.
+                  Sign in and check out to lock in your {pkg.name} plan. After
+                  payment, you&apos;ll complete a short intake assessment about
+                  your goals and lifestyle. Your coach reviews it and prepares
+                  a fully personalized program within 24-48 hours.
                 </p>
               </div>
             </div>

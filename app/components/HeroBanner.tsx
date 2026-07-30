@@ -59,10 +59,10 @@ function HeroBannerCopyDesktop() {
 
       <div className="hero-banner__actions hero-banner__reveal mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
         <a
-          href="/quiz?start=1"
+          href="/#packages"
           className="btn btn-accent inline-flex items-center justify-center gap-2 px-7 py-3.5 text-sm font-semibold text-white"
         >
-          Start Free Assessment — 2 Min
+          View Coaching Packages
         </a>
         <a
           href="#coach-videos"
@@ -106,12 +106,12 @@ function HeroBannerCopyMobile() {
       </ul>
 
       <div className="hero-banner__actions">
-        <a href="/quiz?start=1" className="btn btn-accent hero-banner__btn">
-          Start Free Assessment — 2 Min
+        <a href="/#packages" className="btn btn-accent hero-banner__btn">
+          Packages
         </a>
         <a href="#coach-videos" className="btn btn-outline hero-banner__btn">
           <Play size={14} weight="fill" aria-hidden />
-          Watch Coach Videos
+          Videos
         </a>
       </div>
 

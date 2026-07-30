@@ -14,7 +14,7 @@ function SignupContent() {
   const redirectTo = redirectParam
     ? redirectParam
     : packageName
-      ? `/quiz?package=${encodeURIComponent(packageName)}`
+      ? `/checkout?package=${encodeURIComponent(packageName)}`
       : "/";
 
   const [email, setEmail] = useState("");
