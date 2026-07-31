@@ -1,26 +1,129 @@
+"use client";
+
 import Image from "next/image";
-import { Check, Play } from "@phosphor-icons/react/dist/ssr";
+import { useEffect, useState } from "react";
+import { Check, Play } from "@phosphor-icons/react";
 
 const HERO_ALT =
-  "Athletic Wolf ISSA-certified coach at an outdoor gym";
+  "Athletic Wolf ISSA-certified coach — personalized online fitness coaching";
 
-const DESKTOP_HERO = {
-  src: "/media/hero/coach-hero-outdoor-21-9.png",
-  width: 2352,
-  height: 1008,
-} as const;
+const SLIDE_INTERVAL_MS = 3500;
 
-const MOBILE_HERO = {
-  src: "/media/hero/coach-hero-mobile-4-3.jpg",
-  width: 1344,
-  height: 1008,
-} as const;
+const DESKTOP_SLIDES = [
+  {
+    src: "/media/hero/coach-hero-outdoor-21-9.png",
+    width: 2352,
+    height: 1008,
+    alt: "Athletic Wolf coach training outdoors",
+  },
+  {
+    src: "/media/hero/coach-hero-gym-21-9.jpg",
+    width: 2352,
+    height: 1008,
+    alt: "Athletic Wolf coach in the gym",
+  },
+] as const;
+
+const MOBILE_SLIDES = [
+  {
+    src: "/media/hero/coach-hero-mobile-4-3.jpg",
+    width: 1344,
+    height: 1008,
+    alt: "Athletic Wolf coach training outdoors",
+  },
+  {
+    src: "/media/hero/coach-hero-gym-mobile-4-3.jpg",
+    width: 1344,
+    height: 1008,
+    alt: "Athletic Wolf coach in the gym",
+  },
+] as const;
 
 const HERO_BULLETS = [
   "ISSA-certified coach — plans built for you",
   "100% personalized training & nutrition",
   "Weekly check-ins & direct support",
 ] as const;
+
+type HeroSlide = {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+};
+
+function HeroBannerSlider({
+  slides,
+  variant,
+}: {
+  slides: readonly HeroSlide[];
+  variant: "mobile" | "desktop";
+}) {
+  const [index, setIndex] = useState(0);
+  const [transitionEnabled, setTransitionEnabled] = useState(true);
+  const [motionEnabled, setMotionEnabled] = useState(true);
+
+  const loopSlides =
+    slides.length > 1 ? [...slides, slides[0]] : [...slides];
+
+  useEffect(() => {
+    setMotionEnabled(
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!motionEnabled || slides.length < 2) return;
+
+    const timer = window.setInterval(() => {
+      setIndex((current) => {
+        if (current >= slides.length) return current;
+        return current + 1;
+      });
+    }, SLIDE_INTERVAL_MS);
+
+    return () => window.clearInterval(timer);
+  }, [motionEnabled, slides.length]);
+
+  function handleTransitionEnd() {
+    if (index !== slides.length) return;
+
+    setTransitionEnabled(false);
+    setIndex(0);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setTransitionEnabled(true));
+    });
+  }
+
+  return (
+    <div
+      className={`hero-banner__slider hero-banner__slider--${variant}`}
+      aria-hidden
+    >
+      <div
+        className={`hero-banner__slider-track${
+          transitionEnabled ? "" : " hero-banner__slider-track--instant"
+        }`}
+        style={{ transform: `translate3d(-${index * 100}%, 0, 0)` }}
+        onTransitionEnd={handleTransitionEnd}
+      >
+        {loopSlides.map((slide, slideIndex) => (
+          <div key={`${slide.src}-${slideIndex}`} className="hero-banner__slide">
+            <Image
+              src={slide.src}
+              alt={slide.alt}
+              width={slide.width}
+              height={slide.height}
+              priority={slideIndex === 0}
+              className={`hero-banner__media-img hero-banner__media-img--${variant}`}
+              sizes="100vw"
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function HeroBannerCopyDesktop() {
   return (
@@ -126,30 +229,14 @@ export function HeroBanner() {
   return (
     <section className="hero-banner relative w-full bg-black text-white">
       <div className="hero-banner__frame hero-banner__frame--mobile relative isolate md:hidden">
-        <Image
-          src={MOBILE_HERO.src}
-          alt={HERO_ALT}
-          width={MOBILE_HERO.width}
-          height={MOBILE_HERO.height}
-          priority
-          className="hero-banner__media-img hero-banner__media-img--mobile block h-auto w-full"
-          sizes="100vw"
-        />
+        <HeroBannerSlider slides={MOBILE_SLIDES} variant="mobile" />
         <div className="hero-banner__inner hero-banner__inner--mobile">
           <HeroBannerCopyMobile />
         </div>
       </div>
 
       <div className="hero-banner__frame hero-banner__frame--desktop relative isolate hidden w-full md:block">
-        <Image
-          src={DESKTOP_HERO.src}
-          alt={HERO_ALT}
-          width={DESKTOP_HERO.width}
-          height={DESKTOP_HERO.height}
-          priority
-          className="hero-banner__media-img hero-banner__media-img--desktop block h-auto w-full"
-          sizes="100vw"
-        />
+        <HeroBannerSlider slides={DESKTOP_SLIDES} variant="desktop" />
         <div className="hero-banner__inner hero-banner__inner--desktop">
           <HeroBannerCopyDesktop />
         </div>

@@ -2105,6 +2105,28 @@ header[data-site-header] {
 }
 
 /* ── Hero banner ── */
+.hero-banner__slider {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.hero-banner__slider-track {
+  display: flex;
+  width: 100%;
+  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.hero-banner__slider-track--instant {
+  transition: none !important;
+}
+
+.hero-banner__slide {
+  flex: 0 0 100%;
+  width: 100%;
+}
+
 .hero-banner__frame--mobile {
   position: relative;
   width: 100%;
@@ -2361,6 +2383,10 @@ header[data-site-header] {
   .hero-banner__reveal,
   .hero-banner__media img {
     animation: none !important;
+  }
+
+  .hero-banner__slider-track {
+    transition: none;
   }
 }
 
