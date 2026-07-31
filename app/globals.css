@@ -1618,6 +1618,10 @@ header[data-site-header] {
   .site-header__bar {
     --site-header-inner: 5.5rem;
   }
+
+  .site-header__menu-toggle {
+    display: none;
+  }
 }
 
 .site-header__account-text {
