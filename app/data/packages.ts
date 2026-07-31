@@ -48,3 +48,10 @@ export const packages = [
     ],
   },
 ];
+
+export function getPackageDiscountPercent(pkg: {
+  price: number;
+  value: number;
+}) {
+  return Math.round((1 - pkg.price / pkg.value) * 100);
+}

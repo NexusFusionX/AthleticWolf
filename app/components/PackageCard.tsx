@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Check, Fire } from "@phosphor-icons/react/dist/ssr";
-import { packages } from "../data/packages";
+import { packages, getPackageDiscountPercent } from "../data/packages";
 import { Reveal } from "./Reveal";
 import { revealAt } from "../lib/reveal";
 import { PackageStartLink } from "./PackageStartLink";
@@ -18,20 +18,17 @@ function ctaClassName(slug: Package["slug"]) {
 export function PackageCard({ pkg }: { pkg: Package }) {
   const isHero = pkg.featured;
   const total = pkg.price * 6;
+  const discountPercent = getPackageDiscountPercent(pkg);
 
   return (
     <div
       className={`package-card-shell${isHero ? " package-card-shell--hero" : ""}`}
     >
       {isHero ? (
-        <>
-          <span className="package-card__patti package-card__patti--left" aria-hidden />
-          <span className="package-card__patti package-card__patti--right" aria-hidden />
-          <span className="package-card__popular">
-            <Fire size={14} weight="fill" aria-hidden />
-            Most Popular
-          </span>
-        </>
+        <span className="package-card__popular">
+          <Fire size={14} weight="fill" aria-hidden />
+          Most Popular
+        </span>
       ) : (
         <span className="package-card__badge">{pkg.ribbon}</span>
       )}
@@ -39,6 +36,16 @@ export function PackageCard({ pkg }: { pkg: Package }) {
       <article
         className={`package-card package-card--${pkg.slug}${isHero ? " package-card--hero" : ""}`}
       >
+        {isHero ? (
+          <span
+            className="package-card__discount-ribbon"
+            aria-label={`Save ${discountPercent}%`}
+          >
+            <span className="package-card__discount-ribbon-text">
+              -{discountPercent}%
+            </span>
+          </span>
+        ) : null}
         <div className="package-card__head">
           <p className="package-card__tier">{pkg.name}</p>
           <p className="package-card__term">6 Month Plan</p>
