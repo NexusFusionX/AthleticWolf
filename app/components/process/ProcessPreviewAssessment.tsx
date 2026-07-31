@@ -3,18 +3,24 @@ import { ProcessMiniScreen } from "./ProcessMiniScreen";
 
 const GOAL_VALUE = "Build muscle";
 const DAYS_VALUE = "3-4 days";
+const LEVEL_VALUE = "Intermediate";
 
 function PreviewOptions({
   options,
   selected,
+  limit,
 }: {
   options: { value: string; label: string }[];
   selected: string;
+  limit?: number;
 }) {
+  const items = limit ? options.slice(0, limit) : options;
+
   return (
     <div className="process-mini-options">
-      {options.slice(0, 2).map((opt) => {
+      {items.map((opt) => {
         const isSelected = opt.value === selected;
+
         return (
           <div
             key={opt.value}
@@ -32,25 +38,68 @@ function PreviewOptions({
 }
 
 export function ProcessPreviewAssessmentGoals() {
-  const field = ASSESSMENT_STEPS[0].fields[1];
-  if (field.type !== "radio") return null;
+  const nameField = ASSESSMENT_STEPS[0].fields[0];
+  const goalField = ASSESSMENT_STEPS[0].fields[1];
+  const ageField = ASSESSMENT_STEPS[0].fields[2];
+  if (
+    nameField.type !== "text" ||
+    goalField.type !== "radio" ||
+    ageField.type !== "number"
+  ) {
+    return null;
+  }
 
   return (
     <ProcessMiniScreen eyebrow="Your goal" title="Share your goal">
-      <p className="process-mini-q">{field.label.replace("?", "?")}</p>
-      <PreviewOptions options={field.options} selected={GOAL_VALUE} />
+      <div className="process-mini-field">
+        <span className="process-mini-field__label">{nameField.label}</span>
+        <span className="process-mini-field__value">Alex Morgan</span>
+      </div>
+      <p className="process-mini-q">{goalField.label}</p>
+      <PreviewOptions options={goalField.options} selected={GOAL_VALUE} />
+      <div className="process-mini-field process-mini-fill-bottom">
+        <span className="process-mini-field__label">{ageField.label}</span>
+        <span className="process-mini-field__value">28</span>
+      </div>
     </ProcessMiniScreen>
   );
 }
 
 export function ProcessPreviewAssessmentTraining() {
-  const field = ASSESSMENT_STEPS[1].fields[1];
-  if (field.type !== "radio") return null;
+  const levelField = ASSESSMENT_STEPS[1].fields[0];
+  const daysField = ASSESSMENT_STEPS[1].fields[1];
+  const equipmentField = ASSESSMENT_STEPS[1].fields[2];
+  if (
+    levelField.type !== "radio" ||
+    daysField.type !== "radio" ||
+    equipmentField.type !== "checkbox"
+  ) {
+    return null;
+  }
 
   return (
     <ProcessMiniScreen eyebrow="Your schedule" title="Training days">
-      <p className="process-mini-q">{field.label.replace("?", "?")}</p>
-      <PreviewOptions options={field.options} selected={DAYS_VALUE} />
+      <p className="process-mini-q">{daysField.label}</p>
+      <PreviewOptions
+        options={daysField.options}
+        selected={DAYS_VALUE}
+        limit={3}
+      />
+      <p className="process-mini-q process-mini-q--spaced">{levelField.label}</p>
+      <PreviewOptions
+        options={levelField.options}
+        selected={LEVEL_VALUE}
+        limit={2}
+      />
+      <div className="process-mini-fill-bottom">
+        <p className="process-mini-q">{equipmentField.label}</p>
+        <div className="process-mini-chips">
+          <span className="process-mini-chip process-mini-chip--selected">
+            Full gym
+          </span>
+          <span className="process-mini-chip">Dumbbells at home</span>
+        </div>
+      </div>
     </ProcessMiniScreen>
   );
 }

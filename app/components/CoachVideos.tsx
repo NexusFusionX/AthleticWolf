@@ -1,106 +1,336 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import {
+  ArrowsIn,
+  ArrowsOut,
+  ClosedCaptioning,
+  Pause,
+  Play,
+  SpeakerHigh,
+  SpeakerSlash,
+} from "@phosphor-icons/react";
 import { Reveal } from "./Reveal";
 import { AccentHeading } from "./AccentHeading";
-import { Play } from "@phosphor-icons/react";
 
 const YOUTUBE_VIDEO_ID = "2DOaUdGEOmM";
 
-const COACH_VIDEO = {
-  title: "Fat Loss in 10 Mins | Daily Home Routine",
-  channel: "Athletic Wolf",
-  channelUrl: "https://www.youtube.com/@AthleticWolf",
-  watchUrl: `https://www.youtube.com/watch?v=${YOUTUBE_VIDEO_ID}`,
-  thumbnails: [
-    `https://i.ytimg.com/vi/${YOUTUBE_VIDEO_ID}/sddefault.jpg`,
-    `https://i.ytimg.com/vi/${YOUTUBE_VIDEO_ID}/hqdefault.jpg`,
-    `https://i.ytimg.com/vi/${YOUTUBE_VIDEO_ID}/mqdefault.jpg`,
-  ],
-  embedSrc: `https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&rel=0`,
+const YOUTUBE_STATE = {
+  playing: 1,
+  paused: 2,
 } as const;
+const PLAYER_ELEMENT_ID = "coach-video-youtube-player";
 
-function YouTubeMark({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 90 20"
-      aria-hidden
-      className={className}
-      fill="currentColor"
-    >
-      <path d="M27.2 4.2h-4.5v11.6h4.5c3.1 0 5.3-1.6 5.3-5.8 0-4.2-2.2-5.8-5.3-5.8zm-.3 9.7h-2.2V6.1h2.2c2 0 3.1 1 3.1 3.9 0 2.9-1.1 3.9-3.1 3.9zM41.8 4.2l-3.8 11.6h-2.3L31.9 4.2h2.4l2.1 7.1 2.1-7.1h2.3zM52.6 4.2h2.2v11.6h-2.2V4.2zM63.4 4.2c3.4 0 5.6 2.2 5.6 5.8s-2.2 5.8-5.6 5.8h-4.5V4.2h4.5zm0 9.7c2 0 3.1-1.2 3.1-3.9s-1.1-3.9-3.1-3.9h-2.2v7.8h2.2zM77.8 4.2l3.5 11.6h-2.3l-.7-2.2h-3.9l-.7 2.2h-2.3l3.5-11.6h2.9zm-1.5 7.1l-1.2-3.8-1.2 3.8h2.4zM11.9 2.5C11.3 1 10.1 0 8.5 0H2.2C.6 0-.6 1.1-1.2 2.5 0 0-1.2 4.1-1.2 6.5v7c0 2.4 1.2 4 1.2 4 .6 1.4 1.8 2.5 3.4 2.5h6.3c1.6 0 2.8-1.1 3.4-2.5 0 0 1.2-1.6 1.2-4v-7c0-2.4-1.2-4-1.2-4zM7.3 14.5V5.5L12.5 10 7.3 14.5z" />
-    </svg>
-  );
+type YouTubePlayer = {
+  playVideo: () => void;
+  pauseVideo: () => void;
+  mute: () => void;
+  unMute: () => void;
+  setVolume: (volume: number) => void;
+  isMuted: () => boolean;
+  loadModule: (name: string) => void;
+  unloadModule: (name: string) => void;
+  setOption: (module: string, option: string, value: unknown) => void;
+  destroy: () => void;
+};
+
+type YouTubePlayerCtor = new (
+  elementId: string,
+  options: {
+    host?: string;
+    videoId: string;
+    width?: string | number;
+    height?: string | number;
+    playerVars?: Record<string, string | number>;
+    events?: {
+      onReady?: (event: { target: YouTubePlayer }) => void;
+      onStateChange?: (event: { data: number }) => void;
+    };
+  }
+) => YouTubePlayer;
+
+declare global {
+  interface Window {
+    YT?: {
+      Player: YouTubePlayerCtor;
+    };
+    onYouTubeIframeAPIReady?: () => void;
+  }
 }
 
-function YouTubePlayer() {
-  const [playing, setPlaying] = useState(false);
-  const [thumbnailIndex, setThumbnailIndex] = useState(0);
+function loadYouTubeIframeApi() {
+  if (typeof window === "undefined") {
+    return Promise.resolve();
+  }
 
-  const thumbnail = COACH_VIDEO.thumbnails[thumbnailIndex];
+  if (window.YT?.Player) {
+    return Promise.resolve();
+  }
 
-  function handleThumbnailError() {
-    setThumbnailIndex((current) =>
-      current < COACH_VIDEO.thumbnails.length - 1 ? current + 1 : current
+  return new Promise<void>((resolve) => {
+    const finish = () => resolve();
+
+    if (window.YT?.Player) {
+      finish();
+      return;
+    }
+
+    const previousReady = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      previousReady?.();
+      finish();
+    };
+
+    if (!document.getElementById("youtube-iframe-api")) {
+      const script = document.createElement("script");
+      script.id = "youtube-iframe-api";
+      script.src = "https://www.youtube.com/iframe_api";
+      document.body.appendChild(script);
+    }
+  });
+}
+
+function ScrollYouTubePlayer() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const playerRef = useRef<YouTubePlayer | null>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+  const [isReady, setIsReady] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [manuallyPaused, setManuallyPaused] = useState(false);
+  const [captionsOn, setCaptionsOn] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useEffect(() => {
+    const node = containerRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const visible =
+          entry.isIntersecting && entry.intersectionRatio >= 0.45;
+        setIsActive(visible);
+        if (visible) setShouldLoad(true);
+      },
+      { threshold: [0, 0.45, 0.65] }
     );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!shouldLoad) return;
+
+    let cancelled = false;
+
+    loadYouTubeIframeApi().then(() => {
+      if (cancelled || playerRef.current || !window.YT?.Player) return;
+      if (!document.getElementById(PLAYER_ELEMENT_ID)) return;
+
+      const player = new window.YT.Player(PLAYER_ELEMENT_ID, {
+        host: "https://www.youtube-nocookie.com",
+        videoId: YOUTUBE_VIDEO_ID,
+        width: "100%",
+        height: "100%",
+        playerVars: {
+          enablejsapi: 1,
+          modestbranding: 1,
+          rel: 0,
+          controls: 0,
+          iv_load_policy: 3,
+          playsinline: 1,
+          fs: 0,
+          disablekb: 1,
+          loop: 1,
+          playlist: YOUTUBE_VIDEO_ID,
+          mute: 1,
+          cc_load_policy: 0,
+          origin: window.location.origin,
+        },
+        events: {
+          onReady: ({ target }) => {
+            playerRef.current = target;
+            setIsReady(true);
+            setIsMuted(target.isMuted());
+          },
+          onStateChange: ({ data }) => {
+            setIsPlaying(data === YOUTUBE_STATE.playing);
+          },
+        },
+      });
+
+      playerRef.current = player;
+    });
+
+    return () => {
+      cancelled = true;
+      playerRef.current?.destroy();
+      playerRef.current = null;
+      setIsReady(false);
+    };
+  }, [shouldLoad]);
+
+  useEffect(() => {
+    const player = playerRef.current;
+    if (!isReady || !player) return;
+
+    if (!isActive) {
+      player.pauseVideo();
+      return;
+    }
+
+    if (!manuallyPaused) {
+      player.playVideo();
+    }
+  }, [isActive, isReady, manuallyPaused]);
+
+  function togglePlayPause() {
+    const player = playerRef.current;
+    if (!player) return;
+
+    if (isPlaying) {
+      player.pauseVideo();
+      setManuallyPaused(true);
+      return;
+    }
+
+    player.playVideo();
+    setManuallyPaused(false);
+  }
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+
+    function handleFullscreenChange() {
+      setIsFullscreen(document.fullscreenElement === stage);
+    }
+
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+    return () =>
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
+  }, []);
+
+  function toggleMute() {
+    const player = playerRef.current;
+    if (!player) return;
+
+    if (player.isMuted()) {
+      player.unMute();
+      player.setVolume(100);
+      setIsMuted(false);
+      return;
+    }
+
+    player.mute();
+    setIsMuted(true);
+  }
+
+  function toggleCaptions() {
+    const player = playerRef.current;
+    if (!player) return;
+
+    if (captionsOn) {
+      player.setOption("captions", "track", {});
+      player.unloadModule("captions");
+      setCaptionsOn(false);
+      return;
+    }
+
+    player.loadModule("captions");
+    player.setOption("captions", "track", { languageCode: "en" });
+    setCaptionsOn(true);
+  }
+
+  async function toggleFullscreen() {
+    const stage = stageRef.current;
+    if (!stage) return;
+
+    if (document.fullscreenElement === stage) {
+      await document.exitFullscreen();
+      return;
+    }
+
+    await stage.requestFullscreen();
   }
 
   return (
-    <div className="coach-video card-premium overflow-hidden rounded-2xl border border-line bg-card">
-      <div className="coach-video__media relative aspect-video w-full overflow-hidden bg-black">
-        {playing ? (
-          <iframe
-            src={COACH_VIDEO.embedSrc}
-            title={COACH_VIDEO.title}
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-            className="absolute inset-0 h-full w-full border-0"
-          />
-        ) : (
+    <div
+      ref={containerRef}
+      className="coach-video card-premium overflow-hidden rounded-2xl border border-line bg-card"
+    >
+      <div ref={stageRef} className="coach-video__stage bg-black">
+        <div className="coach-video__media relative aspect-video w-full overflow-hidden bg-black">
+          {shouldLoad ? (
+            <div id={PLAYER_ELEMENT_ID} className="coach-video__player" />
+          ) : (
+            <div className="absolute inset-0 bg-black" aria-hidden />
+          )}
+        </div>
+
+        <div className="coach-video__toolbar">
           <button
             type="button"
-            onClick={() => setPlaying(true)}
-            className="group absolute inset-0 flex w-full items-center justify-center"
-            aria-label={`Play ${COACH_VIDEO.title} on YouTube`}
+            className="coach-video__toolbar-btn"
+            onClick={togglePlayPause}
+            disabled={!isReady}
+            aria-label={isPlaying ? "Pause video" : "Play video"}
+            aria-pressed={isPlaying}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={thumbnail}
-              alt={COACH_VIDEO.title}
-              onError={handleThumbnailError}
-              className="absolute inset-0 h-full w-full object-cover object-center"
-            />
-            <span className="absolute inset-0 bg-black/20 transition-colors group-hover:bg-black/30" />
-            <span className="relative flex h-14 w-14 items-center justify-center rounded-full bg-[#ff0000] text-white shadow-lg transition-transform group-hover:scale-110 sm:h-16 sm:w-16">
-              <Play size={28} weight="fill" aria-hidden className="ml-0.5" />
-            </span>
+            {isPlaying ? (
+              <Pause size={18} weight="fill" aria-hidden />
+            ) : (
+              <Play size={18} weight="fill" aria-hidden />
+            )}
+            <span>{isPlaying ? "Pause" : "Play"}</span>
           </button>
-        )}
-      </div>
 
-      <div className="coach-video__meta px-5 py-4 sm:px-6 sm:py-5">
-        <h3 className="font-display text-lg sm:text-xl">{COACH_VIDEO.title}</h3>
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm">
-          <a
-            href={COACH_VIDEO.channelUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-semibold text-white transition-colors hover:text-accent"
+          <button
+            type="button"
+            className="coach-video__toolbar-btn"
+            onClick={toggleMute}
+            disabled={!isReady}
+            aria-label={isMuted ? "Unmute video" : "Mute video"}
+            aria-pressed={isMuted}
           >
-            {COACH_VIDEO.channel}
-          </a>
-          <span className="text-white/25" aria-hidden>
-            ·
-          </span>
-          <a
-            href={COACH_VIDEO.watchUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 font-semibold text-[#ff0000] transition-opacity hover:opacity-80"
+            {isMuted ? (
+              <SpeakerSlash size={18} weight="bold" aria-hidden />
+            ) : (
+              <SpeakerHigh size={18} weight="bold" aria-hidden />
+            )}
+            <span>{isMuted ? "Unmute" : "Mute"}</span>
+          </button>
+
+          <button
+            type="button"
+            className="coach-video__toolbar-btn"
+            onClick={toggleCaptions}
+            disabled={!isReady}
+            aria-label={captionsOn ? "Turn captions off" : "Turn captions on"}
+            aria-pressed={captionsOn}
           >
-            <YouTubeMark className="h-4 w-auto" />
-            <span>Watch on YouTube</span>
-          </a>
+            <ClosedCaptioning size={18} weight="bold" aria-hidden />
+            <span>{captionsOn ? "Captions on" : "Captions off"}</span>
+          </button>
+
+          <button
+            type="button"
+            className="coach-video__toolbar-btn"
+            onClick={toggleFullscreen}
+            disabled={!isReady}
+            aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+            aria-pressed={isFullscreen}
+          >
+            {isFullscreen ? (
+              <ArrowsIn size={18} weight="bold" aria-hidden />
+            ) : (
+              <ArrowsOut size={18} weight="bold" aria-hidden />
+            )}
+            <span>{isFullscreen ? "Exit full screen" : "Full screen"}</span>
+          </button>
         </div>
       </div>
     </div>
@@ -109,22 +339,24 @@ function YouTubePlayer() {
 
 export function CoachVideos() {
   return (
-    <section id="coach-videos" className="px-6 py-20 sm:px-8 sm:py-28">
-      <div className="mx-auto max-w-4xl">
+    <section id="coach-videos" className="page-section px-6 sm:px-8">
+      <div className="mx-auto max-w-6xl">
         <Reveal className="max-w-xl" variant="left">
           <AccentHeading
-            accent="Coach"
-            after="Videos"
+            before="See Your Coach"
+            accent="In Action"
             className="font-display text-4xl sm:text-5xl"
           />
           <p className="mt-4 text-muted">
-            Learn directly from your coach — streamed in high quality on YouTube.
+            Real training from your coach — it plays when you scroll here and
+            pauses when you scroll away. Use the buttons below to play, pause,
+            unmute, captions, or full screen.
           </p>
         </Reveal>
 
         <Reveal delay={0.12} variant="right">
-          <div className="mt-10 sm:mt-12">
-            <YouTubePlayer />
+          <div className="mt-8 sm:mt-10">
+            <ScrollYouTubePlayer />
           </div>
         </Reveal>
       </div>

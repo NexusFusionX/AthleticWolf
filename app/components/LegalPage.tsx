@@ -1,13 +1,17 @@
 import Link from "next/link";
 import { Header } from "@/app/components/Header";
+import { TrustHighlightStrip } from "@/app/components/TrustHighlightStrip";
+import type { TrustHighlightItem } from "@/app/lib/trust-highlights";
 
 export function LegalPage({
   title,
   subtitle,
+  trustHighlights,
   children,
 }: {
   title: string;
   subtitle?: string;
+  trustHighlights?: TrustHighlightItem[];
   children: React.ReactNode;
 }) {
   return (
@@ -29,11 +33,18 @@ export function LegalPage({
           </div>
         </section>
 
-        <section className="px-6 py-14 sm:px-8 sm:py-20">
+        <section className="page-section px-6 sm:px-8">
           <div className="legal-prose mx-auto max-w-3xl space-y-8 text-sm leading-relaxed text-muted sm:text-base">
             {children}
           </div>
         </section>
+
+        {trustHighlights ? (
+          <TrustHighlightStrip
+            items={trustHighlights}
+            className="page-trust-strip"
+          />
+        ) : null}
       </main>
     </div>
   );

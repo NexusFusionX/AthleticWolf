@@ -88,7 +88,7 @@ export function Testimonials() {
 
         <Reveal delay={0.08} variant="up">
           <div
-            className="mt-10 flex flex-wrap justify-center gap-2"
+            className="mt-8 flex flex-wrap justify-center gap-2"
             role="tablist"
             aria-label="Review categories"
           >
@@ -111,7 +111,7 @@ export function Testimonials() {
           </div>
         </Reveal>
 
-        <div className="mt-10 grid gap-4 sm:grid-cols-2">
+        <div className="mt-8 grid gap-4 sm:grid-cols-2">
           {items.map((item, i) => (
             <Reveal key={`${active}-${item.name}`} delay={i * 0.06} variant="rise">
               <article className="testimonial-card h-full rounded-2xl border border-line bg-card p-6">

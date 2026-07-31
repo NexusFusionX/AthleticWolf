@@ -72,7 +72,7 @@ export function PackageCard({ pkg }: { pkg: Package }) {
             className={`package-card__cta ${ctaClassName(pkg.slug)}`}
           >
             <span className="package-card__cta-label">
-              Start with {pkg.name}
+              Get started
               <ArrowRight size={16} weight="bold" aria-hidden />
             </span>
           </PackageStartLink>

@@ -66,7 +66,7 @@ export function WhoItIsFor() {
           </p>
         </Reveal>
 
-        <div className="process-grid who-it-is-for__grid mt-10 sm:mt-12">
+        <div className="process-grid who-it-is-for__grid mt-8">
           {categories.map((category, i) => (
             <Reveal
               key={category.title}

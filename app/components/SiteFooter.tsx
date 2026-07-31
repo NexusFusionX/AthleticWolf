@@ -1,59 +1,211 @@
 import Link from "next/link";
+import type { ComponentType } from "react";
+import type { IconProps } from "@phosphor-icons/react";
 import {
+  Barbell,
+  ChartLineUp,
   EnvelopeSimple,
-  Headset,
+  FileText,
   InstagramLogo,
+  Package,
+  Path,
+  Question,
+  Receipt,
   ShieldCheck,
+  SignIn,
+  SquaresFour,
+  Star,
+  User,
+  UserPlus,
   WhatsappLogo,
 } from "@phosphor-icons/react/dist/ssr";
 import { BrandLogo } from "./BrandLogo";
 import { SiteFooterCTA } from "./SiteFooterCTA";
+import { SiteFooterTrust } from "./SiteFooterTrust";
 import { getWhatsAppUrl, SITE_CONTACT } from "@/app/lib/site-contact";
 
-const EXPLORE_LINKS = [
-  { href: "/#programs", label: "Programs" },
-  { href: "/packages", label: "Packages" },
-  { href: "/how-it-works", label: "How It Works" },
-  { href: "/#results", label: "Results" },
-  { href: "/#testimonials", label: "Reviews" },
-  { href: "/about", label: "About" },
-] as const;
+type FooterNavLink = {
+  href: string;
+  label: string;
+  description: string;
+  icon: ComponentType<IconProps>;
+  external?: boolean;
+};
 
-const SUPPORT_LINKS = [
-  { href: "/faq", label: "FAQ & Help" },
-  { href: "/privacy", label: "Privacy Policy" },
-  { href: "/refund", label: "Refund Policy" },
-  { href: "/terms", label: "Terms & Conditions" },
-] as const;
+const EXPLORE_LINKS: FooterNavLink[] = [
+  {
+    href: "/#programs",
+    label: "Programs",
+    description: "Fat loss, muscle, and more.",
+    icon: Barbell,
+  },
+  {
+    href: "/packages",
+    label: "Packages",
+    description: "Silver, Platinum, and Diamond.",
+    icon: Package,
+  },
+  {
+    href: "/how-it-works",
+    label: "How It Works",
+    description: "From signup to your first workout.",
+    icon: Path,
+  },
+  {
+    href: "/#results",
+    label: "Results",
+    description: "Real client transformations.",
+    icon: ChartLineUp,
+  },
+  {
+    href: "/#testimonials",
+    label: "Reviews",
+    description: "What clients say about coaching.",
+    icon: Star,
+  },
+  {
+    href: "/about",
+    label: "About",
+    description: "Meet your ISSA-certified coach.",
+    icon: User,
+  },
+];
 
-const ACCOUNT_LINKS = [
-  { href: "/auth/login", label: "Client login" },
-  { href: "/auth/signup", label: "Create account" },
-  { href: "/dashboard", label: "Dashboard" },
-] as const;
+const SUPPORT_LINKS: FooterNavLink[] = [
+  {
+    href: "/faq",
+    label: "FAQ & Help",
+    description: "Common questions answered fast.",
+    icon: Question,
+  },
+  {
+    href: "/privacy",
+    label: "Privacy Policy",
+    description: "How we protect your information.",
+    icon: ShieldCheck,
+  },
+  {
+    href: "/refund",
+    label: "Refund Policy",
+    description: "Clear terms before you commit.",
+    icon: Receipt,
+  },
+  {
+    href: "/terms",
+    label: "Terms & Conditions",
+    description: "Coaching and billing policies.",
+    icon: FileText,
+  },
+];
 
-function FooterLinkColumn({
+const ACCOUNT_LINKS: FooterNavLink[] = [
+  {
+    href: "/auth/login",
+    label: "Client login",
+    description: "Access your coaching dashboard.",
+    icon: SignIn,
+  },
+  {
+    href: "/auth/signup",
+    label: "Create account",
+    description: "Start checkout in minutes.",
+    icon: UserPlus,
+  },
+  {
+    href: "/dashboard",
+    label: "Dashboard",
+    description: "Workouts, nutrition, and check-ins.",
+    icon: SquaresFour,
+  },
+];
+
+const CONTACT_LINKS: FooterNavLink[] = [
+  {
+    href: `mailto:${SITE_CONTACT.email}`,
+    label: "Email",
+    description: SITE_CONTACT.email,
+    icon: EnvelopeSimple,
+  },
+  {
+    href: getWhatsAppUrl(),
+    label: "WhatsApp",
+    description: SITE_CONTACT.whatsappDisplay,
+    icon: WhatsappLogo,
+    external: true,
+  },
+  {
+    href: SITE_CONTACT.instagramUrl,
+    label: "Instagram",
+    description: SITE_CONTACT.instagramHandle,
+    icon: InstagramLogo,
+    external: true,
+  },
+];
+
+function FooterNavCard({ link }: { link: FooterNavLink }) {
+  const Icon = link.icon;
+
+  const content = (
+    <>
+      <span className="trust-highlight-strip__icon" aria-hidden>
+        <Icon size={20} weight="duotone" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="site-footer__nav-card-title block text-sm font-bold text-white">
+          {link.label}
+        </span>
+        <span className="mt-0.5 block text-xs leading-relaxed text-white/55">
+          {link.description}
+        </span>
+      </span>
+    </>
+  );
+
+  const className =
+    "site-footer__nav-card trust-highlight-strip__card trust-highlight-strip__card--link";
+
+  if (link.external) {
+    return (
+      <li>
+        <a
+          href={link.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={className}
+        >
+          {content}
+        </a>
+      </li>
+    );
+  }
+
+  return (
+    <li>
+      <Link href={link.href} className={className}>
+        {content}
+      </Link>
+    </li>
+  );
+}
+
+function FooterNavSection({
   title,
   links,
 }: {
   title: string;
-  links: ReadonlyArray<{ href: string; label: string }>;
+  links: FooterNavLink[];
 }) {
   return (
-    <div>
+    <section className="site-footer__nav-section">
       <h5 className="text-xs font-bold uppercase tracking-[0.12em] text-white/90">
         {title}
       </h5>
-      <ul className="mt-4 flex flex-col gap-2.5 text-sm text-white/55">
+      <ul className="site-footer__nav-list">
         {links.map((link) => (
-          <li key={link.href}>
-            <Link href={link.href} className="transition-colors hover:text-white">
-              {link.label}
-            </Link>
-          </li>
+          <FooterNavCard key={`${title}-${link.href}`} link={link} />
         ))}
       </ul>
-    </div>
+    </section>
   );
 }
 
@@ -71,52 +223,13 @@ export function SiteFooter() {
         <SiteFooterCTA />
       </div>
 
-      <div className="mx-auto mt-10 grid w-full max-w-6xl gap-4 px-6 sm:grid-cols-3 sm:px-8">
-        <Link
-          href="/refund"
-          className="flex items-start gap-3 rounded-xl border border-white/10 p-4 transition-colors hover:border-accent/40"
-        >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
-            <ShieldCheck size={20} weight="duotone" aria-hidden />
-          </span>
-          <span>
-            <span className="block text-sm font-bold text-white">Refund policy</span>
-            <span className="mt-0.5 block text-xs leading-relaxed text-white/55">
-              Clear terms before you commit.
-            </span>
-          </span>
-        </Link>
-
-        <div className="flex items-start gap-3 rounded-xl border border-white/10 p-4">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
-            <Headset size={20} weight="duotone" aria-hidden />
-          </span>
-          <span>
-            <span className="block text-sm font-bold text-white">Coach follow-up</span>
-            <span className="mt-0.5 block text-xs leading-relaxed text-white/55">
-              We reach out within 24 hours after checkout.
-            </span>
-          </span>
-        </div>
-
-        <div className="flex items-start gap-3 rounded-xl border border-white/10 p-4">
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
-            <ShieldCheck size={20} weight="duotone" aria-hidden />
-          </span>
-          <span>
-            <span className="block text-sm font-bold text-white">Secure checkout</span>
-            <span className="mt-0.5 block text-xs leading-relaxed text-white/55">
-              Payments encrypted and processed by Stripe.
-            </span>
-          </span>
-        </div>
-      </div>
+      <SiteFooterTrust />
 
       <div className="mx-auto w-full max-w-6xl px-6 pb-8 pt-14 sm:px-8">
-        <div className="grid gap-10 border-b border-white/10 pb-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
-          <div className="lg:col-span-4">
+        <div className="site-footer__main border-b border-white/10 pb-12">
+          <div className="site-footer__brand">
             <BrandLogo height={88} />
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/55">
+            <p className="mt-4 max-w-md text-sm leading-relaxed text-white/55">
               ISSA-certified online personal training and nutrition coaching for
               clients worldwide.
             </p>
@@ -125,55 +238,11 @@ export function SiteFooter() {
             </p>
           </div>
 
-          <div className="lg:col-span-2 lg:col-start-6">
-            <FooterLinkColumn title="Explore" links={EXPLORE_LINKS} />
-          </div>
-
-          <div className="lg:col-span-2">
-            <FooterLinkColumn title="Support" links={SUPPORT_LINKS} />
-          </div>
-
-          <div className="lg:col-span-2">
-            <FooterLinkColumn title="Account" links={ACCOUNT_LINKS} />
-          </div>
-
-          <div className="lg:col-span-2">
-            <h5 className="text-xs font-bold uppercase tracking-[0.12em] text-white/90">
-              Contact
-            </h5>
-            <ul className="mt-4 flex flex-col gap-2.5 text-sm text-white/55">
-              <li>
-                <a
-                  href={`mailto:${SITE_CONTACT.email}`}
-                  className="inline-flex items-center gap-2 transition-colors hover:text-white"
-                >
-                  <EnvelopeSimple size={16} weight="regular" aria-hidden />
-                  {SITE_CONTACT.email}
-                </a>
-              </li>
-              <li>
-                <a
-                  href={getWhatsAppUrl()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 transition-colors hover:text-white"
-                >
-                  <WhatsappLogo size={16} weight="regular" aria-hidden />
-                  {SITE_CONTACT.whatsappDisplay}
-                </a>
-              </li>
-              <li>
-                <a
-                  href={SITE_CONTACT.instagramUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 transition-colors hover:text-white"
-                >
-                  <InstagramLogo size={16} weight="regular" aria-hidden />
-                  {SITE_CONTACT.instagramHandle}
-                </a>
-              </li>
-            </ul>
+          <div className="site-footer__nav-columns">
+            <FooterNavSection title="Explore" links={EXPLORE_LINKS} />
+            <FooterNavSection title="Support" links={SUPPORT_LINKS} />
+            <FooterNavSection title="Account" links={ACCOUNT_LINKS} />
+            <FooterNavSection title="Contact" links={CONTACT_LINKS} />
           </div>
         </div>
 

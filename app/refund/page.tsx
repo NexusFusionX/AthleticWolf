@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/app/components/LegalPage";
+import { REFUND_TRUST_HIGHLIGHTS } from "@/app/lib/trust-highlights";
 
 export const metadata: Metadata = {
   title: "Refund Policy | Athletic Wolf",
@@ -12,6 +13,7 @@ export default function RefundPolicyPage() {
     <LegalPage
       title="Refund Policy"
       subtitle="Last updated: July 24, 2026. Please read this carefully before purchasing a coaching package."
+      trustHighlights={REFUND_TRUST_HIGHLIGHTS}
     >
       <section className="space-y-3">
         <h2 className="font-display text-xl text-foreground sm:text-2xl">1. Overview</h2>

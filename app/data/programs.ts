@@ -1,7 +1,7 @@
 export const programs = [
   {
     slug: "fat-loss",
-    src: "/media/programs/fat-loss.png",
+    src: "/media/programs/fat-loss-coach.jpg",
     title: "Fat Loss Coaching",
     titleAccent: "Fat Loss",
     titleAfter: "Coaching",
@@ -18,7 +18,7 @@ export const programs = [
   },
   {
     slug: "muscle-building",
-    src: "/media/programs/muscle-building.png",
+    src: "/media/programs/muscle-building-coach.png",
     title: "Muscle Building Coaching",
     titleAccent: "Muscle Building",
     titleAfter: "Coaching",

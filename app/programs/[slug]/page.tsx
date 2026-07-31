@@ -3,7 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Header } from "@/app/components/Header";
 import { AccentHeading } from "@/app/components/AccentHeading";
+import { TrustHighlightStrip } from "@/app/components/TrustHighlightStrip";
 import { programs } from "@/app/data/programs";
+import { programTrustHighlights } from "@/app/lib/trust-highlights";
 import { Check } from "@phosphor-icons/react/dist/ssr";
 
 export function generateStaticParams() {
@@ -57,17 +59,18 @@ export default async function ProgramDetailPage({
           </div>
         </section>
 
-        <section className="px-6 py-16 sm:px-8 sm:py-20">
+        <section className="page-section px-6 sm:px-8">
           <div className="mx-auto grid max-w-4xl gap-10 lg:grid-cols-[1fr_320px]">
             <div>
-              <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-line">
+              <div className="overflow-hidden rounded-2xl border border-line bg-ink">
                 <Image
                   src={program.src}
                   alt={program.title}
-                  fill
+                  width={900}
+                  height={1200}
                   quality={92}
-                  className="h-full w-full object-cover object-center"
-                  sizes="(min-width: 1024px) 900px, 100vw"
+                  className="h-auto w-full"
+                  sizes="(min-width: 1024px) 680px, 100vw"
                 />
               </div>
 
@@ -105,6 +108,11 @@ export default async function ProgramDetailPage({
             </div>
           </div>
         </section>
+
+        <TrustHighlightStrip
+          items={programTrustHighlights(program.titleAccent)}
+          className="page-trust-strip"
+        />
       </main>
     </div>
   );

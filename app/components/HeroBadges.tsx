@@ -1,72 +1,20 @@
-import {
-  ShieldCheck,
-  CheckCircle,
-  Clock,
-  GlobeHemisphereWest,
-  CalendarCheck,
-} from "@phosphor-icons/react/dist/ssr";
-
-const badges = [
-  {
-    icon: ShieldCheck,
-    heading: "ISSA",
-    label: "Certified Coach",
-  },
-  {
-    icon: CheckCircle,
-    heading: "100%",
-    label: "Personalized Plans",
-  },
-  {
-    icon: Clock,
-    heading: "Weekly",
-    label: "Check-ins Included",
-  },
-  {
-    icon: CalendarCheck,
-    heading: "6-Month",
-    label: "Coaching Programs",
-  },
-  {
-    icon: GlobeHemisphereWest,
-    heading: "Worldwide",
-    label: "Online Coaching",
-  },
-];
-
-function BadgeItem({ badge }: { badge: (typeof badges)[number] }) {
-  const Icon = badge.icon;
-
-  return (
-    <div className="flex flex-col items-center gap-2.5 text-center sm:gap-3">
-      <div className="flex h-11 w-11 items-center justify-center rounded-full border border-accent/50 bg-accent/10 text-accent sm:h-12 sm:w-12">
-        <Icon size={22} weight="regular" />
-      </div>
-      <p className="font-display text-base font-bold leading-none tracking-wide text-white sm:text-xl">
-        {badge.heading}
-      </p>
-      <p className="max-w-[9.5rem] text-[10px] font-semibold uppercase leading-snug tracking-wider text-white/65 sm:text-xs">
-        {badge.label}
-      </p>
-    </div>
-  );
-}
+import { HeroTrustBadgeItem, HERO_TRUST_BADGES } from "./HeroTrustBadges";
 
 export function HeroBadges() {
-  const mobileBadges = badges.slice(0, 3);
+  const mobileBadges = HERO_TRUST_BADGES.slice(0, 3);
 
   return (
-    <section className="border-y border-line px-6 py-8 sm:px-8">
+    <section className="border-y border-line px-6 py-5 sm:px-8 sm:py-6">
       <div className="mx-auto max-w-6xl">
         <div className="grid grid-cols-3 gap-3 sm:hidden">
           {mobileBadges.map((badge) => (
-            <BadgeItem key={badge.heading} badge={badge} />
+            <HeroTrustBadgeItem key={badge.heading} badge={badge} compact />
           ))}
         </div>
 
         <div className="hidden grid-cols-5 gap-6 sm:grid">
-          {badges.map((badge) => (
-            <BadgeItem key={badge.heading} badge={badge} />
+          {HERO_TRUST_BADGES.map((badge) => (
+            <HeroTrustBadgeItem key={badge.heading} badge={badge} />
           ))}
         </div>
       </div>

@@ -119,7 +119,7 @@ export function Programs() {
           />
         </Reveal>
 
-        <div className="mt-10 flex flex-col gap-3 sm:hidden">
+        <div className="mt-8 flex flex-col gap-3 sm:hidden">
           {programs.map((program, i) => (
             <ProgramRow
               key={program.slug}
@@ -130,7 +130,7 @@ export function Programs() {
           ))}
         </div>
 
-        <div className="mt-10 hidden gap-4 sm:grid sm:grid-cols-3 lg:grid-cols-5">
+        <div className="mt-8 hidden gap-4 sm:grid sm:grid-cols-3 lg:grid-cols-5">
           {programs.map((program, i) => (
             <Reveal
               key={program.slug}

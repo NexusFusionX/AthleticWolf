@@ -5,14 +5,16 @@ const LOGO_SRC = "/brand/athletic-wolf-wordmark.png";
 type BrandLogoProps = {
   href?: string;
   className?: string;
-  /** Pixel height of the logo */
+  imgClassName?: string;
+  /** Pixel height of the logo. Omit when using imgClassName or header CSS. */
   height?: number;
 };
 
 export function BrandLogo({
   href = "/",
   className = "",
-  height = 40,
+  imgClassName = "",
+  height,
 }: BrandLogoProps) {
   const image = (
     // Plain img so height changes always apply locally (no Next image sizing/cache quirks).
@@ -20,8 +22,8 @@ export function BrandLogo({
     <img
       src={LOGO_SRC}
       alt="Athletic Wolf"
-      className="brand-logo block w-auto max-w-none object-contain"
-      style={{ height: `${height}px` }}
+      className={`brand-logo block w-auto max-w-none object-contain ${imgClassName}`.trim()}
+      style={height != null ? { height: `${height}px` } : undefined}
     />
   );
 

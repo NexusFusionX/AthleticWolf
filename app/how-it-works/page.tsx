@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Header } from "@/app/components/Header";
 import { AccentHeading } from "@/app/components/AccentHeading";
 import { HowItWorksGuide } from "@/app/components/HowItWorksGuide";
+import { TrustHighlightStrip } from "@/app/components/TrustHighlightStrip";
+import { HOW_IT_WORKS_TRUST_HIGHLIGHTS } from "@/app/lib/trust-highlights";
 
 export const metadata = {
   title: "How Coaching Works | Athletic Wolf",
@@ -40,11 +42,16 @@ export default function HowItWorksPage() {
           </div>
         </section>
 
-        <section className="px-6 py-16 sm:px-8 sm:py-20">
+        <section className="page-section px-6 sm:px-8">
           <div className="mx-auto max-w-5xl">
             <HowItWorksGuide />
           </div>
         </section>
+
+        <TrustHighlightStrip
+          items={HOW_IT_WORKS_TRUST_HIGHLIGHTS}
+          className="page-trust-strip"
+        />
       </main>
     </div>
   );

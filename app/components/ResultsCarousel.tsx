@@ -68,7 +68,7 @@ export function ResultsCarousel() {
           </p>
         </Reveal>
 
-        <div className="mt-14 hidden grid-cols-3 gap-5 sm:grid">
+        <div className="mt-8 hidden grid-cols-3 gap-5 sm:grid">
           {readyTransformations.map((item, i) => (
             <Reveal
               key={item.label}
@@ -102,7 +102,7 @@ export function ResultsCarousel() {
         </div>
 
         <Reveal variant="scale">
-          <div className="mt-14 sm:hidden">
+          <div className="mt-8 sm:hidden">
             <BeforeAfterSlider
               beforeSrc={readyTransformations[currentIndex].beforeSrc}
               afterSrc={readyTransformations[currentIndex].afterSrc}

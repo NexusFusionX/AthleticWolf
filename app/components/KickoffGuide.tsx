@@ -22,7 +22,6 @@ const steps = [
     step: "01",
     title: "Pick a plan & pay",
     lead: "Choose your package and checkout in minutes.",
-    points: ["Silver, Platinum, or Diamond", "Secure online payment"],
     screens: [
       { key: "packages", node: <ProcessPreviewPackages /> },
       { key: "checkout", node: <ProcessPreviewCheckout /> },
@@ -32,7 +31,6 @@ const steps = [
     step: "02",
     title: "Complete your assessment",
     lead: "After payment, answer a short intake so your coach knows you.",
-    points: ["Goals, schedule & equipment", "Takes about 5 minutes"],
     screens: [
       { key: "goals", node: <ProcessPreviewAssessmentGoals /> },
       { key: "training", node: <ProcessPreviewAssessmentTraining /> },
@@ -42,7 +40,6 @@ const steps = [
     step: "03",
     title: "Get your plan & train",
     lead: "Your coach delivers your program — then you start training.",
-    points: ["Personalized workouts & nutrition", "Check-ins as you progress"],
     screens: [
       { key: "building", node: <ProcessPreviewPlanBuilding /> },
       { key: "dashboard", node: <ProcessPreviewDashboard /> },
@@ -72,7 +69,7 @@ export function KickoffGuide() {
           </p>
         </Reveal>
 
-        <div className="kickoff-grid mt-14">
+        <div className="kickoff-grid mt-8">
           {steps.map((item, i) => (
             <Reveal
               key={item.step}
@@ -85,11 +82,6 @@ export function KickoffGuide() {
                   <span className="kickoff-card__step">Step {item.step}</span>
                   <h3 className="kickoff-card__title">{item.title}</h3>
                   <p className="kickoff-card__lead">{item.lead}</p>
-                  <ul className="kickoff-card__points">
-                    {item.points.map((point) => (
-                      <li key={point}>{point}</li>
-                    ))}
-                  </ul>
                 </div>
 
                 <div className="kickoff-card__screens" aria-hidden inert>

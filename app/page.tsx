@@ -55,7 +55,7 @@ export default function Home() {
               </p>
             </Reveal>
 
-            <PackageGrid className="mt-14" />
+            <PackageGrid className="mt-8" />
           </div>
         </section>
 
@@ -63,7 +63,7 @@ export default function Home() {
 
         <section id="about" className="section-y wheel-section section-surface px-6 sm:px-8">
           <div className="mx-auto max-w-6xl">
-            <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+            <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
               <Reveal variant="left">
                 <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
                   About Your Coach

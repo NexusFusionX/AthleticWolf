@@ -2,7 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Header } from "@/app/components/Header";
 import { AccentHeading } from "@/app/components/AccentHeading";
+import { TrustHighlightStrip } from "@/app/components/TrustHighlightStrip";
 import { packages } from "@/app/data/packages";
+import { packageTrustHighlights } from "@/app/lib/trust-highlights";
 import { Check } from "@phosphor-icons/react/dist/ssr";
 import { PackageStartLink } from "@/app/components/PackageStartLink";
 
@@ -63,7 +65,7 @@ export default async function PackageDetailPage({
           </div>
         </section>
 
-        <section className="px-6 py-16 sm:px-8 sm:py-20">
+        <section className="page-section px-6 sm:px-8">
           <div className="mx-auto grid max-w-4xl gap-10 lg:grid-cols-[1fr_320px]">
             <div>
               <AccentHeading before="What's" accent="Included" className="font-display text-2xl" />
@@ -125,6 +127,11 @@ export default async function PackageDetailPage({
             </div>
           </div>
         </section>
+
+        <TrustHighlightStrip
+          items={packageTrustHighlights(pkg.name, pkg.tagline)}
+          className="page-trust-strip"
+        />
       </main>
     </div>
   );

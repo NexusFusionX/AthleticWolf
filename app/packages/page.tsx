@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Header } from "@/app/components/Header";
 import { AccentHeading } from "@/app/components/AccentHeading";
 import { PackageGrid } from "@/app/components/PackageCard";
+import { TrustHighlightStrip } from "@/app/components/TrustHighlightStrip";
+import { PACKAGES_TRUST_HIGHLIGHTS } from "@/app/lib/trust-highlights";
 
 export const metadata = {
   title: "Our Coaching Packages | Athletic Wolf",
@@ -36,11 +38,16 @@ export default function PackagesPage() {
           </div>
         </section>
 
-        <section className="px-6 py-20 sm:px-8 sm:py-28">
+        <section className="page-section px-6 sm:px-8">
           <div className="mx-auto max-w-6xl">
             <PackageGrid />
           </div>
         </section>
+
+        <TrustHighlightStrip
+          items={PACKAGES_TRUST_HIGHLIGHTS}
+          className="page-trust-strip"
+        />
       </main>
     </div>
   );

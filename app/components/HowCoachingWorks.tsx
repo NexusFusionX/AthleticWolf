@@ -55,7 +55,7 @@ export function HowCoachingWorks() {
           />
         </Reveal>
 
-        <div className="mt-16">
+        <div className="mt-8">
           <div className="hidden lg:grid lg:grid-cols-5 lg:gap-6">
             {steps.map((step, i) => {
               const Icon = step.icon;
@@ -117,7 +117,7 @@ export function HowCoachingWorks() {
           </div>
         </div>
 
-        <div className="mt-12 text-center">
+        <div className="mt-8 text-center">
           <Link
             href="/packages"
             className="btn btn-accent px-6 py-3 text-sm font-semibold text-white"

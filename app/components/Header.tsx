@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
-import { Bell, List, User, X } from "@phosphor-icons/react";
+import { Bell, User, X } from "@phosphor-icons/react";
 import { BrandLogo } from "./BrandLogo";
 
 const NAV_LINKS = [
@@ -128,24 +128,28 @@ export function Header() {
       data-site-header
       className="site-header sticky top-0 z-50 border-b border-white/10 bg-black"
     >
-      <div className="mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-2 px-6 py-2 sm:px-8 md:flex md:justify-between md:gap-4 md:py-3">
+      <div className="site-header__bar mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-2 px-6 sm:px-8 md:flex md:justify-between md:gap-4">
         <button
           type="button"
-          className="col-start-1 row-start-1 flex h-11 w-11 items-center justify-center justify-self-start rounded-xl border border-white/15 text-white transition-colors hover:border-accent/40 hover:text-accent md:hidden"
+          className="site-header__menu-toggle col-start-1 row-start-1 justify-self-start md:hidden"
           aria-expanded={menuOpen}
           aria-controls="mobile-nav"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           onClick={toggleMenu}
         >
-          {menuOpen ? (
-            <X size={22} weight="bold" />
-          ) : (
-            <List size={22} weight="bold" />
-          )}
+          <span className="site-header__menu-icon" aria-hidden>
+            <span className="site-header__menu-bar" />
+            <span className="site-header__menu-bar" />
+            <span className="site-header__menu-bar" />
+          </span>
         </button>
 
-        <div className="col-start-2 row-start-1 justify-self-center md:col-auto md:justify-self-start">
-          <BrandLogo href="/" className="site-header__brand" />
+        <div className="col-start-2 row-start-1 flex justify-self-center md:col-auto md:justify-self-start">
+          <BrandLogo
+            href="/"
+            className="site-header__brand"
+            imgClassName="site-header__logo-img"
+          />
         </div>
 
         <nav
@@ -172,7 +176,7 @@ export function Header() {
           ) : (
             <Link
               href={accountHref}
-              className="relative inline-flex h-11 w-11 items-center justify-center gap-2 rounded-xl border border-white/15 text-white transition-colors hover:border-accent/40 hover:text-accent md:w-auto md:px-3.5"
+              className="relative inline-flex h-12 w-12 items-center justify-center gap-2 rounded-xl border border-white/15 text-white transition-colors hover:border-accent/40 hover:text-accent md:h-11 md:w-auto md:px-3.5"
               aria-label={accountLabel}
             >
               <User size={20} weight="bold" aria-hidden />

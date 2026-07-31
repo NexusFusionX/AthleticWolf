@@ -7,7 +7,9 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { Header } from "@/app/components/Header";
 import { AboutHeroBanner } from "@/app/components/AboutHeroBanner";
+import { TrustHighlightStrip } from "@/app/components/TrustHighlightStrip";
 import { getWhatsAppUrl, SITE_CONTACT } from "@/app/lib/site-contact";
+import { ABOUT_TRUST_HIGHLIGHTS } from "@/app/lib/trust-highlights";
 
 export const metadata = {
   title: "About Your Coach | Athletic Wolf",
@@ -31,7 +33,7 @@ export default function AboutPage() {
         <AboutHeroBanner />
 
         <section className="section-y px-6 sm:px-8">
-          <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center">
+          <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-2 lg:items-center">
             <div>
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
                 Who is your coach?
@@ -67,7 +69,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="border-y border-line bg-black px-6 py-16 sm:px-8 sm:py-20">
+        <section className="border-y border-line bg-black page-section px-6 sm:px-8">
           <div className="mx-auto max-w-6xl">
             <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
               <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-line">
@@ -115,7 +117,7 @@ export default function AboutPage() {
         </section>
 
         <section className="section-y px-6 sm:px-8">
-          <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:items-center">
+          <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-2 lg:items-center">
             <div className="relative mx-auto aspect-[3/4] w-full max-w-md overflow-hidden rounded-2xl border border-line shadow-premium lg:max-w-none">
               <Image
                 src="/media/about/coach-mirror.jpg"
@@ -148,7 +150,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="border-t border-line bg-black px-6 py-16 sm:px-8 sm:py-20">
+        <section className="border-t border-line bg-black page-section px-6 sm:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
               Get in touch
@@ -196,6 +198,11 @@ export default function AboutPage() {
             </ul>
           </div>
         </section>
+
+        <TrustHighlightStrip
+          items={ABOUT_TRUST_HIGHLIGHTS}
+          className="page-trust-strip"
+        />
       </main>
     </div>
   );
