@@ -2,8 +2,6 @@ import Link from "next/link";
 import { Header } from "@/app/components/Header";
 import { AccentHeading } from "@/app/components/AccentHeading";
 import { HowItWorksGuide } from "@/app/components/HowItWorksGuide";
-import { TrustHighlightStrip } from "@/app/components/TrustHighlightStrip";
-import { HOW_IT_WORKS_TRUST_HIGHLIGHTS } from "@/app/lib/trust-highlights";
 
 export const metadata = {
   title: "How Coaching Works | Athletic Wolf",
@@ -47,11 +45,6 @@ export default function HowItWorksPage() {
             <HowItWorksGuide />
           </div>
         </section>
-
-        <TrustHighlightStrip
-          items={HOW_IT_WORKS_TRUST_HIGHLIGHTS}
-          className="page-trust-strip"
-        />
       </main>
     </div>
   );

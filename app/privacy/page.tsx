@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/app/components/LegalPage";
-import { PRIVACY_TRUST_HIGHLIGHTS } from "@/app/lib/trust-highlights";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Athletic Wolf",
@@ -13,7 +12,6 @@ export default function PrivacyPolicyPage() {
     <LegalPage
       title="Privacy Policy"
       subtitle="Last updated: July 24, 2026. This policy explains how Athletic Wolf handles your information."
-      trustHighlights={PRIVACY_TRUST_HIGHLIGHTS}
     >
       <section className="space-y-3">
         <h2 className="font-display text-xl text-foreground sm:text-2xl">1. Who we are</h2>

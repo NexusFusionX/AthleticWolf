@@ -7,9 +7,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { Header } from "@/app/components/Header";
 import { AboutHeroBanner } from "@/app/components/AboutHeroBanner";
-import { TrustHighlightStrip } from "@/app/components/TrustHighlightStrip";
 import { getWhatsAppUrl, SITE_CONTACT } from "@/app/lib/site-contact";
-import { ABOUT_TRUST_HIGHLIGHTS } from "@/app/lib/trust-highlights";
 
 export const metadata = {
   title: "About Your Coach | Athletic Wolf",
@@ -198,11 +196,6 @@ export default function AboutPage() {
             </ul>
           </div>
         </section>
-
-        <TrustHighlightStrip
-          items={ABOUT_TRUST_HIGHLIGHTS}
-          className="page-trust-strip"
-        />
       </main>
     </div>
   );

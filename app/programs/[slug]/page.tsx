@@ -3,9 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Header } from "@/app/components/Header";
 import { AccentHeading } from "@/app/components/AccentHeading";
-import { TrustHighlightStrip } from "@/app/components/TrustHighlightStrip";
 import { programs } from "@/app/data/programs";
-import { programTrustHighlights } from "@/app/lib/trust-highlights";
 import { Check } from "@phosphor-icons/react/dist/ssr";
 
 export function generateStaticParams() {
@@ -108,11 +106,6 @@ export default async function ProgramDetailPage({
             </div>
           </div>
         </section>
-
-        <TrustHighlightStrip
-          items={programTrustHighlights(program.titleAccent)}
-          className="page-trust-strip"
-        />
       </main>
     </div>
   );

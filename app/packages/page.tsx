@@ -2,8 +2,6 @@ import Link from "next/link";
 import { Header } from "@/app/components/Header";
 import { AccentHeading } from "@/app/components/AccentHeading";
 import { PackageGrid } from "@/app/components/PackageCard";
-import { TrustHighlightStrip } from "@/app/components/TrustHighlightStrip";
-import { PACKAGES_TRUST_HIGHLIGHTS } from "@/app/lib/trust-highlights";
 
 export const metadata = {
   title: "Our Coaching Packages | Athletic Wolf",
@@ -43,11 +41,6 @@ export default function PackagesPage() {
             <PackageGrid />
           </div>
         </section>
-
-        <TrustHighlightStrip
-          items={PACKAGES_TRUST_HIGHLIGHTS}
-          className="page-trust-strip"
-        />
       </main>
     </div>
   );

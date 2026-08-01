@@ -2,27 +2,27 @@ import Link from "next/link";
 import type { ComponentType } from "react";
 import type { IconProps } from "@phosphor-icons/react";
 import {
-  Barbell,
-  ChartLineUp,
   EnvelopeSimple,
+  FacebookLogo,
   FileText,
   InstagramLogo,
-  Package,
-  Path,
   Question,
-  Receipt,
   ShieldCheck,
   SignIn,
+  SnapchatLogo,
   SquaresFour,
-  Star,
-  User,
+  TiktokLogo,
   UserPlus,
   WhatsappLogo,
+  YoutubeLogo,
 } from "@phosphor-icons/react/dist/ssr";
 import { BrandLogo } from "./BrandLogo";
 import { SiteFooterCTA } from "./SiteFooterCTA";
-import { SiteFooterTrust } from "./SiteFooterTrust";
-import { getWhatsAppUrl, SITE_CONTACT } from "@/app/lib/site-contact";
+import { TrustHighlightStrip } from "./TrustHighlightStrip";
+import {
+  getFooterContactIcons,
+  type FooterContactIconId,
+} from "@/app/lib/site-contact";
 
 type FooterNavLink = {
   href: string;
@@ -31,45 +31,6 @@ type FooterNavLink = {
   icon: ComponentType<IconProps>;
   external?: boolean;
 };
-
-const EXPLORE_LINKS: FooterNavLink[] = [
-  {
-    href: "/#programs",
-    label: "Programs",
-    description: "Fat loss, muscle, and more.",
-    icon: Barbell,
-  },
-  {
-    href: "/packages",
-    label: "Packages",
-    description: "Silver, Platinum, and Diamond.",
-    icon: Package,
-  },
-  {
-    href: "/how-it-works",
-    label: "How It Works",
-    description: "From signup to your first workout.",
-    icon: Path,
-  },
-  {
-    href: "/#results",
-    label: "Results",
-    description: "Real client transformations.",
-    icon: ChartLineUp,
-  },
-  {
-    href: "/#testimonials",
-    label: "Reviews",
-    description: "What clients say about coaching.",
-    icon: Star,
-  },
-  {
-    href: "/about",
-    label: "About",
-    description: "Meet your ISSA-certified coach.",
-    icon: User,
-  },
-];
 
 const SUPPORT_LINKS: FooterNavLink[] = [
   {
@@ -83,12 +44,6 @@ const SUPPORT_LINKS: FooterNavLink[] = [
     label: "Privacy Policy",
     description: "How we protect your information.",
     icon: ShieldCheck,
-  },
-  {
-    href: "/refund",
-    label: "Refund Policy",
-    description: "Clear terms before you commit.",
-    icon: Receipt,
   },
   {
     href: "/terms",
@@ -119,28 +74,15 @@ const ACCOUNT_LINKS: FooterNavLink[] = [
   },
 ];
 
-const CONTACT_LINKS: FooterNavLink[] = [
-  {
-    href: `mailto:${SITE_CONTACT.email}`,
-    label: "Email",
-    description: SITE_CONTACT.email,
-    icon: EnvelopeSimple,
-  },
-  {
-    href: getWhatsAppUrl(),
-    label: "WhatsApp",
-    description: SITE_CONTACT.whatsappDisplay,
-    icon: WhatsappLogo,
-    external: true,
-  },
-  {
-    href: SITE_CONTACT.instagramUrl,
-    label: "Instagram",
-    description: SITE_CONTACT.instagramHandle,
-    icon: InstagramLogo,
-    external: true,
-  },
-];
+const CONTACT_ICONS: Record<FooterContactIconId, ComponentType<IconProps>> = {
+  email: EnvelopeSimple,
+  whatsapp: WhatsappLogo,
+  youtube: YoutubeLogo,
+  instagram: InstagramLogo,
+  tiktok: TiktokLogo,
+  snapchat: SnapchatLogo,
+  facebook: FacebookLogo,
+};
 
 function FooterNavCard({ link }: { link: FooterNavLink }) {
   const Icon = link.icon;
@@ -209,6 +151,35 @@ function FooterNavSection({
   );
 }
 
+function FooterContactIcons() {
+  const contactIcons = getFooterContactIcons();
+
+  return (
+    <div className="site-footer__contact-icons">
+      <ul className="site-footer__contact-icons-row" aria-label="Contact">
+        {contactIcons.map((contact) => {
+          const Icon = CONTACT_ICONS[contact.id];
+
+          return (
+            <li key={contact.id}>
+              <a
+                href={contact.href}
+                {...(contact.external
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
+                className="site-footer__contact-icon-btn"
+                aria-label={contact.label}
+              >
+                <Icon size={22} weight="fill" aria-hidden />
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
 export function SiteFooter() {
   const year = new Date().getFullYear();
 
@@ -223,8 +194,6 @@ export function SiteFooter() {
         <SiteFooterCTA />
       </div>
 
-      <SiteFooterTrust />
-
       <div className="mx-auto w-full max-w-6xl px-6 pb-8 pt-14 sm:px-8">
         <div className="site-footer__main border-b border-white/10 pb-12">
           <div className="site-footer__brand">
@@ -236,14 +205,16 @@ export function SiteFooter() {
             <p className="mt-3 inline-flex rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-accent">
               ISSA Certified
             </p>
+            <TrustHighlightStrip embedded className="site-footer__trust" />
           </div>
 
-          <div className="site-footer__nav-columns">
-            <FooterNavSection title="Explore" links={EXPLORE_LINKS} />
-            <FooterNavSection title="Support" links={SUPPORT_LINKS} />
-            <FooterNavSection title="Account" links={ACCOUNT_LINKS} />
-            <FooterNavSection title="Contact" links={CONTACT_LINKS} />
+          <div className="site-footer__nav-area">
+            <div className="site-footer__nav-columns">
+              <FooterNavSection title="Support" links={SUPPORT_LINKS} />
+              <FooterNavSection title="Account" links={ACCOUNT_LINKS} />
+            </div>
           </div>
+          <FooterContactIcons />
         </div>
 
         <div className="flex flex-col gap-2 pt-6 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between">

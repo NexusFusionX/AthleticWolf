@@ -3,8 +3,6 @@ import { Header } from "@/app/components/Header";
 import { Faq } from "@/app/components/Faq";
 import { AiFaqChat } from "@/app/components/AiFaqChat";
 import { AccentHeading } from "@/app/components/AccentHeading";
-import { TrustHighlightStrip } from "@/app/components/TrustHighlightStrip";
-import { FAQ_TRUST_HIGHLIGHTS } from "@/app/lib/trust-highlights";
 
 export const metadata = {
   title: "FAQ & AI Assistant | Athletic Wolf",
@@ -52,11 +50,6 @@ export default function FaqPage() {
             <Faq />
           </div>
         </section>
-
-        <TrustHighlightStrip
-          items={FAQ_TRUST_HIGHLIGHTS}
-          className="page-trust-strip"
-        />
       </main>
     </div>
   );

@@ -4456,6 +4456,10 @@ header[data-site-header] {
   min-width: 0;
 }
 
+.site-footer__trust {
+  margin-top: 1.5rem;
+}
+
 .site-footer__nav-columns {
   display: grid;
   width: 100%;
@@ -4470,12 +4474,54 @@ header[data-site-header] {
   }
 }
 
-@media (min-width: 1024px) {
-  .site-footer__nav-columns {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1.25rem;
-    align-items: start;
+.site-footer__nav-area {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.site-footer__contact-icons {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: center;
+}
+
+.site-footer__contact-icons-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  justify-content: center;
+}
+
+.site-footer__contact-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.65rem;
+  background: #fff;
+  color: #111;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+@media (hover: hover) {
+  .site-footer__contact-icon-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
   }
+}
+
+.site-footer__contact-icon-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .site-footer__nav-section {

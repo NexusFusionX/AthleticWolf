@@ -2,9 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Header } from "@/app/components/Header";
 import { AccentHeading } from "@/app/components/AccentHeading";
-import { TrustHighlightStrip } from "@/app/components/TrustHighlightStrip";
 import { packages } from "@/app/data/packages";
-import { packageTrustHighlights } from "@/app/lib/trust-highlights";
 import { Check } from "@phosphor-icons/react/dist/ssr";
 import { PackageStartLink } from "@/app/components/PackageStartLink";
 
@@ -127,11 +125,6 @@ export default async function PackageDetailPage({
             </div>
           </div>
         </section>
-
-        <TrustHighlightStrip
-          items={packageTrustHighlights(pkg.name, pkg.tagline)}
-          className="page-trust-strip"
-        />
       </main>
     </div>
   );

@@ -1,17 +1,13 @@
 import Link from "next/link";
 import { Header } from "@/app/components/Header";
-import { TrustHighlightStrip } from "@/app/components/TrustHighlightStrip";
-import type { TrustHighlightItem } from "@/app/lib/trust-highlights";
 
 export function LegalPage({
   title,
   subtitle,
-  trustHighlights,
   children,
 }: {
   title: string;
   subtitle?: string;
-  trustHighlights?: TrustHighlightItem[];
   children: React.ReactNode;
 }) {
   return (
@@ -38,13 +34,6 @@ export function LegalPage({
             {children}
           </div>
         </section>
-
-        {trustHighlights ? (
-          <TrustHighlightStrip
-            items={trustHighlights}
-            className="page-trust-strip"
-          />
-        ) : null}
       </main>
     </div>
   );

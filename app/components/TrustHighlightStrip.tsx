@@ -5,18 +5,27 @@ import { DEFAULT_TRUST_HIGHLIGHTS } from "@/app/lib/trust-highlights";
 type TrustHighlightStripProps = {
   items?: TrustHighlightItem[];
   className?: string;
+  /** Drop outer horizontal padding and center max-width — for footer embed */
+  embedded?: boolean;
 };
 
 export function TrustHighlightStrip({
   items = DEFAULT_TRUST_HIGHLIGHTS,
   className = "",
+  embedded = false,
 }: TrustHighlightStripProps) {
   return (
     <section
-      className={`trust-highlight-strip px-6 sm:px-8 ${className}`.trim()}
+      className={`trust-highlight-strip ${embedded ? "" : "px-6 sm:px-8"} ${className}`.trim()}
       aria-label="Why train with Athletic Wolf"
     >
-      <div className="mx-auto grid w-full max-w-6xl gap-4 sm:grid-cols-3">
+      <div
+        className={
+          embedded
+            ? "grid w-full gap-4 sm:grid-cols-3"
+            : "mx-auto grid w-full max-w-6xl gap-4 sm:grid-cols-3"
+        }
+      >
         {items.map((item) => {
           const Icon = item.icon;
           const content = (
