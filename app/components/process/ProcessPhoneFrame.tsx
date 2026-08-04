@@ -5,13 +5,20 @@ type ProcessPhoneFrameProps = {
   label?: string;
 };
 
-export function ProcessPhoneFrame({ children, label }: ProcessPhoneFrameProps) {
+export function ProcessPhoneFrame({
+  children,
+  label = "Preview",
+}: ProcessPhoneFrameProps) {
   return (
     <div className="process-phone" aria-hidden>
-      {label && <span className="process-phone__label">{label}</span>}
+      <span className="process-phone__label">{label}</span>
       <div className="process-phone__device">
-        <div className="process-phone__notch" />
+        <div className="process-phone__chrome">
+          <span className="process-phone__speaker" />
+          <span className="process-phone__camera" />
+        </div>
         <div className="process-phone__screen">{children}</div>
+        <div className="process-phone__home" />
       </div>
     </div>
   );

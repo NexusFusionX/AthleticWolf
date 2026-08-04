@@ -85,10 +85,17 @@ export function KickoffGuide() {
                 </div>
 
                 <div className="kickoff-card__screens" aria-hidden inert>
-                  {item.screens.map((screen) => (
-                    <ProcessPhoneFrame key={screen.key}>
-                      {screen.node}
-                    </ProcessPhoneFrame>
+                  {item.screens.map((screen, screenIndex) => (
+                    <div
+                      key={screen.key}
+                      className={
+                        screenIndex === 0
+                          ? "kickoff-card__phone"
+                          : "kickoff-card__phone kickoff-card__phone--desktop"
+                      }
+                    >
+                      <ProcessPhoneFrame>{screen.node}</ProcessPhoneFrame>
+                    </div>
                   ))}
                 </div>
               </article>

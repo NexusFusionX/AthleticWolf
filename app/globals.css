@@ -3055,6 +3055,7 @@ header[data-site-header] {
 }
 
 .kickoff-card {
+  position: relative;
   display: grid;
   grid-template-rows: auto minmax(21rem, 1fr);
   gap: 0.875rem;
@@ -3062,13 +3063,35 @@ header[data-site-header] {
   height: 100%;
   min-height: 26rem;
   padding: 1.35rem;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 1.25rem;
   background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.05) 0%,
-    rgba(255, 255, 255, 0.02) 100%
+    165deg,
+    rgba(36, 36, 40, 0.98) 0%,
+    rgba(18, 18, 20, 0.96) 55%,
+    rgba(12, 12, 14, 0.98) 100%
   );
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 18px 40px rgba(0, 0, 0, 0.45);
+}
+
+.kickoff-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 1.25rem;
+  right: 1.25rem;
+  height: 2px;
+  border-radius: 9999px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 107, 53, 0.85),
+    transparent
+  );
+  pointer-events: none;
 }
 
 .kickoff-card__copy {
@@ -3133,19 +3156,67 @@ header[data-site-header] {
 .kickoff-card__screens {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.5rem;
+  gap: 0.65rem;
   min-height: 21rem;
   align-items: stretch;
-  padding: 0;
+  padding: 0.65rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.42);
   pointer-events: none;
   user-select: none;
+  cursor: default;
+}
+
+.kickoff-card__phone {
+  min-width: 0;
+  height: 100%;
+}
+
+@media (max-width: 1023px) {
+  .kickoff-card {
+    grid-template-rows: auto minmax(18rem, 1fr);
+    min-height: 0;
+  }
+
+  .kickoff-card__screens {
+    grid-template-columns: minmax(0, 15.5rem);
+    justify-content: center;
+    min-height: 20rem;
+    width: 100%;
+  }
+
+  .kickoff-card__phone--desktop {
+    display: none;
+  }
 }
 
 .process-phone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
   height: 100%;
   pointer-events: none;
   user-select: none;
+  cursor: default;
+}
+
+.process-phone__label {
+  position: absolute;
+  top: 0.4rem;
+  left: 0.4rem;
+  z-index: 2;
+  padding: 0.2rem 0.45rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.72);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1;
 }
 
 .process-phone__device {
@@ -3154,21 +3225,41 @@ header[data-site-header] {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  background: #050505;
+  border-radius: 1.25rem;
+  border: 2px solid rgba(255, 255, 255, 0.28);
+  background: linear-gradient(180deg, #2a2a2a 0%, #111 18%, #070707 100%);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.85),
+    0 14px 32px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
 }
 
-.process-phone__notch {
-  position: absolute;
-  top: 0.4rem;
-  left: 50%;
-  z-index: 1;
-  height: 0.35rem;
-  width: 2rem;
-  transform: translateX(-50%);
+.process-phone__chrome {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  flex-shrink: 0;
+  height: 1.15rem;
+  padding-top: 0.35rem;
+  background: linear-gradient(180deg, #1f1f1f 0%, #0d0d0d 100%);
+}
+
+.process-phone__speaker {
+  display: block;
+  width: 2.1rem;
+  height: 0.28rem;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.process-phone__camera {
+  display: block;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.4);
 }
 
 .process-phone__screen {
@@ -3177,13 +3268,46 @@ header[data-site-header] {
   align-items: flex-start;
   justify-content: center;
   min-height: 0;
-  padding: 0.75rem 0.5rem 0.5rem;
+  margin: 0 0.35rem;
+  padding: 0.55rem 0.4rem 0.4rem;
   overflow: hidden;
+  border-radius: 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #12141a;
+}
+
+.process-phone__home {
+  flex-shrink: 0;
+  width: 2.5rem;
+  height: 0.28rem;
+  margin: 0.45rem auto 0.5rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.18);
 }
 
 .kickoff-card .process-phone__screen {
   align-items: stretch;
-  padding: 0.55rem 0.4rem 0.4rem;
+  padding: 0.5rem 0.35rem 0.35rem;
+}
+
+/* Soften selected states so previews don't feel tappable */
+.kickoff-card .process-mini-options__item--selected,
+.kickoff-card .process-mini-option--selected {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.kickoff-card .process-mini-options__item--selected .process-mini-options__dot {
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: none;
+}
+
+.kickoff-card .process-mini-cta {
+  padding: 0.55rem;
+  font-size: 0.62rem;
+  background: rgba(255, 107, 53, 0.72);
+  box-shadow: none;
 }
 
 .kickoff-card .process-mini-screen {
@@ -3244,11 +3368,6 @@ header[data-site-header] {
   width: 4.25rem;
   height: 4.25rem;
   font-size: 0.92rem;
-}
-
-.kickoff-card .process-mini-cta {
-  padding: 0.55rem;
-  font-size: 0.62rem;
 }
 
 .kickoff-card .process-mini-fill-bottom {
@@ -4358,8 +4477,27 @@ header[data-site-header] {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem;
   min-height: 14rem;
+  padding: 0.65rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.35);
   pointer-events: none;
   user-select: none;
+  cursor: default;
+}
+
+.how-it-works-step__screens .process-mini-options__item--selected,
+.how-it-works-step__screens .process-mini-option--selected {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.how-it-works-step__screens
+  .process-mini-options__item--selected
+  .process-mini-options__dot {
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: none;
 }
 
 .how-it-works-cta {
