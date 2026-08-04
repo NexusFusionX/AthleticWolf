@@ -69,7 +69,7 @@ function SignupContent() {
       <div className="w-full overflow-hidden shadow-premium rounded-2xl border border-line bg-card">
         <div className="bg-ink px-8 py-10 text-center text-white">
           <div className="flex justify-center">
-            <BrandLogo height={78} />
+            <BrandLogo height={110} />
           </div>
           <p className="mt-6 text-sm font-semibold uppercase tracking-[0.18em] text-accent">
             Get Started

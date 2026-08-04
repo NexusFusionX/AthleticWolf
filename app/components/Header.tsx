@@ -212,7 +212,7 @@ export function Header() {
       >
         <div className="mobile-nav-dialog__panel">
           <div className="mobile-nav-dialog__header">
-            <BrandLogo height={76} />
+            <BrandLogo height={96} />
             <button
               type="button"
               onClick={closeMenu}

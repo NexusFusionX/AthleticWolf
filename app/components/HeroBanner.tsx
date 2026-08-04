@@ -22,20 +22,20 @@ const DESKTOP_SLIDES = [
     height: 1008,
     alt: "Athletic Wolf coach in the gym",
   },
+  {
+    src: "/media/hero/coach-hero-slider3-21-9.jpg",
+    width: 2352,
+    height: 1008,
+    alt: "Athletic Wolf coach at outdoor training park",
+  },
 ] as const;
 
 const MOBILE_SLIDES = [
   {
-    src: "/media/hero/coach-hero-mobile-4-3.jpg",
-    width: 1344,
-    height: 1008,
-    alt: "Athletic Wolf coach training outdoors",
-  },
-  {
-    src: "/media/hero/coach-hero-gym-mobile-4-3.jpg",
-    width: 1344,
-    height: 1008,
-    alt: "Athletic Wolf coach in the gym",
+    src: "/media/hero/coach-hero-mobile-3-4.jpg",
+    width: 1024,
+    height: 1536,
+    alt: "Athletic Wolf coach at outdoor training park",
   },
 ] as const;
 
@@ -200,7 +200,7 @@ function HeroBannerCopyMobile() {
       </p>
 
       <ul className="hero-banner__bullets">
-        {HERO_BULLETS.map((item) => (
+        {HERO_BULLETS.slice(0, 2).map((item) => (
           <li key={item}>
             <Check size={12} weight="bold" className="shrink-0 text-accent" aria-hidden />
             <span>{item}</span>
@@ -217,10 +217,6 @@ function HeroBannerCopyMobile() {
           Videos
         </a>
       </div>
-
-      <p className="hero-banner__trust">
-        ISSA Certified · 100% Personalized · Weekly Check-ins
-      </p>
     </div>
   );
 }

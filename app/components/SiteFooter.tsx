@@ -197,7 +197,7 @@ export function SiteFooter() {
       <div className="mx-auto w-full max-w-6xl px-6 pb-8 pt-14 sm:px-8">
         <div className="site-footer__main border-b border-white/10 pb-12">
           <div className="site-footer__brand">
-            <BrandLogo height={88} />
+            <BrandLogo height={152} />
             <p className="mt-4 max-w-md text-sm leading-relaxed text-white/55">
               ISSA-certified online personal training and nutrition coaching for
               clients worldwide.
