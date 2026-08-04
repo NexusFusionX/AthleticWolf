@@ -4712,6 +4712,7 @@ header[data-site-header] {
   box-sizing: border-box;
   padding: 1rem;
   align-items: flex-start;
+  gap: 0.75rem;
   overflow: hidden;
 }
 
@@ -4724,20 +4725,6 @@ header[data-site-header] {
 .site-footer__nav-card-title {
   overflow-wrap: anywhere;
   word-break: break-word;
-}
-
-@media (min-width: 1024px) {
-  .site-footer__nav-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.625rem;
-    padding: 0.875rem;
-  }
-
-  .site-footer__nav-card > .min-w-0 {
-    width: 100%;
-    min-width: 0;
-  }
 }
 
 .testimonial-card {
