@@ -32,9 +32,9 @@ const DESKTOP_SLIDES = [
 
 const MOBILE_SLIDES = [
   {
-    src: "/media/hero/coach-hero-mobile-3-4-copy.jpg",
+    src: "/media/hero/coach-hero-mobile-4-5-slide.jpg",
     width: 1024,
-    height: 1327,
+    height: 1280,
     alt: "Athletic Wolf coach at outdoor training park",
   },
 ] as const;
