@@ -1,29 +1,40 @@
-// Quick test to verify Supabase integration
-const supabaseUrl = "https://kputxxqenaczmgzjptbr.supabase.co";
-const supabaseKey = "sb_publishable_dyiQkY59xLhv1uTcT2kswg_MyoAxyVr";
+// Local smoke-test helper. Uses env vars — never hardcode keys.
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 async function testFlow() {
-  console.log("Testing Athletic Wolf auth flow...\n");
+  console.log("Testing Athletic Wolf auth/API smoke checks...\n");
 
-  // Test 1: Check Supabase connectivity
-  console.log("1. Testing Supabase connectivity...");
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.log("✗ Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY");
+    process.exit(1);
+  }
+
+  console.log("1. Testing anon access to plans (should be empty/denied after RLS)...");
   try {
-    const response = await fetch(`${supabaseUrl}/rest/v1/plans?limit=1`, {
-      headers: {
-        apikey: supabaseKey,
-        Authorization: `Bearer ${supabaseKey}`,
-      },
-    });
-    if (response.ok) {
-      console.log("   ✓ Supabase is accessible\n");
+    const response = await fetch(
+      `${supabaseUrl}/rest/v1/plans?select=id&limit=1`,
+      {
+        headers: {
+          apikey: supabaseAnonKey,
+          Authorization: `Bearer ${supabaseAnonKey}`,
+        },
+      }
+    );
+    const body = await response.text();
+    console.log(`   status=${response.status}`);
+    console.log(`   body=${body.slice(0, 120)}`);
+    if (response.ok && body.trim() === "[]") {
+      console.log("   ✓ Anon cannot read plan rows (RLS working)\n");
+    } else if (response.ok && body.includes('"id"')) {
+      console.log("   ✗ Anon can still read plans — enable RLS migration\n");
     } else {
-      console.log("   ✗ Supabase returned error:", response.status);
+      console.log("   ✓ Anon blocked or empty\n");
     }
   } catch (err) {
     console.log("   ✗ Failed to connect:", err.message);
   }
 
-  // Test 2: Check app routes
   console.log("2. Checking app routes...");
   const routes = [
     "http://localhost:3000",
@@ -31,26 +42,19 @@ async function testFlow() {
     "http://localhost:3000/auth/login",
     "http://localhost:3000/checkout",
     "http://localhost:3000/dashboard",
+    "http://localhost:3000/admin",
   ];
 
   for (const route of routes) {
     try {
       const response = await fetch(route);
-      console.log(`   ${response.ok ? "✓" : "✗"} ${route} (${response.status})`);
-    } catch (err) {
-      console.log(`   ✗ ${route} (error)`);
+      console.log(
+        `   ${response.ok ? "✓" : "✗"} ${route} (${response.status})`
+      );
+    } catch {
+      console.log(`   ✗ ${route} (error — is dev server running?)`);
     }
   }
-
-  console.log(
-    "\n✓ All systems ready! Manual testing instructions:\n" +
-      "  1. Go to http://localhost:3000\n" +
-      "  2. Scroll to 'Packages' section\n" +
-      "  3. Click 'Get Started' on any package\n" +
-      "  4. Review the package and click 'Complete Purchase (Test Mode)'\n" +
-      "  5. You'll be redirected to signup\n" +
-      "  6. Create an account and check your dashboard\n"
-  );
 }
 
 testFlow();

@@ -3,10 +3,11 @@
 import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import { Check, X } from "@phosphor-icons/react";
-import { supabase } from "@/lib/supabase";
-import { PlanWizard } from "@/app/components/PlanWizard";
 import { AdminCustomerDetail } from "@/app/components/AdminCustomerDetail";
-import { getCustomerContact, type PlanCheckoutData } from "@/app/lib/plan-customer";
+import {
+  getCustomerContact,
+  type PlanCheckoutData,
+} from "@/app/lib/plan-customer";
 
 interface Plan {
   id: string;
@@ -21,67 +22,72 @@ interface Plan {
   checkout_data: string | null;
 }
 
-interface PlanWithStatus extends Plan {
-  hasPlanContent: boolean;
-}
-
 function AdminContent() {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<{ id: string; email: string } | null>(null);
-  const [markingReady, setMarkingReady] = useState<string | null>(null);
+  const [user, setUser] = useState<{ username: string } | null>(null);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
-  const [authContacts, setAuthContacts] = useState<Record<string, PlanCheckoutData>>(
-    {}
-  );
+  const [authContacts, setAuthContacts] = useState<
+    Record<string, PlanCheckoutData>
+  >({});
   const [contactsWarning, setContactsWarning] = useState<string | null>(null);
 
-  const ADMIN_USERNAME = "mrmoiz";
-  const ADMIN_PASSWORD = "ulpdgwlc";
-
   useEffect(() => {
-    checkAuth();
+    void checkSession();
   }, []);
 
-  async function checkAuth() {
-    const savedUsername = localStorage.getItem("admin-username");
-    if (savedUsername === ADMIN_USERNAME) {
-      setUser({
-        id: "admin",
-        email: ADMIN_USERNAME,
-      });
-      loadPlans();
-    } else {
+  async function checkSession() {
+    try {
+      const res = await fetch("/api/admin/session", { credentials: "include" });
+      if (!res.ok) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+      const data = await res.json();
+      if (data.authenticated && data.username) {
+        setUser({ username: data.username });
+        await loadPlans();
+        return;
+      }
+      setUser(null);
+    } catch {
+      setUser(null);
+    } finally {
       setLoading(false);
     }
   }
 
   async function loadPlans() {
     try {
-      const { data: plansData } = await supabase
-        .from("plans")
-        .select("*")
-        .order("created_at", { ascending: false });
+      const res = await fetch("/api/admin/plans", { credentials: "include" });
+      const data = await res.json();
+      if (!res.ok) {
+        setContactsWarning(data.error || "Failed to load plans");
+        setPlans([]);
+        return;
+      }
 
-      const rows = (plansData as Plan[]) || [];
+      const rows = (data.plans as Plan[]) || [];
       setPlans(rows);
 
       if (rows.length > 0) {
-        const res = await fetch("/api/admin/customer-contacts", {
+        const contactsRes = await fetch("/api/admin/customer-contacts", {
           method: "POST",
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ userIds: rows.map((p) => p.user_id) }),
         });
-        const data = await res.json();
-        if (data.contacts) {
-          setAuthContacts(data.contacts);
+        const contactsData = await contactsRes.json();
+        if (contactsData.contacts) {
+          setAuthContacts(contactsData.contacts);
         }
-        if (data.error) {
-          setContactsWarning(data.error);
+        if (contactsData.error) {
+          setContactsWarning(contactsData.error);
         } else {
           setContactsWarning(null);
         }
@@ -97,43 +103,38 @@ function AdminContent() {
     setLoginLoading(true);
 
     try {
-      if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-        localStorage.setItem("admin-username", ADMIN_USERNAME);
-        setUser({
-          id: "admin",
-          email: ADMIN_USERNAME,
-        });
-        loadPlans();
-      } else {
-        setLoginError("Invalid credentials");
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setLoginError(data.error || "Invalid credentials");
         setLoginLoading(false);
+        return;
       }
-    } catch (err) {
-      setLoginError("Invalid credentials");
+
+      setUser({ username: data.username });
+      setPassword("");
+      setLoading(true);
+      await loadPlans();
+    } catch {
+      setLoginError("Login failed");
+    } finally {
       setLoginLoading(false);
     }
   }
 
-  async function handleMarkReady(planId: string) {
-    setMarkingReady(planId);
-    try {
-      await supabase
-        .from("plans")
-        .update({ plan_ready_at: new Date().toISOString() })
-        .eq("id", planId);
-
-      setPlans((prev) =>
-        prev.map((p) =>
-          p.id === planId ? { ...p, plan_ready_at: new Date().toISOString() } : p
-        )
-      );
-
-      alert("Plan marked ready! Customer notified.");
-    } catch (err) {
-      alert("Failed to mark ready.");
-    } finally {
-      setMarkingReady(null);
-    }
+  async function handleLogout() {
+    await fetch("/api/admin/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+    setUser(null);
+    setPlans([]);
+    setSelectedPlanId(null);
   }
 
   if (loading) {
@@ -172,8 +173,8 @@ function AdminContent() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
+                autoComplete="username"
                 className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
-                placeholder="mrmoiz"
               />
             </label>
 
@@ -184,6 +185,7 @@ function AdminContent() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                autoComplete="current-password"
                 className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-foreground outline-none transition-colors focus:border-accent"
                 placeholder="••••••••"
               />
@@ -202,7 +204,9 @@ function AdminContent() {
     );
   }
 
-  const selectedPlan = selectedPlanId ? plans.find((p) => p.id === selectedPlanId) : null;
+  const selectedPlan = selectedPlanId
+    ? plans.find((p) => p.id === selectedPlanId)
+    : null;
 
   if (selectedPlan) {
     return (
@@ -220,17 +224,17 @@ function AdminContent() {
       <div className="mx-auto max-w-6xl">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <Link href="/" className="font-display text-2xl text-white mb-2 block">
+            <Link
+              href="/"
+              className="font-display text-2xl text-white mb-2 block"
+            >
               Athletic<span className="text-accent">Wolf</span>
             </Link>
             <h1 className="font-display text-3xl text-white">Coach Dashboard</h1>
-            <p className="text-muted mt-1">Logged in as {user.email}</p>
+            <p className="text-muted mt-1">Logged in as {user.username}</p>
           </div>
           <button
-            onClick={() => {
-              localStorage.removeItem("admin-username");
-              setUser(null);
-            }}
+            onClick={() => void handleLogout()}
             className="btn btn-outline px-6 py-2 text-sm font-bold uppercase tracking-wide"
           >
             Log Out
@@ -240,9 +244,7 @@ function AdminContent() {
         <div className="shadow-premium rounded-2xl border border-line bg-card overflow-hidden">
           <div className="bg-ink px-8 py-6 text-white border-b border-line">
             <h2 className="font-display text-xl">Customer Assessments</h2>
-            <p className="text-sm text-muted mt-1">
-              {plans.length} total
-            </p>
+            <p className="text-sm text-muted mt-1">{plans.length} total</p>
           </div>
 
           {contactsWarning && (
@@ -288,47 +290,57 @@ function AdminContent() {
                     );
 
                     return (
-                    <tr key={plan.id} className="border-b border-line hover:bg-surface/30 transition cursor-pointer" onClick={() => setSelectedPlanId(plan.id)}>
-                      <td className="px-6 py-4 text-sm font-semibold">{contact.name}</td>
-                      <td className="px-6 py-4 text-sm text-muted">{contact.phone}</td>
-                      <td className="px-6 py-4 text-sm font-semibold">{plan.package_name}</td>
-                      <td className="px-6 py-4 text-sm">
-                        {plan.assessment_completed_at ? (
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
-                            <Check size={14} weight="bold" />
-                            Completed
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow-500/10 px-3 py-1 text-xs font-semibold text-yellow-500">
-                            <X size={14} weight="bold" />
-                            Pending
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 text-sm">
-                        {plan.plan_ready_at ? (
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
-                            <Check size={14} weight="bold" />
-                            Ready
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1.5 rounded-full bg-surface px-3 py-1 text-xs font-semibold text-muted">
-                            {plan.plan_content ? "Created" : "Draft"}
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-6 py-4 text-sm">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedPlanId(plan.id);
-                          }}
-                          className="btn btn-accent px-4 py-2 text-xs font-bold uppercase tracking-wide"
-                        >
-                          View
-                        </button>
-                      </td>
-                    </tr>
+                      <tr
+                        key={plan.id}
+                        className="border-b border-line hover:bg-surface/30 transition cursor-pointer"
+                        onClick={() => setSelectedPlanId(plan.id)}
+                      >
+                        <td className="px-6 py-4 text-sm font-semibold">
+                          {contact.name}
+                        </td>
+                        <td className="px-6 py-4 text-sm text-muted">
+                          {contact.phone}
+                        </td>
+                        <td className="px-6 py-4 text-sm font-semibold">
+                          {plan.package_name}
+                        </td>
+                        <td className="px-6 py-4 text-sm">
+                          {plan.assessment_completed_at ? (
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
+                              <Check size={14} weight="bold" />
+                              Completed
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-yellow-500/10 px-3 py-1 text-xs font-semibold text-yellow-500">
+                              <X size={14} weight="bold" />
+                              Pending
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-sm">
+                          {plan.plan_ready_at ? (
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-accent/10 px-3 py-1 text-xs font-semibold text-accent">
+                              <Check size={14} weight="bold" />
+                              Ready
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-surface px-3 py-1 text-xs font-semibold text-muted">
+                              {plan.plan_content ? "Created" : "Draft"}
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-sm">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedPlanId(plan.id);
+                            }}
+                            className="btn btn-accent px-4 py-2 text-xs font-bold uppercase tracking-wide"
+                          >
+                            View
+                          </button>
+                        </td>
+                      </tr>
                     );
                   })}
                 </tbody>
@@ -343,7 +355,13 @@ function AdminContent() {
 
 export default function AdminPage() {
   return (
-    <Suspense fallback={<div className="flex min-h-screen items-center justify-center"><p>Loading...</p></div>}>
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <p>Loading...</p>
+        </div>
+      }
+    >
       <AdminContent />
     </Suspense>
   );

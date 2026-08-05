@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
 
 interface PlanWizardProps {
   planId: string;
@@ -135,15 +134,15 @@ export function PlanWizard({ planId, onSuccess }: PlanWizardProps) {
   useEffect(() => {
     async function loadExistingPlan() {
       try {
-        const { data: plan } = await supabase
-          .from("plans")
-          .select("plan_content")
-          .eq("id", planId)
-          .single();
+        const res = await fetch(`/api/admin/plans/${planId}`, {
+          credentials: "include",
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Failed to load plan");
 
-        if (plan?.plan_content) {
+        if (data.plan?.plan_content) {
           try {
-            const savedData = JSON.parse(plan.plan_content);
+            const savedData = JSON.parse(data.plan.plan_content);
             setFormData(savedData);
             setPlanSaved(true);
           } catch (err) {
@@ -157,7 +156,7 @@ export function PlanWizard({ planId, onSuccess }: PlanWizardProps) {
       }
     }
 
-    loadExistingPlan();
+    void loadExistingPlan();
   }, [planId]);
 
   function setValue(name: string, value: string) {
@@ -181,18 +180,18 @@ export function PlanWizard({ planId, onSuccess }: PlanWizardProps) {
     setError("");
 
     try {
-      const { error: updateError } = await supabase
-        .from("plans")
-        .update({
-          plan_content: JSON.stringify(formData),
-        })
-        .eq("id", planId);
-
-      if (updateError) throw updateError;
+      const res = await fetch(`/api/admin/plans/${planId}`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan_content: JSON.stringify(formData) }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to save plan");
 
       setSubmitting(false);
       setPlanSaved(true);
-    } catch (err) {
+    } catch {
       setError("Failed to save plan. Please try again.");
       setSubmitting(false);
     }
@@ -203,16 +202,18 @@ export function PlanWizard({ planId, onSuccess }: PlanWizardProps) {
     setError("");
 
     try {
-      const { error: updateError } = await supabase
-        .from("plans")
-        .update({ plan_ready_at: new Date().toISOString() })
-        .eq("id", planId);
-
-      if (updateError) throw updateError;
+      const res = await fetch(`/api/admin/plans/${planId}`, {
+        method: "PATCH",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan_ready_at: new Date().toISOString() }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to mark ready");
 
       alert("Plan marked ready! Customer notified.");
       onSuccess();
-    } catch (err) {
+    } catch {
       setError("Failed to mark plan ready. Please try again.");
       setMarkingReady(false);
     }

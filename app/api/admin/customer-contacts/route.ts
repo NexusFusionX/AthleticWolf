@@ -1,15 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdminSession } from "@/lib/admin-auth";
 import { createSupabaseAdmin } from "@/lib/supabase-admin";
 import type { PlanCheckoutData } from "@/app/lib/plan-customer";
 
 export async function POST(request: NextRequest) {
+  const { error: authError } = await requireAdminSession();
+  if (authError) return authError;
+
   const admin = createSupabaseAdmin();
 
   if (!admin) {
     return NextResponse.json(
       {
         error:
-          "Add SUPABASE_SERVICE_ROLE_KEY to .env.local (Supabase → Settings → API → service_role).",
+          "Add SUPABASE_SERVICE_ROLE_KEY to server env (Supabase → Settings → API → service_role).",
         contacts: {},
       },
       { status: 503 }
@@ -24,7 +28,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid body" }, { status: 400 });
   }
 
-  const userIds = [...new Set(body.userIds ?? [])].filter(Boolean);
+  const userIds = [...new Set(body.userIds ?? [])].filter(Boolean).slice(0, 200);
   const contacts: Record<string, PlanCheckoutData> = {};
 
   await Promise.all(
