@@ -13,6 +13,7 @@ import type { CheckoutContact } from "@/app/lib/checkout-contact";
 
 type StripeCheckoutPaymentProps = {
   packageName: string;
+  promoCode?: string;
   amountLabel: string;
   paymentDescription?: string;
   assessmentData?: unknown;
@@ -148,6 +149,7 @@ function PaymentForm({
 
 export function StripeCheckoutPayment({
   packageName,
+  promoCode,
   amountLabel,
   paymentDescription,
   assessmentData,
@@ -194,7 +196,7 @@ export function StripeCheckoutPayment({
             "Content-Type": "application/json",
             Authorization: `Bearer ${session.access_token}`,
           },
-          body: JSON.stringify({ packageName }),
+          body: JSON.stringify({ packageName, promoCode }),
         });
 
         const data = await response.json();
@@ -222,7 +224,7 @@ export function StripeCheckoutPayment({
     return () => {
       cancelled = true;
     };
-  }, [packageName, publishableKey]);
+  }, [packageName, promoCode, publishableKey]);
 
   if (loading) {
     return (

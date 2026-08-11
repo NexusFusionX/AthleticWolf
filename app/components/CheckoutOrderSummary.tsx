@@ -7,7 +7,10 @@ import { formatUsd } from "@/app/lib/package-change";
 type CheckoutOrderSummaryProps = {
   packageName: string;
   pricePerMonth: number;
+  subtotalDueToday: number;
   totalDueToday: number;
+  promoCode?: string;
+  promoDiscountAmount?: number;
   changeType?: PackageChangeType | null;
   currentPackageName?: string;
 };
@@ -15,7 +18,10 @@ type CheckoutOrderSummaryProps = {
 export function CheckoutOrderSummary({
   packageName,
   pricePerMonth,
+  subtotalDueToday,
   totalDueToday,
+  promoCode,
+  promoDiscountAmount = 0,
   changeType,
   currentPackageName,
 }: CheckoutOrderSummaryProps) {
@@ -49,6 +55,12 @@ export function CheckoutOrderSummary({
           <div className="checkout-summary__row">
             <dt>Program term</dt>
             <dd>6 months</dd>
+          </div>
+        ) : null}
+        {promoDiscountAmount > 0 && promoCode ? (
+          <div className="checkout-summary__row checkout-summary__row--discount">
+            <dt>Promo ({promoCode})</dt>
+            <dd>-{formatUsd(promoDiscountAmount)}</dd>
           </div>
         ) : null}
         <div className="checkout-summary__row checkout-summary__row--total">

@@ -13,8 +13,11 @@ import { CheckoutContactFields } from "@/app/components/CheckoutContactFields";
 import { CheckoutAccountFields } from "@/app/components/CheckoutAccountFields";
 import { CheckoutInlineLogin } from "@/app/components/CheckoutInlineLogin";
 import { CheckoutOrderSummary } from "@/app/components/CheckoutOrderSummary";
+import { CheckoutPromoCode } from "@/app/components/CheckoutPromoCode";
 import { CheckoutTrustBadges } from "@/app/components/CheckoutTrustBadges";
 import { packages } from "../data/packages";
+import type { PromoCodeDefinition } from "@/app/data/promo-codes";
+import { applyPromoDiscount } from "@/app/lib/promo-code";
 import { clearPendingAssessment } from "@/app/lib/assessment";
 import {
   type CheckoutContact,
@@ -72,6 +75,9 @@ export function CheckoutFlow() {
     email: "",
     preferredContact: "WhatsApp",
   });
+  const [appliedPromo, setAppliedPromo] = useState<PromoCodeDefinition | null>(
+    null
+  );
 
   const contactComplete = useMemo(
     () => isCheckoutContactComplete(contact),
@@ -106,19 +112,24 @@ export function CheckoutFlow() {
       (guestAuthMode === "signup" && accountReady && !user)) &&
     actionType !== "same";
 
-  const totalDueToday =
+  const subtotalDueToday =
     actionType === "upgrade" && upgradeDifference != null
       ? upgradeDifference
       : actionType === "downgrade"
         ? 0
         : pkg?.price ?? 0;
 
-  const paymentAmountLabel =
-    actionType === "upgrade" && upgradeDifference != null
-      ? formatUsd(upgradeDifference)
-      : pkg
-        ? formatUsd(pkg.price)
-        : "$0";
+  const promoDiscountAmount =
+    appliedPromo && subtotalDueToday > 0
+      ? subtotalDueToday - applyPromoDiscount(subtotalDueToday, appliedPromo.percentOff)
+      : 0;
+
+  const totalDueToday =
+    appliedPromo && subtotalDueToday > 0
+      ? applyPromoDiscount(subtotalDueToday, appliedPromo.percentOff)
+      : subtotalDueToday;
+
+  const paymentAmountLabel = formatUsd(totalDueToday);
 
   useEffect(() => {
     if (!packageFromUrl) {
@@ -387,7 +398,10 @@ export function CheckoutFlow() {
     <CheckoutOrderSummary
       packageName={pkg.name}
       pricePerMonth={pkg.price}
+      subtotalDueToday={subtotalDueToday}
       totalDueToday={totalDueToday}
+      promoCode={appliedPromo?.code}
+      promoDiscountAmount={promoDiscountAmount}
       changeType={actionType}
       currentPackageName={existingPlan?.package_name}
     />
@@ -496,6 +510,13 @@ export function CheckoutFlow() {
                   </p>
                 ) : null}
 
+                {actionType !== "downgrade" && actionType !== "same" ? (
+                  <CheckoutPromoCode
+                    appliedPromo={appliedPromo}
+                    onApply={setAppliedPromo}
+                  />
+                ) : null}
+
                 {(authError || changeError) && guestAuthMode === "signup" ? (
                   <p className="checkout-error">{authError ?? changeError}</p>
                 ) : null}
@@ -562,8 +583,9 @@ export function CheckoutFlow() {
                   </div>
                 ) : (
                   <StripeCheckoutPayment
-                    key={`${selectedPackageName}-${actionType ?? "new"}`}
+                    key={`${selectedPackageName}-${actionType ?? "new"}-${appliedPromo?.code ?? "none"}`}
                     packageName={pkg.name}
+                    promoCode={appliedPromo?.code}
                     amountLabel={paymentAmountLabel}
                     paymentDescription={
                       actionType === "upgrade" && existingPlan

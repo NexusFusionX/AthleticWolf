@@ -6,6 +6,7 @@ import {
   getUpgradeDifferenceCents,
 } from "@/app/lib/package-change";
 import { getCheckoutAmountCents, getStripe, isStripeConfigured } from "@/lib/stripe";
+import { applyPromoDiscountCents, validatePromoCode } from "@/app/lib/promo-code";
 
 export async function POST(request: NextRequest) {
   if (!isStripeConfigured()) {
@@ -21,7 +22,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  let body: { packageName?: string };
+  let body: { packageName?: string; promoCode?: string };
 
   try {
     body = await request.json();
@@ -98,8 +99,28 @@ export async function POST(request: NextRequest) {
     };
   }
 
+  const promo = body.promoCode ? validatePromoCode(body.promoCode) : null;
+
+  if (body.promoCode && !promo) {
+    return NextResponse.json({ error: "Invalid promo code." }, { status: 400 });
+  }
+
   try {
     const stripe = getStripe();
+
+    if (promo) {
+      amount = applyPromoDiscountCents(amount, promo.percentOff);
+      metadata.promoCode = promo.code;
+      metadata.promoPercentOff = String(promo.percentOff);
+      description = `${description} (${promo.code} ${promo.percentOff}% off)`;
+    }
+
+    if (amount <= 0) {
+      return NextResponse.json(
+        { error: "This order total is fully covered by your promo code." },
+        { status: 400 }
+      );
+    }
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
