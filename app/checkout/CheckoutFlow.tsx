@@ -14,6 +14,7 @@ import { CheckoutAccountFields } from "@/app/components/CheckoutAccountFields";
 import { CheckoutInlineLogin } from "@/app/components/CheckoutInlineLogin";
 import { CheckoutOrderSummary } from "@/app/components/CheckoutOrderSummary";
 import { CheckoutPromoCode } from "@/app/components/CheckoutPromoCode";
+import { CheckoutTermsAcceptance } from "@/app/components/CheckoutTermsAcceptance";
 import { CheckoutTrustBadges } from "@/app/components/CheckoutTrustBadges";
 import { packages } from "../data/packages";
 import type { PromoCodeDefinition } from "@/app/data/promo-codes";
@@ -78,6 +79,7 @@ export function CheckoutFlow() {
   const [appliedPromo, setAppliedPromo] = useState<PromoCodeDefinition | null>(
     null
   );
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const contactComplete = useMemo(
     () => isCheckoutContactComplete(contact),
@@ -108,6 +110,7 @@ export function CheckoutFlow() {
 
   const canContinuePlanStep =
     contactComplete &&
+    termsAccepted &&
     (Boolean(user) ||
       (guestAuthMode === "signup" && accountReady && !user)) &&
     actionType !== "same";
@@ -407,6 +410,49 @@ export function CheckoutFlow() {
     />
   );
 
+  const termsAcceptanceSection =
+    actionType !== "same" ? (
+      <CheckoutTermsAcceptance
+        checked={termsAccepted}
+        onChange={setTermsAccepted}
+      />
+    ) : null;
+
+  const planContinueActions = (
+    <div className="checkout-plan-actions">
+      {(authError || changeError) && guestAuthMode === "signup" ? (
+        <p className="checkout-error">{authError ?? changeError}</p>
+      ) : null}
+
+      {!canContinuePlanStep && actionType !== "same" ? (
+        <p className="checkout-hint">
+          {!contactComplete
+            ? "Complete your personal details to continue."
+            : !termsAccepted
+              ? "Accept the Terms of Service, Privacy Policy, and Refund Policy to continue."
+              : !user && !accountReady
+                ? guestAuthMode === "login"
+                  ? "Sign in to continue."
+                  : "Add a valid email and password to create your account."
+                : "Ready when you are."}
+        </p>
+      ) : null}
+
+      <button
+        type="button"
+        onClick={handleContinueToPayment}
+        disabled={processing || !canContinuePlanStep}
+        className="btn btn-accent font-display checkout-continue w-full px-8 py-3.5 text-base text-white disabled:opacity-50"
+      >
+        {processing
+          ? "Please wait..."
+          : actionType === "downgrade"
+            ? "Continue to confirm"
+            : "Continue to payment"}
+      </button>
+    </div>
+  );
+
   return (
     <div className="checkout-shell">
       <div className="checkout-card">
@@ -517,34 +563,10 @@ export function CheckoutFlow() {
                   />
                 ) : null}
 
-                {(authError || changeError) && guestAuthMode === "signup" ? (
-                  <p className="checkout-error">{authError ?? changeError}</p>
-                ) : null}
-
-                {!canContinuePlanStep && actionType !== "same" ? (
-                  <p className="checkout-hint">
-                    {!contactComplete
-                      ? "Complete your personal details to continue."
-                      : !user && !accountReady
-                        ? guestAuthMode === "login"
-                          ? "Sign in to continue."
-                          : "Add a valid email and password to create your account."
-                        : "Ready when you are."}
-                  </p>
-                ) : null}
-
-                <button
-                  type="button"
-                  onClick={handleContinueToPayment}
-                  disabled={processing || !canContinuePlanStep}
-                  className="btn btn-accent font-display checkout-continue w-full px-8 py-3.5 text-base text-white disabled:opacity-50"
-                >
-                  {processing
-                    ? "Please wait..."
-                    : actionType === "downgrade"
-                      ? "Continue to confirm"
-                      : "Continue to payment"}
-                </button>
+                <div className="checkout-desktop-only">
+                  {termsAcceptanceSection}
+                  {planContinueActions}
+                </div>
               </>
             ) : (
               <>
@@ -599,22 +621,6 @@ export function CheckoutFlow() {
                 )}
               </>
             )}
-
-            <p className="checkout-legal">
-              By continuing, you agree to our{" "}
-              <Link href="/terms" className="text-accent hover:text-accent-light">
-                Terms &amp; Conditions
-              </Link>
-              ,{" "}
-              <Link href="/privacy" className="text-accent hover:text-accent-light">
-                Privacy Policy
-              </Link>
-              , and{" "}
-              <Link href="/refund" className="text-accent hover:text-accent-light">
-                Refund Policy
-              </Link>
-              .
-            </p>
           </div>
 
           <aside className="checkout-sidebar">
@@ -625,7 +631,13 @@ export function CheckoutFlow() {
 
         <div className="checkout-mobile-summary">
           {summary}
-          <CheckoutTrustBadges />
+          {checkoutStep === "plan" ? (
+            <>
+              {termsAcceptanceSection}
+              {planContinueActions}
+              <CheckoutTrustBadges />
+            </>
+          ) : null}
         </div>
       </div>
     </div>
