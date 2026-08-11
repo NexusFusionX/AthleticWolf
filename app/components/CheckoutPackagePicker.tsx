@@ -2,14 +2,17 @@
 
 import { Check } from "@phosphor-icons/react";
 import { packages } from "@/app/data/packages";
+import { formatCheckoutMoney } from "@/app/lib/checkout-currency";
 
 type CheckoutPackagePickerProps = {
   selectedName: string;
+  countryCode: string;
   onSelect: (packageName: string) => void;
 };
 
 export function CheckoutPackagePicker({
   selectedName,
+  countryCode,
   onSelect,
 }: CheckoutPackagePickerProps) {
   const selectedPackage = packages.find((pkg) => pkg.name === selectedName);
@@ -47,7 +50,7 @@ export function CheckoutPackagePicker({
                 )}
                 <span className="checkout-package-picker__name">{pkg.name}</span>
                 <span className="checkout-package-picker__price">
-                  ${pkg.price}/mo
+                  {formatCheckoutMoney(pkg.price, countryCode)}/mo
                 </span>
                 <span className="checkout-package-picker__term">6-month plan</span>
               </button>

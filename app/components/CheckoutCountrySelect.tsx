@@ -7,6 +7,7 @@ import {
   getCountryOptions,
   type CountryOption,
 } from "@/app/data/countries";
+import { getCheckoutCurrencyCode } from "@/app/lib/checkout-currency";
 
 type CheckoutCountrySelectProps = {
   value: string;
@@ -102,6 +103,11 @@ export function CheckoutCountrySelect({
             aria-hidden
           />
         </button>
+        {selected ? (
+          <p className="checkout-country-select__currency">
+            Prices in {getCheckoutCurrencyCode(value)}
+          </p>
+        ) : null}
       </label>
 
       {open ? (

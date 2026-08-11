@@ -18,7 +18,9 @@ import { CheckoutTermsAcceptance } from "@/app/components/CheckoutTermsAcceptanc
 import { CheckoutTrustBadges } from "@/app/components/CheckoutTrustBadges";
 import { packages } from "../data/packages";
 import type { PromoCodeDefinition } from "@/app/data/promo-codes";
+import { findCountryByCode } from "@/app/data/countries";
 import { applyPromoDiscount } from "@/app/lib/promo-code";
+import { formatCheckoutMoney } from "@/app/lib/checkout-currency";
 import { clearPendingAssessment } from "@/app/lib/assessment";
 import {
   type CheckoutContact,
@@ -26,7 +28,6 @@ import {
 } from "@/app/lib/checkout-contact";
 import {
   findPackageByName,
-  formatUsd,
   getPackageChangeType,
 } from "@/app/lib/package-change";
 
@@ -133,7 +134,10 @@ export function CheckoutFlow() {
       ? applyPromoDiscount(subtotalDueToday, appliedPromo.percentOff)
       : subtotalDueToday;
 
-  const paymentAmountLabel = formatUsd(totalDueToday);
+  const paymentAmountLabel = formatCheckoutMoney(
+    totalDueToday,
+    contact.countryCode
+  );
 
   useEffect(() => {
     if (!packageFromUrl) {
@@ -158,6 +162,38 @@ export function CheckoutFlow() {
       setAccountEmail(contact.email);
     }
   }, [contact.contactChannel, contact.email]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function detectCountryFromIp() {
+      try {
+        const response = await fetch("/api/geo/country");
+        if (!response.ok || cancelled) return;
+
+        const data: { countryCode?: string | null } = await response.json();
+        const countryCode = data.countryCode?.trim().toUpperCase() ?? "";
+
+        if (!countryCode || !findCountryByCode(countryCode) || cancelled) {
+          return;
+        }
+
+        setContact((current) =>
+          current.countryCode
+            ? current
+            : { ...current, countryCode }
+        );
+      } catch {
+        // Geo detection is best-effort only.
+      }
+    }
+
+    detectCountryFromIp();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     async function checkAuth() {
@@ -404,6 +440,7 @@ export function CheckoutFlow() {
       pricePerMonth={pkg.price}
       subtotalDueToday={subtotalDueToday}
       totalDueToday={totalDueToday}
+      countryCode={contact.countryCode}
       promoCode={appliedPromo?.code}
       promoDiscountAmount={promoDiscountAmount}
       changeType={actionType}
@@ -539,6 +576,7 @@ export function CheckoutFlow() {
 
                 <CheckoutPackagePicker
                   selectedName={selectedPackageName}
+                  countryCode={contact.countryCode}
                   onSelect={handlePackageSelect}
                 />
 
@@ -580,7 +618,7 @@ export function CheckoutFlow() {
                     <p className="font-semibold">Package upgrade</p>
                     <p className="mt-2 text-sm text-muted">
                       Upgrading from {existingPlan.package_name} to {pkg.name}.
-                      You pay {formatUsd(upgradeDifference)} today — the monthly
+                      You pay {formatCheckoutMoney(upgradeDifference, contact.countryCode)} today — the monthly
                       price difference only.
                     </p>
                   </div>

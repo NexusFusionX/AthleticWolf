@@ -4404,6 +4404,13 @@ header[data-site-header] {
   color: var(--muted);
 }
 
+.checkout-summary__currency-note {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent-light);
+}
+
 .checkout-summary__rows {
   margin-top: 1rem;
   padding-top: 1rem;
@@ -4771,6 +4778,13 @@ header[data-site-header] {
   padding: 0.85rem 0.7rem;
   font-size: 0.875rem;
   color: var(--muted);
+}
+
+.checkout-country-select__currency {
+  margin: 0.35rem 0 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent-light);
 }
 
 @media (max-width: 959px) {
