@@ -4,6 +4,7 @@ import {
   PHONE_CONTACT_OPTIONS,
   type CheckoutContact,
 } from "@/app/lib/checkout-contact";
+import { CheckoutCountrySelect } from "@/app/components/CheckoutCountrySelect";
 
 type CheckoutContactFieldsProps = {
   value: CheckoutContact;
@@ -132,6 +133,11 @@ export function CheckoutContactFields({
             />
           </label>
 
+          <CheckoutCountrySelect
+            value={value.countryCode}
+            onChange={(countryCode) => update("countryCode", countryCode)}
+          />
+
           <fieldset className="checkout-contact__fieldset">
             <legend>Contact via *</legend>
             <div className="checkout-contact__choices">
@@ -174,6 +180,13 @@ export function CheckoutContactFields({
           />
         </label>
       )}
+
+      {value.contactChannel === "email" ? (
+        <CheckoutCountrySelect
+          value={value.countryCode}
+          onChange={(countryCode) => update("countryCode", countryCode)}
+        />
+      ) : null}
       </div>
     </section>
   );

@@ -71,6 +71,7 @@ export function CheckoutFlow() {
   const [contact, setContact] = useState<CheckoutContact>({
     firstName: "",
     lastName: "",
+    countryCode: "",
     contactChannel: "phone",
     phone: "",
     email: "",
@@ -427,7 +428,11 @@ export function CheckoutFlow() {
       {!canContinuePlanStep && actionType !== "same" ? (
         <p className="checkout-hint">
           {!contactComplete
-            ? "Complete your personal details to continue."
+            ? !contact.firstName.trim()
+              ? "Complete your personal details to continue."
+              : !contact.countryCode.trim()
+                ? "Select your country to continue."
+                : "Complete your personal details to continue."
             : !termsAccepted
               ? "Accept the Terms of Service, Privacy Policy, and Refund Policy to continue."
               : !user && !accountReady

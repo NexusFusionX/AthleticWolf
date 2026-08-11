@@ -14,6 +14,7 @@ export async function POST(request: NextRequest) {
     checkoutContact?: {
       firstName?: string;
       lastName?: string;
+      countryCode?: string;
       contactChannel?: "phone" | "email";
       phone?: string;
       email?: string;
@@ -71,6 +72,7 @@ export async function POST(request: NextRequest) {
     ? {
         firstName: checkoutContact.firstName.trim(),
         lastName: checkoutContact.lastName?.trim() ?? "",
+        countryCode: checkoutContact.countryCode?.trim() ?? "",
         contactChannel: checkoutContact.contactChannel,
         phone:
           checkoutContact.contactChannel === "phone"
@@ -121,6 +123,7 @@ export async function POST(request: NextRequest) {
             : null,
         contact_channel: checkoutContact.contactChannel,
         preferred_contact: checkoutContact.preferredContact ?? null,
+        country: checkoutContact.countryCode?.trim() || null,
       },
     });
   }

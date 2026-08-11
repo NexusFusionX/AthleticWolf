@@ -1,6 +1,7 @@
 export type CheckoutContact = {
   firstName: string;
   lastName: string;
+  countryCode: string;
   contactChannel: "phone" | "email";
   phone: string;
   email: string;
@@ -16,6 +17,7 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function isCheckoutContactComplete(contact: CheckoutContact) {
   if (!contact.firstName.trim()) return false;
+  if (!contact.countryCode.trim()) return false;
 
   if (contact.contactChannel === "phone") {
     return (
