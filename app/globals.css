@@ -4655,10 +4655,145 @@ header[data-site-header] {
 }
 
 @media (max-width: 959px) {
+  .checkout-shell {
+    padding: 0;
+    background: #050505;
+  }
+
+  .checkout-card {
+    max-width: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .checkout-header {
+    padding: 1rem 1rem 0;
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .checkout-header__copy {
+    padding-bottom: 1.25rem;
+  }
+
+  .checkout-layout {
+    padding: 0 1rem 1rem;
+    gap: 1.35rem;
+  }
+
+  .checkout-main {
+    gap: 1.35rem;
+  }
+
+  .checkout-mobile-summary {
+    padding: 0 1rem 1.5rem;
+    gap: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .checkout-section {
+    gap: 0.75rem;
+  }
+
+  .checkout-section__title {
+    font-size: 1.1875rem;
+  }
+
+  .checkout-section__subtitle {
+    font-size: 0.9375rem;
+    line-height: 1.55;
+  }
+
+  .checkout-promo-panel,
+  .checkout-terms {
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .checkout-summary {
+    padding: 1.25rem;
+    border-radius: 0.85rem;
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+
+  .checkout-summary__term,
+  .checkout-summary__note,
+  .checkout-summary__fine {
+    font-size: 0.875rem;
+    line-height: 1.55;
+  }
+
+  .checkout-summary__row {
+    font-size: 0.9375rem;
+  }
+
+  .checkout-summary__row--total dt,
+  .checkout-summary__row--total dd {
+    font-size: 1.0625rem;
+  }
+
+  .checkout-terms {
+    gap: 0.85rem;
+  }
+
+  .checkout-terms__text {
+    font-size: calc(1rem - 2px);
+    line-height: 1.6;
+  }
+
+  .checkout-contact__field > span,
+  .checkout-contact__fieldset > legend {
+    font-size: 0.875rem;
+  }
+
   .checkout-contact__choice {
     justify-content: flex-start;
     padding-left: 0.75rem;
     padding-right: 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .checkout-trust-assurance {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .checkout-trust-assurance__card {
+    padding: 0.875rem 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .checkout-trust-assurance__card:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .checkout-trust-assurance__card:hover {
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: none;
+  }
+
+  .checkout-trust-assurance__title {
+    font-size: 0.9375rem;
+  }
+
+  .checkout-trust-assurance__text {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  .checkout-hint {
+    font-size: 0.875rem;
+    line-height: 1.5;
   }
 }
 
