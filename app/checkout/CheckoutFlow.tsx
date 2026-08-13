@@ -417,10 +417,10 @@ export function CheckoutFlow() {
   async function handlePaymentSuccess() {
     clearPendingAssessment();
     if (existingPlan) {
-      window.location.href = "/dashboard";
+      window.location.href = `/thank-you?package=${encodeURIComponent(selectedPackageName)}&type=upgrade`;
       return;
     }
-    window.location.href = `/quiz?package=${encodeURIComponent(selectedPackageName)}`;
+    window.location.href = `/thank-you?package=${encodeURIComponent(selectedPackageName)}&type=new`;
   }
 
   async function handleDowngradeConfirm() {

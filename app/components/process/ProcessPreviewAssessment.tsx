@@ -5,6 +5,14 @@ const GOAL_VALUE = "Build muscle";
 const DAYS_VALUE = "3-4 days";
 const LEVEL_VALUE = "Intermediate";
 
+function findField(name: string) {
+  for (const step of ASSESSMENT_STEPS) {
+    const field = step.fields.find((item) => item.name === name);
+    if (field) return field;
+  }
+  return null;
+}
+
 function PreviewOptions({
   options,
   selected,
@@ -38,10 +46,13 @@ function PreviewOptions({
 }
 
 export function ProcessPreviewAssessmentGoals() {
-  const nameField = ASSESSMENT_STEPS[0].fields[0];
-  const goalField = ASSESSMENT_STEPS[0].fields[1];
-  const ageField = ASSESSMENT_STEPS[0].fields[2];
+  const nameField = findField("name");
+  const goalField = findField("goal");
+  const ageField = findField("age");
   if (
+    !nameField ||
+    !goalField ||
+    !ageField ||
     nameField.type !== "text" ||
     goalField.type !== "radio" ||
     ageField.type !== "number"
@@ -66,10 +77,13 @@ export function ProcessPreviewAssessmentGoals() {
 }
 
 export function ProcessPreviewAssessmentTraining() {
-  const levelField = ASSESSMENT_STEPS[1].fields[0];
-  const daysField = ASSESSMENT_STEPS[1].fields[1];
-  const equipmentField = ASSESSMENT_STEPS[1].fields[2];
+  const levelField = findField("level");
+  const daysField = findField("days");
+  const equipmentField = findField("equipment");
   if (
+    !levelField ||
+    !daysField ||
+    !equipmentField ||
     levelField.type !== "radio" ||
     daysField.type !== "radio" ||
     equipmentField.type !== "checkbox"

@@ -10,6 +10,7 @@ import {
   type AssessmentFormValue,
 } from "@/app/lib/assessment-steps";
 import { AssessmentFields } from "@/app/components/assessment/AssessmentFields";
+import { AssessmentReview } from "@/app/components/assessment/AssessmentReview";
 import { AssessmentShell } from "@/app/components/assessment/AssessmentShell";
 
 type SavedProgress = {
@@ -67,24 +68,35 @@ export function QuizWizard() {
       } = await supabase.auth.getUser();
       setUser(authUser);
 
-      let plan = null;
-      if (authUser) {
-        const { data } = await supabase
-          .from("plans")
-          .select("*")
-          .eq("user_id", authUser.id)
-          .single();
-        plan = data ?? null;
-        setExistingPlan(plan);
-      }
-
       if (!authUser) {
         setAuthLoading(false);
         return;
       }
 
-      if (startFresh || !plan) {
+      const { data: plan, error: planError } = await supabase
+        .from("plans")
+        .select("*")
+        .eq("user_id", authUser.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (planError) {
+        console.error("quiz plan lookup failed", planError);
+      }
+
+      setExistingPlan(plan ?? null);
+
+      if (startFresh) {
         router.replace("/packages");
+        return;
+      }
+
+      if (!plan) {
+        // Paid users sometimes hit this before the plan row is readable —
+        // show a recoverable state instead of silently bouncing to packages.
+        setAccessAllowed(false);
+        setAuthLoading(false);
         return;
       }
 
@@ -101,7 +113,7 @@ export function QuizWizard() {
       setAccessAllowed(true);
       setAuthLoading(false);
     }
-    checkAuth();
+    void checkAuth();
   }, [selectedPackage, router, startFresh]);
 
   useEffect(() => {
@@ -139,7 +151,8 @@ export function QuizWizard() {
 
   function handleContinueResume() {
     if (resumePrompt) {
-      setCurrent(resumePrompt.step);
+      const maxStep = ASSESSMENT_STEPS.length - 1;
+      setCurrent(Math.min(Math.max(resumePrompt.step, 0), maxStep));
       setFormData(resumePrompt.formData);
     }
     setResumePrompt(null);
@@ -170,6 +183,11 @@ export function QuizWizard() {
 
   function validateStep(idx: number) {
     const step = ASSESSMENT_STEPS[idx];
+    if (step.kind === "review" || step.fields.length === 0) {
+      setErrors({});
+      return true;
+    }
+
     const newErrors: Record<string, boolean> = {};
     let ok = true;
 
@@ -243,7 +261,7 @@ export function QuizWizard() {
     if (current > 0) setCurrent((c) => c - 1);
   }
 
-  if (authLoading || !accessAllowed || resumePrompt === undefined) {
+  if (authLoading || resumePrompt === undefined) {
     return (
       <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
         <div className="text-center">
@@ -277,6 +295,45 @@ export function QuizWizard() {
               Sign In
             </Link>
           </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!accessAllowed && !existingPlan) {
+    return (
+      <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
+        <div className="w-full shadow-premium rounded-2xl border border-line bg-card p-10 text-center">
+          <h1 className="font-display text-3xl">Finishing setup…</h1>
+          <p className="mt-3 text-muted">
+            We couldn&apos;t load your coaching plan yet. If you just paid, wait a
+            moment and try again.
+          </p>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="btn btn-accent px-6 py-3 text-sm font-bold uppercase tracking-wide text-white"
+            >
+              Try again
+            </button>
+            <Link
+              href="/dashboard"
+              className="btn btn-outline px-6 py-3 text-sm font-bold uppercase tracking-wide"
+            >
+              Go to dashboard
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!accessAllowed) {
+    return (
+      <div className="mx-auto flex min-h-screen max-w-2xl items-center justify-center p-6">
+        <div className="text-center">
+          <p className="font-display text-2xl text-white">Opening assessment…</p>
         </div>
       </div>
     );
@@ -369,7 +426,7 @@ export function QuizWizard() {
                   className="btn btn-accent font-display px-7 py-3 text-base text-white"
                 >
                   {current === ASSESSMENT_STEPS.length - 1
-                    ? "Get My Plan →"
+                    ? "Submit assessment →"
                     : "Next Step →"}
                 </button>
               </div>
@@ -392,6 +449,11 @@ export function QuizWizard() {
                 Back to Home
               </Link>
             </div>
+          ) : ASSESSMENT_STEPS[current].kind === "review" ? (
+            <AssessmentReview
+              formData={formData}
+              onEditStep={(stepIndex) => setCurrent(stepIndex)}
+            />
           ) : (
             <AssessmentFields
               fields={ASSESSMENT_STEPS[current].fields}

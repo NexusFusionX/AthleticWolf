@@ -31,6 +31,8 @@ export function AssessmentShell({
   const titleClass = compact
     ? "font-display mt-1 text-sm leading-tight"
     : "font-display mt-1.5 text-3xl sm:text-4xl";
+  const heading =
+    step?.kind === "review" ? "Review Your Answers" : "Tell Us About Your Goals";
 
   return (
     <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-premium">
@@ -56,7 +58,7 @@ export function AssessmentShell({
         >
           Intake Assessment
         </p>
-        <h2 className={titleClass}>Tell Us About Your Goals</h2>
+        <h2 className={titleClass}>{heading}</h2>
         {packageName && (
           <span
             className={`mt-2 inline-block rounded-full bg-white/10 font-semibold uppercase tracking-wide text-white/90 ${

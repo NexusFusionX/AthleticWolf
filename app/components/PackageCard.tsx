@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { ArrowRight, Check, Fire } from "@phosphor-icons/react/dist/ssr";
 import { packages, getPackageDiscountPercent } from "../data/packages";
 import { Reveal } from "./Reveal";
@@ -76,12 +75,14 @@ export function PackageCard({ pkg }: { pkg: Package }) {
               <ArrowRight size={16} weight="bold" aria-hidden />
             </span>
           </PackageStartLink>
-          <Link
-            href={`/packages/${pkg.slug}`}
-            className="package-card__cta-secondary"
-          >
-            <span className="package-card__cta-label">Learn more</span>
-          </Link>
+          {pkg.slug !== "silver" ? (
+            <PackageStartLink
+              packageName={pkg.name}
+              className="package-card__cta-secondary"
+            >
+              <span className="package-card__cta-label">Upgrade</span>
+            </PackageStartLink>
+          ) : null}
         </div>
       </article>
     </div>

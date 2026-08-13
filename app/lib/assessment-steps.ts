@@ -31,20 +31,14 @@ export type AssessmentField =
 export type AssessmentStep = {
   label: string;
   fields: AssessmentField[];
+  /** Final confirmation page — shows a summary of prior answers. */
+  kind?: "fields" | "review";
 };
 
 export const ASSESSMENT_STEPS: AssessmentStep[] = [
   {
     label: "Your Goal",
     fields: [
-      {
-        name: "name",
-        label: "What's your name?",
-        type: "text",
-        required: true,
-        placeholder: "e.g. Ahmed Khan",
-        error: "Please enter your name.",
-      },
       {
         name: "goal",
         label: "What's your main fitness goal?",
@@ -57,6 +51,19 @@ export const ASSESSMENT_STEPS: AssessmentStep[] = [
           { value: "Improve endurance", label: "🏃 Improve endurance" },
           { value: "General health", label: "❤️ General health & mobility" },
         ],
+      },
+    ],
+  },
+  {
+    label: "About You",
+    fields: [
+      {
+        name: "name",
+        label: "What's your name?",
+        type: "text",
+        required: true,
+        placeholder: "e.g. Ahmed Khan",
+        error: "Please enter your name.",
       },
       {
         name: "age",
@@ -71,7 +78,7 @@ export const ASSESSMENT_STEPS: AssessmentStep[] = [
     ],
   },
   {
-    label: "Training Style",
+    label: "Experience",
     fields: [
       {
         name: "level",
@@ -87,6 +94,11 @@ export const ASSESSMENT_STEPS: AssessmentStep[] = [
           { value: "Returning after break", label: "Returning after a break" },
         ],
       },
+    ],
+  },
+  {
+    label: "Training Setup",
+    fields: [
       {
         name: "days",
         label: "How many days per week can you train?",
@@ -118,7 +130,7 @@ export const ASSESSMENT_STEPS: AssessmentStep[] = [
     ],
   },
   {
-    label: "Final Details",
+    label: "Nutrition & Health",
     fields: [
       {
         name: "diet",
@@ -150,6 +162,28 @@ export const ASSESSMENT_STEPS: AssessmentStep[] = [
       },
     ],
   },
+  {
+    label: "Review",
+    kind: "review",
+    fields: [],
+  },
 ];
 
 export type AssessmentFormValue = string | string[];
+
+export function getAssessmentFieldLabel(fieldName: string) {
+  for (const step of ASSESSMENT_STEPS) {
+    const field = step.fields.find((item) => item.name === fieldName);
+    if (field) return field.label;
+  }
+  return fieldName;
+}
+
+export function formatAssessmentValue(value: AssessmentFormValue | undefined) {
+  if (value == null) return "—";
+  if (Array.isArray(value)) {
+    return value.length > 0 ? value.join(", ") : "—";
+  }
+  const trimmed = value.trim();
+  return trimmed || "—";
+}

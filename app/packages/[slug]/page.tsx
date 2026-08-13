@@ -96,14 +96,24 @@ export default async function PackageDetailPage({
                 size="detail"
               />
 
-              <PackageStartLink
-                packageName={pkg.name}
-                className={`btn mt-6 w-full px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-white ${
-                  pkg.featured ? "btn-accent" : "btn-dark"
-                }`}
-              >
-                Choose {pkg.name}
-              </PackageStartLink>
+              <div className="mt-6 flex flex-col gap-3">
+                <PackageStartLink
+                  packageName={pkg.name}
+                  className={`btn w-full px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-white ${
+                    pkg.featured ? "btn-accent" : "btn-dark"
+                  }`}
+                >
+                  Get started
+                </PackageStartLink>
+                {pkg.slug !== "silver" ? (
+                  <PackageStartLink
+                    packageName={pkg.name}
+                    className="btn btn-outline w-full px-6 py-3.5 text-sm font-bold uppercase tracking-wide"
+                  >
+                    Upgrade
+                  </PackageStartLink>
+                ) : null}
+              </div>
 
               {otherPackages.length > 0 && (
                 <div className="mt-6 border-t border-line pt-4">

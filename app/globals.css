@@ -513,17 +513,31 @@ h1, h2, h3, h4, h5, h6, .font-display {
   align-items: center;
   justify-content: center;
   border-radius: 0.75rem;
-  border: 1.5px solid rgba(17, 17, 17, 0.2);
-  background: rgba(255, 255, 255, 0.12);
+  border: 1.5px solid rgba(255, 138, 77, 0.65);
+  background: rgba(255, 107, 53, 0.14);
   padding: 0.7rem 1rem;
   font-size: 0.6875rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(17, 17, 17, 0.82);
+  color: #ffb366;
   transition:
     border-color 0.35s ease,
-    background-color 0.35s ease;
+    background-color 0.35s ease,
+    color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+
+.package-card--platinum .package-card__cta-secondary {
+  border-color: rgba(17, 17, 17, 0.35);
+  background: rgba(17, 17, 17, 0.18);
+  color: #1a0f08;
+}
+
+.package-card--diamond .package-card__cta-secondary {
+  border-color: rgba(255, 179, 102, 0.7);
+  background: rgba(255, 138, 77, 0.16);
+  color: #ffc48a;
 }
 
 .package-card__cta.btn-accent::after {
@@ -588,8 +602,23 @@ h1, h2, h3, h4, h5, h6, .font-display {
   }
 
   .package-card__cta-secondary:hover {
-    border-color: rgba(17, 17, 17, 0.35);
-    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 179, 102, 0.95);
+    background: rgba(255, 107, 53, 0.28);
+    color: #ffe0c2;
+    box-shadow: 0 0 0 1px rgba(255, 138, 77, 0.2);
+  }
+
+  .package-card--platinum .package-card__cta-secondary:hover {
+    border-color: rgba(17, 17, 17, 0.55);
+    background: rgba(17, 17, 17, 0.28);
+    color: #111;
+    box-shadow: none;
+  }
+
+  .package-card--diamond .package-card__cta-secondary:hover {
+    border-color: rgba(255, 204, 153, 0.95);
+    background: rgba(255, 138, 77, 0.28);
+    color: #ffe6cc;
   }
 }
 

@@ -6,7 +6,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Suspense } from "react";
 import { FloatingFaqWidget } from "./components/FloatingFaqWidget";
 import { ConditionalSiteFooter } from "./components/ConditionalSiteFooter";
-import { ScrollProgress } from "./components/ScrollProgress";
 import { SitePreloader } from "./components/SitePreloader";
 import "./globals.css";
 
@@ -66,7 +65,6 @@ export default function RootLayout({
         </div>
         <div className="grain-overlay" aria-hidden />
         <SitePreloader />
-        <ScrollProgress />
         {children}
         <Suspense fallback={null}>
           <ConditionalSiteFooter />
