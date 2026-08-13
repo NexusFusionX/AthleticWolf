@@ -36,7 +36,7 @@ function ProgramCard({ program }: { program: Program }) {
           src={program.src}
           alt={program.title}
           fill
-          quality={92}
+          quality={75}
           className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
           sizes="(min-width: 1024px) 480px, (min-width: 640px) 33vw, 50vw"
         />
@@ -83,7 +83,7 @@ function ProgramRow({
               src={program.src}
               alt={program.title}
               fill
-              quality={92}
+              quality={75}
               className="h-full w-full object-cover object-center"
               sizes="(min-width: 640px) 320px, 240px"
             />

@@ -5,6 +5,7 @@ import { AccentHeading } from "@/app/components/AccentHeading";
 import { packages } from "@/app/data/packages";
 import { Check } from "@phosphor-icons/react/dist/ssr";
 import { PackageStartLink } from "@/app/components/PackageStartLink";
+import { LocalizedPackagePrice } from "@/app/components/LocalizedPackagePrice";
 
 export function generateStaticParams() {
   return packages.map((pkg) => ({ slug: pkg.slug }));
@@ -89,11 +90,11 @@ export default async function PackageDetailPage({
 
             <div className="h-fit rounded-2xl border border-line bg-card p-6 shadow-premium">
               <p className="text-sm text-muted">6 Month Coaching Package</p>
-              <div className="mt-2 flex items-end gap-1">
-                <span className="font-display text-4xl">${pkg.price}</span>
-                <span className="mb-1 text-sm text-muted">/ month</span>
-              </div>
-              <p className="mt-1 text-sm text-muted">Total value ${pkg.value}</p>
+              <LocalizedPackagePrice
+                usdPrice={pkg.price}
+                usdValue={pkg.value}
+                size="detail"
+              />
 
               <PackageStartLink
                 packageName={pkg.name}

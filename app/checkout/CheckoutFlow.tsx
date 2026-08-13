@@ -20,7 +20,10 @@ import { packages } from "../data/packages";
 import type { PromoCodeDefinition } from "@/app/data/promo-codes";
 import { findCountryByCode } from "@/app/data/countries";
 import { applyPromoDiscount } from "@/app/lib/promo-code";
-import { formatCheckoutMoney } from "@/app/lib/checkout-currency";
+import {
+  formatChargeMoney,
+  formatCheckoutMoney,
+} from "@/app/lib/checkout-currency";
 import { clearPendingAssessment } from "@/app/lib/assessment";
 import {
   type CheckoutContact,
@@ -30,6 +33,8 @@ import {
   findPackageByName,
   getPackageChangeType,
 } from "@/app/lib/package-change";
+import { persistVisitorCountry } from "@/app/hooks/useVisitorCountry";
+import { useLiveFxRates } from "@/app/hooks/useLiveFxRates";
 
 const DEFAULT_PACKAGE =
   packages.find((p) => p.featured)?.name ?? packages[0].name;
@@ -69,19 +74,45 @@ export function CheckoutFlow() {
   const [guestAuthMode, setGuestAuthMode] = useState<GuestAuthMode>("signup");
   const [accountEmail, setAccountEmail] = useState("");
   const [accountPassword, setAccountPassword] = useState("");
-  const [contact, setContact] = useState<CheckoutContact>({
-    firstName: "",
-    lastName: "",
-    countryCode: "",
-    contactChannel: "phone",
-    phone: "",
-    email: "",
-    preferredContact: "WhatsApp",
+  const [contact, setContact] = useState<CheckoutContact>(() => {
+    let storedCountry = "";
+    if (typeof window !== "undefined") {
+      try {
+        const value = window.localStorage.getItem("aw_visitor_country");
+        const normalized = value?.trim().toUpperCase() ?? "";
+        if (normalized && findCountryByCode(normalized)) {
+          storedCountry = normalized;
+        }
+      } catch {
+        // ignore
+      }
+    }
+    return {
+      firstName: "",
+      lastName: "",
+      countryCode: storedCountry,
+      contactChannel: "phone",
+      phone: "",
+      email: "",
+      preferredContact: "WhatsApp",
+    };
   });
   const [appliedPromo, setAppliedPromo] = useState<PromoCodeDefinition | null>(
     null
   );
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const { rates } = useLiveFxRates();
+
+  function handleContactChange(next: CheckoutContact) {
+    if (
+      next.countryCode &&
+      next.countryCode !== contact.countryCode &&
+      findCountryByCode(next.countryCode)
+    ) {
+      persistVisitorCountry(next.countryCode, { manual: true });
+    }
+    setContact(next);
+  }
 
   const contactComplete = useMemo(
     () => isCheckoutContactComplete(contact),
@@ -134,9 +165,10 @@ export function CheckoutFlow() {
       ? applyPromoDiscount(subtotalDueToday, appliedPromo.percentOff)
       : subtotalDueToday;
 
-  const paymentAmountLabel = formatCheckoutMoney(
+  const paymentAmountLabel = formatChargeMoney(
     totalDueToday,
-    contact.countryCode
+    contact.countryCode,
+    rates
   );
 
   useEffect(() => {
@@ -168,21 +200,39 @@ export function CheckoutFlow() {
 
     async function detectCountryFromIp() {
       try {
-        const response = await fetch("/api/geo/country");
-        if (!response.ok || cancelled) return;
+        // Prefer browser/VPN IP; localhost server geo often stays on Pakistan.
+        let countryCode = "";
+        try {
+          const browserRes = await fetch("https://ipwho.is/", { cache: "no-store" });
+          if (browserRes.ok) {
+            const browserData = (await browserRes.json()) as {
+              country_code?: string;
+              success?: boolean;
+            };
+            if (browserData.success !== false) {
+              countryCode = browserData.country_code?.trim().toUpperCase() ?? "";
+            }
+          }
+        } catch {
+          // Fall through to server geo.
+        }
 
-        const data: { countryCode?: string | null } = await response.json();
-        const countryCode = data.countryCode?.trim().toUpperCase() ?? "";
+        if (!countryCode || !findCountryByCode(countryCode)) {
+          const response = await fetch("/api/geo/country");
+          if (!response.ok || cancelled) return;
+          const data: { countryCode?: string | null } = await response.json();
+          countryCode = data.countryCode?.trim().toUpperCase() ?? "";
+        }
 
         if (!countryCode || !findCountryByCode(countryCode) || cancelled) {
           return;
         }
 
-        setContact((current) =>
-          current.countryCode
-            ? current
-            : { ...current, countryCode }
-        );
+        setContact((current) => {
+          if (current.countryCode) return current;
+          persistVisitorCountry(countryCode);
+          return { ...current, countryCode };
+        });
       } catch {
         // Geo detection is best-effort only.
       }
@@ -194,6 +244,12 @@ export function CheckoutFlow() {
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (contact.countryCode) {
+      persistVisitorCountry(contact.countryCode);
+    }
+  }, [contact.countryCode]);
 
   useEffect(() => {
     async function checkAuth() {
@@ -542,7 +598,7 @@ export function CheckoutFlow() {
 
             {checkoutStep === "plan" ? (
               <>
-                <CheckoutContactFields value={contact} onChange={setContact} />
+                <CheckoutContactFields value={contact} onChange={handleContactChange} />
 
                 {!user ? (
                   guestAuthMode === "login" ? (
@@ -618,7 +674,7 @@ export function CheckoutFlow() {
                     <p className="font-semibold">Package upgrade</p>
                     <p className="mt-2 text-sm text-muted">
                       Upgrading from {existingPlan.package_name} to {pkg.name}.
-                      You pay {formatCheckoutMoney(upgradeDifference, contact.countryCode)} today — the monthly
+                      You pay {formatCheckoutMoney(upgradeDifference, contact.countryCode, rates)} today — the monthly
                       price difference only.
                     </p>
                   </div>
@@ -648,9 +704,10 @@ export function CheckoutFlow() {
                   </div>
                 ) : (
                   <StripeCheckoutPayment
-                    key={`${selectedPackageName}-${actionType ?? "new"}-${appliedPromo?.code ?? "none"}`}
+                    key={`${selectedPackageName}-${actionType ?? "new"}-${appliedPromo?.code ?? "none"}-${contact.countryCode || "none"}`}
                     packageName={pkg.name}
                     promoCode={appliedPromo?.code}
+                    countryCode={contact.countryCode}
                     amountLabel={paymentAmountLabel}
                     paymentDescription={
                       actionType === "upgrade" && existingPlan

@@ -66,7 +66,7 @@ export default async function ProgramDetailPage({
                   alt={program.title}
                   width={900}
                   height={1200}
-                  quality={92}
+                  quality={75}
                   className="h-auto w-full"
                   sizes="(min-width: 1024px) 680px, 100vw"
                 />

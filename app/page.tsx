@@ -94,7 +94,7 @@ export default function Home() {
                     src="/media/about/coach-about.png"
                     alt="Athletic Wolf coach"
                     fill
-                    quality={92}
+                    quality={75}
                     className="h-full w-full object-cover object-center"
                     sizes="(min-width: 1024px) 40rem, 100vw"
                   />

@@ -3,6 +3,7 @@
 import { Check } from "@phosphor-icons/react";
 import { packages } from "@/app/data/packages";
 import { formatCheckoutMoney } from "@/app/lib/checkout-currency";
+import { useLiveFxRates } from "@/app/hooks/useLiveFxRates";
 
 type CheckoutPackagePickerProps = {
   selectedName: string;
@@ -15,6 +16,7 @@ export function CheckoutPackagePicker({
   countryCode,
   onSelect,
 }: CheckoutPackagePickerProps) {
+  const { rates } = useLiveFxRates();
   const selectedPackage = packages.find((pkg) => pkg.name === selectedName);
 
   return (
@@ -50,7 +52,7 @@ export function CheckoutPackagePicker({
                 )}
                 <span className="checkout-package-picker__name">{pkg.name}</span>
                 <span className="checkout-package-picker__price">
-                  {formatCheckoutMoney(pkg.price, countryCode)}/mo
+                  {formatCheckoutMoney(pkg.price, countryCode, rates)}/mo
                 </span>
                 <span className="checkout-package-picker__term">6-month plan</span>
               </button>

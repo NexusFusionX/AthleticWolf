@@ -59,7 +59,7 @@ export default function AboutPage() {
                 src="/media/about/coach-about.png"
                 alt="Athletic Wolf coach"
                 fill
-                quality={92}
+                quality={75}
                 className="object-cover object-center"
                 sizes="(min-width: 1024px) 28rem, 100vw"
               />
@@ -75,7 +75,7 @@ export default function AboutPage() {
                   src="/media/about/coach-dubai.jpg"
                   alt="Coach with over 10 years of fitness experience"
                   fill
-                  quality={90}
+                  quality={75}
                   className="object-cover object-center"
                   sizes="(min-width: 1024px) 32rem, 100vw"
                 />
@@ -121,7 +121,7 @@ export default function AboutPage() {
                 src="/media/about/coach-mirror.jpg"
                 alt="Athletic Wolf coach — leading by example"
                 fill
-                quality={92}
+                quality={75}
                 className="object-cover object-center"
                 sizes="(min-width: 1024px) 28rem, 100vw"
               />

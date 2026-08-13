@@ -14,6 +14,7 @@ import type { CheckoutContact } from "@/app/lib/checkout-contact";
 type StripeCheckoutPaymentProps = {
   packageName: string;
   promoCode?: string;
+  countryCode?: string;
   amountLabel: string;
   paymentDescription?: string;
   assessmentData?: unknown;
@@ -150,6 +151,7 @@ function PaymentForm({
 export function StripeCheckoutPayment({
   packageName,
   promoCode,
+  countryCode,
   amountLabel,
   paymentDescription,
   assessmentData,
@@ -190,13 +192,30 @@ export function StripeCheckoutPayment({
           return;
         }
 
+        const resolvedCountry =
+          countryCode?.trim() || checkoutContact?.countryCode?.trim() || "";
+
+        if (!resolvedCountry) {
+          setErrorMessage("Select your country before paying.");
+          setLoading(false);
+          return;
+        }
+
+        setLoading(true);
+        setClientSecret(null);
+        setErrorMessage(null);
+
         const response = await fetch("/api/stripe/create-payment-intent", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${session.access_token}`,
           },
-          body: JSON.stringify({ packageName, promoCode }),
+          body: JSON.stringify({
+            packageName,
+            promoCode,
+            countryCode: resolvedCountry,
+          }),
         });
 
         const data = await response.json();
@@ -224,7 +243,7 @@ export function StripeCheckoutPayment({
     return () => {
       cancelled = true;
     };
-  }, [packageName, promoCode, publishableKey]);
+  }, [packageName, promoCode, countryCode, checkoutContact?.countryCode, publishableKey]);
 
   if (loading) {
     return (

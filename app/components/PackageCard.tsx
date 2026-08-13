@@ -4,6 +4,7 @@ import { packages, getPackageDiscountPercent } from "../data/packages";
 import { Reveal } from "./Reveal";
 import { revealAt } from "../lib/reveal";
 import { PackageStartLink } from "./PackageStartLink";
+import { LocalizedPackagePrice } from "./LocalizedPackagePrice";
 
 const PACKAGE_VARIANTS = ["rise", "zoom", "tilt-right"] as const;
 
@@ -52,15 +53,7 @@ export function PackageCard({ pkg }: { pkg: Package }) {
           <p className="package-card__tagline">{pkg.tagline}</p>
         </div>
 
-        <div className="package-card__pricing">
-          <div className="package-card__price-row">
-            <span className="package-card__price">${pkg.price}</span>
-            <span className="package-card__period">/ month</span>
-          </div>
-          <p className="package-card__billing">
-            ${total} total · 6-month commitment
-          </p>
-        </div>
+        <LocalizedPackagePrice usdPrice={pkg.price} usdTotal={total} />
 
         <ul className="package-card__features">
           {pkg.features.map((feature) => (

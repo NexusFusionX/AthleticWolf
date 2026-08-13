@@ -3,10 +3,13 @@
 import Link from "next/link";
 import type { PackageChangeType } from "@/app/lib/package-change";
 import {
+  chargesInLocalCurrency,
   formatCheckoutMoney,
   getCheckoutCurrencyCode,
+  getStripeChargeCurrencyCode,
   showsLocalCurrency,
 } from "@/app/lib/checkout-currency";
+import { useLiveFxRates } from "@/app/hooks/useLiveFxRates";
 
 type CheckoutOrderSummaryProps = {
   packageName: string;
@@ -30,9 +33,11 @@ export function CheckoutOrderSummary({
   changeType,
   currentPackageName,
 }: CheckoutOrderSummaryProps) {
+  const { rates, source } = useLiveFxRates();
   const isUpgrade = changeType === "upgrade";
   const isDowngrade = changeType === "downgrade";
-  const formatMoney = (amount: number) => formatCheckoutMoney(amount, countryCode);
+  const formatMoney = (amount: number) =>
+    formatCheckoutMoney(amount, countryCode, rates);
 
   return (
     <aside className="checkout-summary">
@@ -42,7 +47,9 @@ export function CheckoutOrderSummary({
 
       {showsLocalCurrency(countryCode) ? (
         <p className="checkout-summary__currency-note">
-          Prices shown in {getCheckoutCurrencyCode(countryCode)} (approximate).
+          {chargesInLocalCurrency(countryCode)
+            ? `Prices and card payment in ${getCheckoutCurrencyCode(countryCode)}${source === "live" ? " (live rate)" : ""}.`
+            : `Prices shown in ${getCheckoutCurrencyCode(countryCode)}. Card payment is charged in ${getStripeChargeCurrencyCode(countryCode)}.`}
         </p>
       ) : null}
 

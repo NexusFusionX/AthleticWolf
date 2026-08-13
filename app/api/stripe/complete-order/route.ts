@@ -2,7 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { packages } from "@/app/data/packages";
 import { getAuthedUser } from "@/lib/supabase-server";
 import { getUpgradeDifferenceCents } from "@/app/lib/package-change";
+import { convertUsdToStripeAmount } from "@/app/lib/checkout-currency";
+import { applyPromoDiscountCents } from "@/app/lib/promo-code";
 import { getCheckoutAmountCents, getStripe, isStripeConfigured } from "@/lib/stripe";
+import { USD_EXCHANGE_RATES } from "@/app/data/currency-rates";
 
 export async function POST(request: NextRequest) {
   if (!isStripeConfigured()) {
@@ -78,7 +81,7 @@ export async function POST(request: NextRequest) {
       .eq("user_id", user.id)
       .maybeSingle();
 
-    let expectedAmount: number;
+    let expectedUsdCents: number;
 
     if (changeType === "upgrade") {
       if (!existingPlan) {
@@ -94,16 +97,51 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: "Invalid upgrade amount" }, { status: 400 });
       }
 
-      expectedAmount = upgradeAmount;
+      expectedUsdCents = upgradeAmount;
     } else {
       if (existingPlan) {
         return NextResponse.json({ error: "Plan already exists" }, { status: 409 });
       }
 
-      expectedAmount = getCheckoutAmountCents(pkg.price);
+      expectedUsdCents = getCheckoutAmountCents(pkg.price);
     }
 
-    if (paymentIntent.amount !== expectedAmount) {
+    const promoPercentOff = Number(paymentIntent.metadata.promoPercentOff || 0);
+    if (Number.isFinite(promoPercentOff) && promoPercentOff > 0) {
+      expectedUsdCents = applyPromoDiscountCents(expectedUsdCents, promoPercentOff);
+    }
+
+    const countryCode =
+      paymentIntent.metadata.countryCode?.trim().toUpperCase() ||
+      checkoutContact?.countryCode?.trim().toUpperCase() ||
+      "US";
+
+    // Use the FX rate locked at payment-intent creation so a mid-checkout
+    // market move cannot fail a successful payment.
+    const fxRate = Number(paymentIntent.metadata.fxRate);
+    const chargeCurrency =
+      paymentIntent.metadata.chargeCurrency?.trim().toUpperCase() ||
+      paymentIntent.currency.toUpperCase();
+
+    const ratesForValidation: Record<string, number> = {
+      ...USD_EXCHANGE_RATES,
+      [chargeCurrency]:
+        Number.isFinite(fxRate) && fxRate > 0
+          ? fxRate
+          : USD_EXCHANGE_RATES[chargeCurrency] ?? 1,
+      USD: 1,
+    };
+
+    const expectedCharge = convertUsdToStripeAmount(
+      expectedUsdCents / 100,
+      countryCode,
+      ratesForValidation
+    );
+
+    if (
+      paymentIntent.amount !== expectedCharge.amount ||
+      paymentIntent.currency !== expectedCharge.currency
+    ) {
       return NextResponse.json({ error: "Payment amount mismatch" }, { status: 403 });
     }
 

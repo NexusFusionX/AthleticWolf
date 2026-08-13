@@ -364,6 +364,13 @@ h1, h2, h3, h4, h5, h6, .font-display {
   font-size: clamp(2.5rem, 4vw, 3.25rem);
   line-height: 1;
   letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+/* PKR amounts are long (e.g. PKR 36,122) — shrink only this currency. */
+.package-card__price--pkr {
+  font-size: clamp(1.55rem, 2.6vw, 1.95rem);
+  letter-spacing: -0.03em;
 }
 
 .package-card__period {
