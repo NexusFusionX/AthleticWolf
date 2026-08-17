@@ -38,7 +38,7 @@ const STEPS = [
     title: "Choose your package",
     lead: "Pick Silver, Platinum, or Diamond.",
     detail:
-      "Compare coaching packages and choose the level of support that fits your goals. All plans are 6-month coaching packages billed monthly.",
+      "Compare coaching packages and choose the level of support that fits your goals. All plans are prepaid 6-month coaching packages paid in full at checkout.",
     points: ["Three coaching tiers", "Switch package at checkout"],
     screens: [
       { key: "packages", node: <ProcessPreviewPackages selectedSlug="silver" /> },

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { packages } from "@/app/data/packages";
+import { packages, getPackageTotalUsd } from "@/app/data/packages";
 import { programs } from "@/app/data/programs";
 
 const MODEL = "llama-3.3-70b-versatile";
@@ -8,7 +8,7 @@ function buildSystemPrompt() {
   const packagesText = packages
     .map(
       (p) =>
-        `- ${p.name} ($${p.price}/month, 6-month package, value $${p.value}): ${p.tagline} Features: ${p.features.join(", ")}.`
+        `- ${p.name} ($${getPackageTotalUsd(p.price)} prepaid for 6 months, $${p.price}/mo equivalent, value $${p.value}): ${p.tagline} Features: ${p.features.join(", ")}.`
     )
     .join("\n");
 
@@ -22,7 +22,7 @@ BUSINESS INFO:
 - Fully online, ISSA-certified 1:1 personal training and nutrition coaching. No gym membership required, works worldwide.
 - After checkout, every client completes a short intake assessment (goals, experience, schedule, equipment, dietary preferences, injuries) so their coach can build a personalized plan.
 - Plans are typically ready within 24-48 hours after checkout.
-- Packages are 6-month coaching packages, billed monthly.
+- Packages are prepaid 6-month coaching packages. Clients pay the full 6-month amount at checkout (not monthly billing).
 
 PACKAGES:
 ${packagesText}

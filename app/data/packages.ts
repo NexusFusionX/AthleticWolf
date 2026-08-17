@@ -1,3 +1,10 @@
+/** Coaching packages are sold as a prepaid term — charged in full at checkout. */
+export const PACKAGE_TERM_MONTHS = 6;
+
+export function getPackageTotalUsd(pricePerMonth: number) {
+  return pricePerMonth * PACKAGE_TERM_MONTHS;
+}
+
 export const packages = [
   {
     slug: "silver",

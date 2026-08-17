@@ -16,7 +16,7 @@ import { CheckoutOrderSummary } from "@/app/components/CheckoutOrderSummary";
 import { CheckoutPromoCode } from "@/app/components/CheckoutPromoCode";
 import { CheckoutTermsAcceptance } from "@/app/components/CheckoutTermsAcceptance";
 import { CheckoutTrustBadges } from "@/app/components/CheckoutTrustBadges";
-import { packages } from "../data/packages";
+import { packages, getPackageTotalUsd } from "../data/packages";
 import type { PromoCodeDefinition } from "@/app/data/promo-codes";
 import { findCountryByCode } from "@/app/data/countries";
 import { applyPromoDiscount } from "@/app/lib/promo-code";
@@ -127,7 +127,7 @@ export function CheckoutFlow() {
     : null;
   const upgradeDifference =
     currentPackage && pkg && actionType === "upgrade"
-      ? pkg.price - currentPackage.price
+      ? getPackageTotalUsd(pkg.price) - getPackageTotalUsd(currentPackage.price)
       : null;
 
   const resolvedAccountEmail =
@@ -153,7 +153,9 @@ export function CheckoutFlow() {
       ? upgradeDifference
       : actionType === "downgrade"
         ? 0
-        : pkg?.price ?? 0;
+        : pkg
+          ? getPackageTotalUsd(pkg.price)
+          : 0;
 
   const promoDiscountAmount =
     appliedPromo && subtotalDueToday > 0
@@ -674,8 +676,8 @@ export function CheckoutFlow() {
                     <p className="font-semibold">Package upgrade</p>
                     <p className="mt-2 text-sm text-muted">
                       Upgrading from {existingPlan.package_name} to {pkg.name}.
-                      You pay {formatCheckoutMoney(upgradeDifference, contact.countryCode, rates)} today — the monthly
-                      price difference only.
+                      You pay {formatCheckoutMoney(upgradeDifference, contact.countryCode, rates)} today — the
+                      prepaid package difference only.
                     </p>
                   </div>
                 ) : null}

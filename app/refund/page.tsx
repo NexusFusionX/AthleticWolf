@@ -25,9 +25,9 @@ export default function RefundPolicyPage() {
       <section className="space-y-3">
         <h2 className="font-display text-xl text-foreground sm:text-2xl">2. Package structure</h2>
         <p>
-          Our packages are sold as 6-month coaching packages and billed monthly
-          unless otherwise stated at checkout. Buying a package means you are
-          committing to the coaching term shown at purchase.
+          Our packages are sold as prepaid 6-month coaching packages. The full
+          package amount is charged at checkout unless otherwise stated. Buying a
+          package means you are committing to the coaching term shown at purchase.
         </p>
       </section>
 

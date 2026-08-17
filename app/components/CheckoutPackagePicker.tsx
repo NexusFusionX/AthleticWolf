@@ -1,7 +1,7 @@
 "use client";
 
 import { Check } from "@phosphor-icons/react";
-import { packages } from "@/app/data/packages";
+import { packages, getPackageTotalUsd } from "@/app/data/packages";
 import { formatCheckoutMoney } from "@/app/lib/checkout-currency";
 import { useLiveFxRates } from "@/app/hooks/useLiveFxRates";
 
@@ -52,9 +52,15 @@ export function CheckoutPackagePicker({
                 )}
                 <span className="checkout-package-picker__name">{pkg.name}</span>
                 <span className="checkout-package-picker__price">
-                  {formatCheckoutMoney(pkg.price, countryCode, rates)}/mo
+                  {formatCheckoutMoney(
+                    getPackageTotalUsd(pkg.price),
+                    countryCode,
+                    rates
+                  )}
                 </span>
-                <span className="checkout-package-picker__term">6-month plan</span>
+                <span className="checkout-package-picker__term">
+                  6 months · paid in full
+                </span>
               </button>
             );
           })}

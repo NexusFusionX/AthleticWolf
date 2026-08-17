@@ -1,5 +1,5 @@
 import { CreditCard, Package, ShieldCheck } from "@phosphor-icons/react";
-import { packages } from "@/app/data/packages";
+import { packages, getPackageTotalUsd } from "@/app/data/packages";
 import { ProcessMiniScreen } from "./ProcessMiniScreen";
 
 export function ProcessPreviewPackages({
@@ -38,7 +38,9 @@ export function ProcessPreviewPackages({
                     <span className="process-mini-tag">Popular</span>
                   ) : null}
                 </div>
-                <p className="process-mini-option__meta">${pkg.price}/mo</p>
+                <p className="process-mini-option__meta">
+                  ${getPackageTotalUsd(pkg.price)} · 6 mo
+                </p>
                 <p className="process-mini-option__hint">{pkg.tagline}</p>
               </div>
             </div>
@@ -46,7 +48,7 @@ export function ProcessPreviewPackages({
         })}
       </div>
       <p className="process-mini-note-box process-mini-fill-bottom">
-        6-month coaching · switch anytime at checkout
+        6-month coaching · paid in full at checkout
       </p>
     </ProcessMiniScreen>
   );
@@ -73,9 +75,11 @@ export function ProcessPreviewCheckout() {
         <div className="process-mini-summary">
           <div>
             <p className="process-mini-summary__plan">{pkg.name} coaching</p>
-            <p className="process-mini-summary__meta">6-month program</p>
+            <p className="process-mini-summary__meta">6 months · paid in full</p>
           </div>
-          <p className="process-mini-summary__price">${pkg.price}/mo</p>
+          <p className="process-mini-summary__price">
+            ${getPackageTotalUsd(pkg.price)}
+          </p>
         </div>
       </div>
       <div className="process-mini-fill-bottom">

@@ -10,6 +10,7 @@ import {
   showsLocalCurrency,
 } from "@/app/lib/checkout-currency";
 import { useLiveFxRates } from "@/app/hooks/useLiveFxRates";
+import { PACKAGE_TERM_MONTHS, getPackageTotalUsd } from "@/app/data/packages";
 
 type CheckoutOrderSummaryProps = {
   packageName: string;
@@ -38,12 +39,15 @@ export function CheckoutOrderSummary({
   const isDowngrade = changeType === "downgrade";
   const formatMoney = (amount: number) =>
     formatCheckoutMoney(amount, countryCode, rates);
+  const packageTotal = getPackageTotalUsd(pricePerMonth);
 
   return (
     <aside className="checkout-summary">
       <p className="checkout-summary__eyebrow">Order summary</p>
       <p className="checkout-summary__plan">{packageName}</p>
-      <p className="checkout-summary__term">6-month coaching · billed monthly</p>
+      <p className="checkout-summary__term">
+        {PACKAGE_TERM_MONTHS}-month coaching · paid in full
+      </p>
 
       {showsLocalCurrency(countryCode) ? (
         <p className="checkout-summary__currency-note">
@@ -66,15 +70,17 @@ export function CheckoutOrderSummary({
       ) : null}
 
       <dl className="checkout-summary__rows">
-        <div className="checkout-summary__row">
-          <dt>Monthly rate</dt>
-          <dd>{formatMoney(pricePerMonth)}/mo</dd>
-        </div>
         {!isUpgrade && !isDowngrade ? (
-          <div className="checkout-summary__row">
-            <dt>Program term</dt>
-            <dd>6 months</dd>
-          </div>
+          <>
+            <div className="checkout-summary__row">
+              <dt>Program term</dt>
+              <dd>{PACKAGE_TERM_MONTHS} months</dd>
+            </div>
+            <div className="checkout-summary__row">
+              <dt>Package total</dt>
+              <dd>{formatMoney(packageTotal)}</dd>
+            </div>
+          </>
         ) : null}
         {promoDiscountAmount > 0 && promoCode ? (
           <div className="checkout-summary__row checkout-summary__row--discount">
@@ -98,12 +104,15 @@ export function CheckoutOrderSummary({
         </p>
       ) : isUpgrade ? (
         <p className="checkout-summary__fine">
-          You pay only the monthly price difference today.
+          You pay only the prepaid package difference today.
         </p>
       ) : (
         <p className="checkout-summary__fine">
-          First month due today. {formatMoney(pricePerMonth * 6)} total over 6
-          months.
+          Full {PACKAGE_TERM_MONTHS}-month package due today
+          {pricePerMonth > 0
+            ? ` (${formatMoney(pricePerMonth)}/mo equivalent)`
+            : ""}
+          .
         </p>
       )}
     </aside>

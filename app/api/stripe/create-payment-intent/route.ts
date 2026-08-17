@@ -94,7 +94,7 @@ export async function POST(request: NextRequest) {
     }
 
     amountUsdCents = upgradeAmount;
-    description = `Athletic Wolf — upgrade to ${pkg.name} (price difference)`;
+    description = `Athletic Wolf — upgrade to ${pkg.name} (prepaid package difference)`;
     metadata = {
       userId: user.id,
       packageName: pkg.name,
@@ -105,7 +105,7 @@ export async function POST(request: NextRequest) {
     };
   } else {
     amountUsdCents = getCheckoutAmountCents(pkg.price);
-    description = `Athletic Wolf — ${pkg.name}`;
+    description = `Athletic Wolf — ${pkg.name} (6-month prepaid)`;
     metadata = {
       userId: user.id,
       packageName: pkg.name,

@@ -50,8 +50,8 @@ export default function Home() {
                 className="font-display mt-3 text-4xl sm:text-5xl"
               />
               <p className="mt-4 text-muted">
-                All plans are 6-month coaching packages designed to help you reach
-                your fitness goals with expert guidance.
+                All plans are prepaid 6-month coaching packages — pay once at
+                checkout for the full term.
               </p>
             </Reveal>
 

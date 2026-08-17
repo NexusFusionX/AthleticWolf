@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+import { PACKAGE_TERM_MONTHS } from "@/app/data/packages";
 
 let stripeClient: Stripe | null = null;
 
@@ -23,7 +24,7 @@ export function isStripeConfigured(): boolean {
   );
 }
 
-/** Placeholder checkout amount until client confirms package pricing. */
+/** Full prepaid package total in USD cents (monthly rate × term). */
 export function getCheckoutAmountCents(pricePerMonth: number): number {
-  return Math.round(pricePerMonth * 100);
+  return Math.round(pricePerMonth * PACKAGE_TERM_MONTHS * 100);
 }

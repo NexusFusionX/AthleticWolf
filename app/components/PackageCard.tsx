@@ -1,5 +1,5 @@
 import { ArrowRight, Check, Fire } from "@phosphor-icons/react/dist/ssr";
-import { packages, getPackageDiscountPercent } from "../data/packages";
+import { packages, getPackageDiscountPercent, getPackageTotalUsd } from "../data/packages";
 import { Reveal } from "./Reveal";
 import { revealAt } from "../lib/reveal";
 import { PackageStartLink } from "./PackageStartLink";
@@ -17,7 +17,7 @@ function ctaClassName(slug: Package["slug"]) {
 
 export function PackageCard({ pkg }: { pkg: Package }) {
   const isHero = pkg.featured;
-  const total = pkg.price * 6;
+  const total = getPackageTotalUsd(pkg.price);
   const discountPercent = getPackageDiscountPercent(pkg);
 
   return (

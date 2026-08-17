@@ -31,7 +31,7 @@ export default function PackagesPage() {
             />
             <p className="mt-4 max-w-xl text-white/75">
               Choose the perfect package to match your fitness goals. All plans are
-              6-month coaching packages designed to help you achieve real results.
+              prepaid 6-month coaching packages — pay once at checkout for the full term.
             </p>
           </div>
         </section>

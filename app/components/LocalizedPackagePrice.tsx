@@ -7,6 +7,7 @@ import {
 } from "@/app/lib/checkout-currency";
 import { useVisitorCountry } from "@/app/hooks/useVisitorCountry";
 import { useLiveFxRates } from "@/app/hooks/useLiveFxRates";
+import { PACKAGE_TERM_MONTHS, getPackageTotalUsd } from "@/app/data/packages";
 
 type LocalizedPackagePriceProps = {
   usdPrice: number;
@@ -24,9 +25,9 @@ export function LocalizedPackagePrice({
   const { countryCode, ready: countryReady } = useVisitorCountry();
   const { rates, ready: fxReady, source } = useLiveFxRates();
   const ready = countryReady && fxReady;
+  const totalUsd = usdTotal ?? getPackageTotalUsd(usdPrice);
+  const total = formatCheckoutMoney(totalUsd, countryCode, rates);
   const monthly = formatCheckoutMoney(usdPrice, countryCode, rates);
-  const total =
-    usdTotal != null ? formatCheckoutMoney(usdTotal, countryCode, rates) : null;
   const value =
     usdValue != null ? formatCheckoutMoney(usdValue, countryCode, rates) : null;
   const local = showsLocalCurrency(countryCode);
@@ -40,9 +41,14 @@ export function LocalizedPackagePrice({
     return (
       <div style={{ opacity: ready ? 1 : 0.7 }}>
         <div className="mt-2 flex items-end gap-1">
-          <span className={priceClassName}>{monthly}</span>
-          <span className="mb-1 text-sm text-muted">/ month</span>
+          <span className={priceClassName}>{total}</span>
+          <span className="mb-1 text-sm text-muted">
+            / {PACKAGE_TERM_MONTHS} months
+          </span>
         </div>
+        <p className="mt-1 text-sm text-muted">
+          Paid in full · {monthly}/mo equivalent
+        </p>
         {value ? (
           <p className="mt-1 text-sm text-muted">Total value {value}</p>
         ) : null}
@@ -59,14 +65,14 @@ export function LocalizedPackagePrice({
   return (
     <div className="package-card__pricing" style={{ opacity: ready ? 1 : 0.7 }}>
       <div className="package-card__price-row">
-        <span className={priceClassName}>{monthly}</span>
-        <span className="package-card__period">/ month</span>
+        <span className={priceClassName}>{total}</span>
+        <span className="package-card__period">
+          / {PACKAGE_TERM_MONTHS} months
+        </span>
       </div>
-      {total ? (
-        <p className="package-card__billing">
-          {total} total · 6-month commitment
-        </p>
-      ) : null}
+      <p className="package-card__billing">
+        Paid in full · {monthly}/mo equivalent
+      </p>
       {local ? (
         <p className="package-card__billing" style={{ opacity: 0.8 }}>
           {currencyCode} · based on your location
