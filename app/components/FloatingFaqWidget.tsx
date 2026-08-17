@@ -1,12 +1,22 @@
 "use client";
 
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { X } from "@phosphor-icons/react";
 import { AiFaqChat } from "./AiFaqChat";
 
+const HIDDEN_PREFIXES = ["/quiz", "/checkout", "/auth/"] as const;
+
 export function FloatingFaqWidget() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
+
+  const hidden = HIDDEN_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(prefix)
+  );
+
+  if (hidden) return null;
 
   return (
     <>

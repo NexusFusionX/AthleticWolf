@@ -1,14 +1,26 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { ASSESSMENT_STEPS } from "@/app/lib/assessment-steps";
+import type { AssessmentStep } from "@/app/lib/assessment-steps";
+
+export type AssessmentSegment = {
+  id: string;
+  label: string;
+  absoluteIndex: number;
+};
 
 type AssessmentShellProps = {
   children: ReactNode;
-  currentStep: number;
+  step: AssessmentStep;
+  /** 1-based index among visible steps. */
+  displayStep: number;
+  displayTotal: number;
   packageName?: string | null;
   compact?: boolean;
   preview?: boolean;
   onStartOver?: () => void;
+  onSelectStep?: (absoluteIndex: number) => void;
+  segments?: AssessmentSegment[];
+  furthestAbsoluteIndex?: number;
   footer?: ReactNode;
   brandHref?: string;
   showProgress?: boolean;
@@ -16,98 +28,154 @@ type AssessmentShellProps = {
 
 export function AssessmentShell({
   children,
-  currentStep,
+  step,
+  displayStep,
+  displayTotal,
   packageName,
   compact = false,
   preview = false,
   onStartOver,
+  onSelectStep,
+  segments = [],
+  furthestAbsoluteIndex = 0,
   footer,
   brandHref,
   showProgress = true,
 }: AssessmentShellProps) {
-  const step = ASSESSMENT_STEPS[currentStep];
-  const headerPad = compact ? "px-3 py-3" : "px-8 py-7";
-  const bodyPad = compact ? "p-3" : "p-8";
-  const titleClass = compact
-    ? "font-display mt-1 text-sm leading-tight"
-    : "font-display mt-1.5 text-3xl sm:text-4xl";
-  const heading =
-    step?.kind === "review" ? "Review Your Answers" : "Tell Us About Your Goals";
+  const progressPct = Math.round(
+    (Math.min(displayStep, displayTotal) / Math.max(displayTotal, 1)) * 100
+  );
+  const canJump = Boolean(onSelectStep) && !preview && !compact;
+
+  if (compact) {
+    return (
+      <div className="overflow-hidden rounded-2xl border border-line bg-card">
+        <div className="bg-ink px-3 py-3 text-white">
+          <p className="font-display text-[10px]">
+            Athletic<span className="text-accent">Wolf</span>
+          </p>
+          <p className="mt-1 text-[8px] uppercase tracking-wide text-accent">
+            {step.label}
+          </p>
+        </div>
+        <div className="p-3">{children}</div>
+        {footer}
+      </div>
+    );
+  }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-line bg-card shadow-premium">
-      <div className={`bg-ink text-white ${headerPad}`}>
-        <p
-          className={`font-display ${compact ? "text-[10px]" : "text-lg"}`}
-          aria-hidden={preview}
-        >
-          {brandHref && !preview ? (
-            <Link href={brandHref}>
-              Athletic<span className="text-accent">Wolf</span>
-            </Link>
-          ) : (
-            <>
-              Athletic<span className="text-accent">Wolf</span>
-            </>
-          )}
-        </p>
-        <p
-          className={`mt-2 font-semibold uppercase tracking-[0.16em] text-accent ${
-            compact ? "text-[8px]" : "text-sm"
-          }`}
-        >
-          Intake Assessment
-        </p>
-        <h2 className={titleClass}>{heading}</h2>
-        {packageName && (
-          <span
-            className={`mt-2 inline-block rounded-full bg-white/10 font-semibold uppercase tracking-wide text-white/90 ${
-              compact ? "px-2 py-0.5 text-[8px]" : "px-3 py-1 text-xs"
-            }`}
-          >
-            {packageName} Plan
-          </span>
-        )}
-
-        {showProgress && (
-          <>
-            <div className={`${compact ? "mt-2" : "mt-5"} flex gap-1`}>
-              {ASSESSMENT_STEPS.map((_, i) => (
-                <div
-                  key={i}
-                  className={`h-1 flex-1 rounded-full ${
-                    i <= currentStep ? "bg-accent" : "bg-white/20"
-                  }`}
-                  aria-hidden
-                />
-              ))}
-            </div>
-            <div
-              className={`${compact ? "mt-1.5" : "mt-2.5"} flex items-center justify-between`}
-            >
-              <p
-                className={`uppercase tracking-[0.12em] text-white/60 ${
-                  compact ? "text-[8px]" : "text-xs"
-                }`}
-              >
-                Step {currentStep + 1} of {ASSESSMENT_STEPS.length}: {step.label}
-              </p>
-              {!preview && onStartOver && (
+    <div className="assessment-pro">
+      <header className="assessment-pro__top">
+        <div className="assessment-pro__top-inner">
+          <div className="assessment-pro__brand-row">
+            <p className="assessment-pro__brand">
+              {brandHref && !preview ? (
+                <Link href={brandHref}>
+                  Athletic<span>Wolf</span>
+                </Link>
+              ) : (
+                <>
+                  Athletic<span>Wolf</span>
+                </>
+              )}
+            </p>
+            <div className="assessment-pro__top-meta">
+              {packageName ? (
+                <span className="assessment-pro__chip">{packageName}</span>
+              ) : null}
+              {!preview && onStartOver ? (
                 <button
                   type="button"
                   onClick={onStartOver}
-                  className="text-xs font-semibold uppercase tracking-[0.1em] text-white/50 underline-offset-2 transition-colors hover:text-white hover:underline"
+                  className="assessment-pro__link-btn"
                 >
-                  Start Over
+                  Start over
                 </button>
-              )}
+              ) : null}
             </div>
-          </>
-        )}
-      </div>
+          </div>
 
-      <div className={bodyPad}>{children}</div>
-      {footer}
+          {showProgress ? (
+            <div className="assessment-pro__progress">
+              <div className="assessment-pro__progress-meta">
+                <span>
+                  Step {displayStep} of {displayTotal}
+                </span>
+                <span>{progressPct}%</span>
+              </div>
+              <div
+                className="assessment-pro__progress-track"
+                role="progressbar"
+                aria-valuenow={displayStep}
+                aria-valuemin={1}
+                aria-valuemax={displayTotal}
+                aria-label="Assessment progress"
+              >
+                <div
+                  className="assessment-pro__progress-fill"
+                  style={{ width: `${progressPct}%` }}
+                />
+              </div>
+              {canJump && segments.length > 0 ? (
+                <nav
+                  className="assessment-pro__segments"
+                  aria-label="Jump to step"
+                >
+                  {segments.map((item) => {
+                    const isCurrent = item.id === step.id;
+                    const isDone = item.absoluteIndex <= furthestAbsoluteIndex;
+                    const className = [
+                      "assessment-pro__segment",
+                      isCurrent ? "assessment-pro__segment--current" : "",
+                      isDone ? "assessment-pro__segment--done" : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ");
+
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        className={className}
+                        onClick={() => onSelectStep?.(item.absoluteIndex)}
+                        aria-current={isCurrent ? "step" : undefined}
+                        aria-label={`Go to ${item.label}`}
+                        title={item.label}
+                      />
+                    );
+                  })}
+                </nav>
+              ) : null}
+            </div>
+          ) : null}
+        </div>
+      </header>
+
+      <main className="assessment-pro__main">
+        <div className="assessment-pro__main-inner">
+          {step.kind === "review" ? null : (
+            <>
+              {step.section ? (
+                <p className="assessment-pro__section">{step.section}</p>
+              ) : null}
+              {step.why ? (
+                <p className="assessment-pro__lead assessment-pro__lead--tight">
+                  {step.why}
+                </p>
+              ) : null}
+            </>
+          )}
+
+          <div className="assessment-pro__content">{children}</div>
+        </div>
+      </main>
+
+      {footer ? (
+        <footer className="assessment-pro__footer">
+          <div className="assessment-pro__footer-inner">{footer}</div>
+        </footer>
+      ) : null}
     </div>
   );
 }

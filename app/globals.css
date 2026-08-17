@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 
 :root {
   --ink: #000000;
@@ -37,7 +37,7 @@
   --color-foreground: var(--foreground);
 }
 
-/* Instant boot cover — first paint only; skipped via .aw-boot-skip / .aw-boot-done */
+/* Instant boot cover â€” first paint only; skipped via .aw-boot-skip / .aw-boot-done */
 #aw-boot {
   position: fixed;
   inset: 0;
@@ -159,7 +159,7 @@ h1, h2, h3, h4, h5, h6, .font-display {
   background: linear-gradient(90deg, transparent, var(--accent-bright), transparent);
 }
 
-/* ── Coaching package cards (tiered pricing) ── */
+/* â”€â”€ Coaching package cards (tiered pricing) â”€â”€ */
 .package-card-shell {
   position: relative;
   height: 100%;
@@ -367,7 +367,7 @@ h1, h2, h3, h4, h5, h6, .font-display {
   white-space: nowrap;
 }
 
-/* PKR amounts are long (e.g. PKR 36,122) — shrink only this currency. */
+/* PKR amounts are long (e.g. PKR 36,122) â€” shrink only this currency. */
 .package-card__price--pkr {
   font-size: clamp(1.55rem, 2.6vw, 1.95rem);
   letter-spacing: -0.03em;
@@ -650,13 +650,13 @@ h1, h2, h3, h4, h5, h6, .font-display {
   }
 }
 
-/* Silver — entry tier, solid orange CTA */
+/* Silver â€” entry tier, solid orange CTA */
 .package-card--silver {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, var(--card) 38%);
 }
 
-/* Platinum — hero tier, inverted orange card */
+/* Platinum â€” hero tier, inverted orange card */
 .package-card--platinum,
 .package-card--hero {
   border-color: rgba(255, 255, 255, 0.28);
@@ -700,7 +700,7 @@ h1, h2, h3, h4, h5, h6, .font-display {
   color: #111;
 }
 
-/* Diamond — premium dark tier, warm orange CTA */
+/* Diamond â€” premium dark tier, warm orange CTA */
 .package-card--diamond {
   border-color: rgba(255, 179, 102, 0.28);
   background:
@@ -754,7 +754,7 @@ h1, h2, h3, h4, h5, h6, .font-display {
   }
 }
 
-/* ── FAQ section (Anatoly-inspired split layout) ── */
+/* â”€â”€ FAQ section (Anatoly-inspired split layout) â”€â”€ */
 .faq-section {
   display: grid;
   gap: 2rem;
@@ -961,7 +961,7 @@ h1, h2, h3, h4, h5, h6, .font-display {
   color: rgba(255, 255, 255, 0.58);
 }
 
-/* ── Promo marquee (trust strip after hero badges) ── */
+/* â”€â”€ Promo marquee (trust strip after hero badges) â”€â”€ */
 .promo-marquee {
   overflow: hidden;
   background-color: #ff6b35;
@@ -1037,7 +1037,7 @@ h1, h2, h3, h4, h5, h6, .font-display {
     0 0 0 1px rgba(255, 255, 255, 0.06);
 }
 
-/* ── Coaching program cards (brand-orange zones) ── */
+/* â”€â”€ Coaching program cards (brand-orange zones) â”€â”€ */
 .program-card {
   position: relative;
 }
@@ -1216,7 +1216,7 @@ h1, h2, h3, h4, h5, h6, .font-display {
   }
 }
 
-/* Scroll reveal — each variant has its own motion character */
+/* Scroll reveal â€” each variant has its own motion character */
 .reveal {
   opacity: 0;
   transition-property: opacity, transform, filter;
@@ -1318,7 +1318,7 @@ h1, h2, h3, h4, h5, h6, .font-display {
   }
 }
 
-/* Layout tokens — asymmetric vertical rhythm so stacked sections don't double-gap */
+/* Layout tokens â€” asymmetric vertical rhythm so stacked sections don't double-gap */
 .section-y {
   padding-top: clamp(2rem, 3.5vw, 2.75rem);
   padding-bottom: clamp(0.875rem, 1.75vw, 1.25rem);
@@ -1542,7 +1542,7 @@ h1, h2, h3, h4, h5, h6, .font-display {
   }
 }
 
-/* Sticky header — always solid black */
+/* Sticky header â€” always solid black */
 header[data-site-header] {
   background-color: #000 !important;
   backdrop-filter: none !important;
@@ -1573,7 +1573,7 @@ header[data-site-header] {
   display: block;
   width: auto;
   max-width: none;
-  /* Wordmark PNG has baked-in padding — scale past the bar so the type fills it */
+  /* Wordmark PNG has baked-in padding â€” scale past the bar so the type fills it */
   height: calc(var(--site-header-inner) * 1.55) !important;
   max-height: none;
   object-fit: contain;
@@ -1759,7 +1759,7 @@ header[data-site-header] {
     0 12px 28px rgba(0, 0, 0, 0.12);
 }
 
-/* ── Process-style cards (Who This Is For — Arbaz-inspired) ── */
+/* â”€â”€ Process-style cards (Who This Is For â€” Arbaz-inspired) â”€â”€ */
 .process-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1993,7 +1993,7 @@ header[data-site-header] {
   }
 }
 
-/* ── Does This Sound Like You ── */
+/* â”€â”€ Does This Sound Like You â”€â”€ */
 .sound-like-section__frame {
   position: relative;
   overflow: hidden;
@@ -2129,7 +2129,7 @@ header[data-site-header] {
   object-position: center 42%;
 }
 
-/* ── Coach video carousel ── */
+/* â”€â”€ Coach video carousel â”€â”€ */
 .video-carousel__track {
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
@@ -2147,7 +2147,7 @@ header[data-site-header] {
   }
 }
 
-/* ── Hero banner ── */
+/* â”€â”€ Hero banner â”€â”€ */
 .hero-banner__slider {
   position: relative;
   width: 100%;
@@ -2450,7 +2450,7 @@ header[data-site-header] {
   }
 }
 
-/* ── Site preloader — structure mirrored from arbazarif HUD, orange brand ── */
+/* â”€â”€ Site preloader â€” structure mirrored from arbazarif HUD, orange brand â”€â”€ */
 .aw-preloader {
   position: fixed;
   inset: 0;
@@ -2879,7 +2879,7 @@ header[data-site-header] {
   }
 }
 
-/* ── Logo-focused preloader (simplified) ── */
+/* â”€â”€ Logo-focused preloader (simplified) â”€â”€ */
 .aw-preloader--logo {
   gap: 1.25rem;
 }
@@ -2943,13 +2943,13 @@ header[data-site-header] {
   color: rgba(255, 255, 255, 0.45);
 }
 
-/* ── Program square cards (mobile) ── */
+/* â”€â”€ Program square cards (mobile) â”€â”€ */
 .program-card--square .program-card__chip {
   font-size: 0.625rem;
   padding: 0.35rem 0.55rem;
 }
 
-/* ── Coach video (YouTube embed) ── */
+/* â”€â”€ Coach video (YouTube embed) â”€â”€ */
 .coach-video__stage {
   display: flex;
   flex-direction: column;
@@ -2959,7 +2959,7 @@ header[data-site-header] {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  /* Source video is 4:3 inside YouTube's 16:9 player — scale X to crop side bars */
+  /* Source video is 4:3 inside YouTube's 16:9 player â€” scale X to crop side bars */
   --coach-video-cover-x: 1.34;
 }
 
@@ -3073,7 +3073,7 @@ header[data-site-header] {
   flex-shrink: 0;
 }
 
-/* ── Kick-off / our process ── */
+/* â”€â”€ Kick-off / our process â”€â”€ */
 .kickoff-grid {
   display: grid;
   gap: 1.5rem;
@@ -3816,7 +3816,7 @@ header[data-site-header] {
   color: var(--accent);
 }
 
-/* ── Checkout page ── */
+/* â”€â”€ Checkout page â”€â”€ */
 .checkout-shell {
   min-height: 100vh;
   padding: 1.5rem;
@@ -5010,7 +5010,7 @@ header[data-site-header] {
   }
 }
 
-/* ── How it works page (detailed steps) ── */
+/* â”€â”€ How it works page (detailed steps) â”€â”€ */
 .how-it-works-steps {
   display: flex;
   flex-direction: column;
@@ -5162,7 +5162,7 @@ header[data-site-header] {
   }
 }
 
-/* ── Trust highlight strip (footer + page sections) ── */
+/* â”€â”€ Trust highlight strip (footer + page sections) â”€â”€ */
 .trust-highlight-strip {
   width: 100%;
 }
@@ -5206,7 +5206,7 @@ header[data-site-header] {
   padding-bottom: 2.5rem;
 }
 
-/* ── Site footer ── */
+/* â”€â”€ Site footer â”€â”€ */
 .site-footer {
   background-color: #000 !important;
 }
@@ -5359,3 +5359,778 @@ header[data-site-header] {
     transform: translateY(-2px);
   }
 }
+
+
+/* ── Professional intake assessment (site dark theme) ── */
+.assessment-pro {
+  --ap-bg: #000000;
+  --ap-surface: #121212;
+  --ap-ink: #f2f3f5;
+  --ap-muted: #99a1ab;
+  --ap-line: rgba(255, 255, 255, 0.1);
+  --ap-line-strong: rgba(255, 255, 255, 0.14);
+  --ap-accent: #ff6b35;
+  --ap-accent-soft: rgba(255, 107, 53, 0.14);
+  --ap-disabled: #3a3a3a;
+
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+  flex-direction: column;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255, 107, 53, 0.1), transparent 55%),
+    var(--ap-bg);
+  color: var(--ap-ink);
+}
+
+.assessment-pro--gate .assessment-pro__main {
+  display: flex;
+  align-items: center;
+}
+
+.assessment-pro__top {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  border-bottom: 1px solid var(--ap-line);
+  background: color-mix(in srgb, #000000 88%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.assessment-pro__top-inner,
+.assessment-pro__main-inner,
+.assessment-pro__footer-inner {
+  width: 100%;
+  max-width: 36rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .assessment-pro__top-inner,
+  .assessment-pro__main-inner,
+  .assessment-pro__footer-inner {
+    padding-inline: 1.5rem;
+  }
+}
+
+.assessment-pro__top-inner {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.assessment-pro__brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.assessment-pro__brand {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ap-ink);
+}
+
+.assessment-pro__brand span {
+  color: var(--ap-accent);
+}
+
+.assessment-pro__brand a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.assessment-pro__top-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem;
+}
+
+.assessment-pro__chip {
+  display: inline-flex;
+  border-radius: 0.35rem;
+  border: 1px solid var(--ap-line-strong);
+  background: var(--ap-surface);
+  padding: 0.28rem 0.55rem;
+  font-size: 0.68rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ap-muted);
+}
+
+.assessment-pro__link-btn {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ap-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+
+.assessment-pro__link-btn:hover {
+  color: var(--ap-ink);
+}
+
+.assessment-pro__progress {
+  margin-top: 0.95rem;
+}
+
+.assessment-pro__progress-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ap-muted);
+}
+
+.assessment-pro__progress-track {
+  height: 0.22rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.assessment-pro__progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--ap-accent);
+  transition: width 0.25s ease;
+}
+
+.assessment-pro__segments {
+  display: flex;
+  gap: 0.28rem;
+  margin-top: 0.65rem;
+}
+
+.assessment-pro__segment {
+  flex: 1;
+  height: 0.22rem;
+  border: 0;
+  padding: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.assessment-pro__segment:hover {
+  background: rgba(255, 107, 53, 0.45);
+}
+
+.assessment-pro__segment:focus-visible {
+  outline: 2px solid var(--ap-accent);
+  outline-offset: 3px;
+}
+
+.assessment-pro__segment--done {
+  background: rgba(255, 107, 53, 0.45);
+}
+
+.assessment-pro__segment--current {
+  background: var(--ap-accent);
+  transform: scaleY(1.35);
+}
+
+.assessment-pro__main {
+  flex: 1;
+  padding-block: 1.75rem 8rem;
+}
+
+@media (min-width: 640px) {
+  .assessment-pro__main {
+    padding-block: 2.25rem 8.5rem;
+  }
+}
+
+.assessment-pro__section {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ap-accent);
+}
+
+.assessment-pro__headline {
+  margin-top: 0.55rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.85rem, 5vw, 2.45rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+  color: var(--ap-ink);
+}
+
+.assessment-pro__lead {
+  margin-top: 0.7rem;
+  max-width: 32rem;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: var(--ap-muted);
+}
+
+.assessment-pro__lead--tight {
+  margin-top: 0.45rem;
+  margin-bottom: 0;
+  font-size: 0.95rem;
+}
+
+.assessment-pro__bullets {
+  margin-top: 1.5rem;
+  display: grid;
+  gap: 0.7rem;
+  padding: 0;
+  list-style: none;
+}
+
+.assessment-pro__bullets li {
+  position: relative;
+  padding-left: 1.35rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--ap-ink);
+}
+
+.assessment-pro__bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.45rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: var(--ap-accent);
+}
+
+.assessment-pro__content {
+  margin-top: 1.35rem;
+}
+
+.assessment-pro__content--intro {
+  margin-top: 0;
+}
+
+.assessment-pro__gate {
+  width: 100%;
+  max-width: 28rem;
+  margin-inline: auto;
+  padding-block: 3rem 2rem;
+}
+
+.assessment-pro__gate-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+@media (min-width: 480px) {
+  .assessment-pro__gate-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+.assessment-pro__footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  border-top: 1px solid var(--ap-line);
+  background: color-mix(in srgb, #000000 92%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.assessment-pro__footer-inner {
+  padding-block: 0.9rem calc(0.9rem + env(safe-area-inset-bottom));
+}
+
+.assessment-pro__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.assessment-pro__btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.9rem;
+  border-radius: 0.65rem;
+  border: 0;
+  background: var(--ap-accent);
+  padding: 0.75rem 1.35rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
+}
+
+.assessment-pro__btn-primary:hover:not(:disabled) {
+  background: #e85a28;
+}
+
+.assessment-pro__btn-primary:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.assessment-pro__btn-primary:disabled {
+  background: var(--ap-disabled);
+  color: rgba(255, 255, 255, 0.92);
+  cursor: not-allowed;
+}
+
+.assessment-pro__btn-primary--inline {
+  margin-top: 1.5rem;
+  text-decoration: none;
+}
+
+a.assessment-pro__btn-primary {
+  text-decoration: none;
+}
+
+.assessment-pro__btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.9rem;
+  border-radius: 0.65rem;
+  border: 1px solid var(--ap-line-strong);
+  background: transparent;
+  padding: 0.75rem 1.15rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--ap-ink);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  text-decoration: none;
+}
+
+.assessment-pro__btn-ghost:hover {
+  border-color: rgba(255, 107, 53, 0.45);
+  background: var(--ap-accent-soft);
+}
+
+.assessment-pro__error {
+  margin-bottom: 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(232, 87, 77, 0.35);
+  background: rgba(232, 87, 77, 0.12);
+  padding: 0.85rem 1rem;
+  color: #f87171;
+  font-size: 0.9rem;
+}
+
+.assessment-pro__payoff {
+  text-align: left;
+}
+
+.assessment-pro__kicker {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ap-accent);
+}
+
+.assessment-pro__title {
+  margin-top: 0.45rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.7rem, 4vw, 2.1rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.assessment-pro__lede {
+  margin-top: 0.65rem;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--ap-muted);
+}
+
+/* Fields */
+.assessment-pro-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.assessment-pro-fields__block:only-child .assessment-pro-fields__label,
+.assessment-pro-fields__label--hero {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.45rem, 4vw, 1.85rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.assessment-pro-fields__label {
+  display: block;
+  margin-bottom: 0.55rem;
+  font-size: 0.95rem;
+  font-weight: 650;
+  color: var(--ap-ink);
+}
+
+.assessment-pro-fields__req {
+  margin-left: 0.2rem;
+  color: var(--ap-accent);
+}
+
+.assessment-pro-fields__opt {
+  margin-left: 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ap-muted);
+  vertical-align: middle;
+}
+
+.assessment-pro-fields__help {
+  margin: -0.15rem 0 0.65rem;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: var(--ap-muted);
+}
+
+.assessment-pro-fields__input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.assessment-pro-fields__input {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid var(--ap-line-strong);
+  background: var(--ap-surface);
+  padding: 0.9rem 1rem;
+  font-size: 1rem;
+  color: var(--ap-ink);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.assessment-pro-fields__unit {
+  position: absolute;
+  right: 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ap-muted);
+  pointer-events: none;
+}
+
+.assessment-pro-fields__input-wrap .assessment-pro-fields__input {
+  padding-right: 3.25rem;
+}
+
+.assessment-pro-fields__input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.assessment-pro-fields__input:focus-visible {
+  border-color: var(--ap-accent);
+  box-shadow: 0 0 0 3px var(--ap-accent-soft);
+}
+
+.assessment-pro-fields__input--error {
+  border-color: #e8574d;
+}
+
+.assessment-pro-fields__textarea {
+  min-height: 7rem;
+  resize: vertical;
+}
+
+.assessment-pro-fields__choices {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.assessment-pro-fields__choices--two {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 520px) {
+  .assessment-pro-fields__choices--two {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.assessment-pro-fields__choice {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.8rem;
+  border-radius: 0.85rem;
+  border: 1px solid var(--ap-line-strong);
+  background: var(--ap-surface);
+  padding: 0.9rem 1rem;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.assessment-pro-fields__choices--chips {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 520px) {
+  .assessment-pro-fields__choices--chips {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.assessment-pro-fields__choice--chip {
+  grid-template-columns: auto 1fr;
+  padding: 0.75rem 0.85rem;
+}
+
+.assessment-pro-fields__choice--plain {
+  grid-template-columns: 1fr auto;
+}
+
+.assessment-pro-fields__choice:not(:has(.assessment-pro-fields__icon)) {
+  grid-template-columns: 1fr auto;
+}
+
+.assessment-pro-fields__choice:hover {
+  border-color: rgba(255, 107, 53, 0.45);
+  background: rgba(255, 107, 53, 0.06);
+}
+
+.assessment-pro-fields__choice--selected {
+  border-color: var(--ap-accent);
+  background: var(--ap-accent-soft);
+  box-shadow: inset 0 0 0 1px rgba(255, 107, 53, 0.2);
+}
+
+.assessment-pro-fields__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 0.65rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ap-muted);
+}
+
+.assessment-pro-fields__choice--selected .assessment-pro-fields__icon {
+  background: rgba(255, 107, 53, 0.16);
+  color: var(--ap-accent);
+}
+
+.assessment-pro-fields__choice-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 0.12rem;
+}
+
+.assessment-pro-fields__choice-label {
+  font-size: 0.95rem;
+  font-weight: 650;
+  color: var(--ap-ink);
+}
+
+.assessment-pro-fields__choice-hint {
+  font-size: 0.8rem;
+  line-height: 1.3;
+  color: var(--ap-muted);
+}
+
+.assessment-pro-fields__tick {
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 2px solid rgba(255, 255, 255, 0.22);
+}
+
+.assessment-pro-fields__tick--radio {
+  border-radius: 999px;
+}
+
+.assessment-pro-fields__tick--box {
+  border-radius: 0.28rem;
+}
+
+.assessment-pro-fields__choice--selected .assessment-pro-fields__tick {
+  border-color: var(--ap-accent);
+  background: var(--ap-accent);
+  box-shadow: inset 0 0 0 3px var(--ap-surface);
+}
+
+.assessment-pro-fields__error {
+  margin-top: 0.55rem;
+  font-size: 0.82rem;
+  color: #f87171;
+}
+
+/* Review */
+.assessment-pro-review {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.assessment-pro-review__hero {
+  margin-bottom: 0.25rem;
+}
+
+.assessment-pro-review__kicker {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ap-accent);
+}
+
+.assessment-pro-review__headline {
+  margin-top: 0.45rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.85rem, 5vw, 2.35rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.assessment-pro-review__lede {
+  margin-top: 0.65rem;
+  font-size: 1.02rem;
+  line-height: 1.5;
+  color: var(--ap-muted);
+}
+
+.assessment-pro-review__profile {
+  border-radius: 0.9rem;
+  border: 1px solid var(--ap-line-strong);
+  background: var(--ap-surface);
+  padding: 1.1rem 1.15rem;
+}
+
+.assessment-pro-review__profile-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ap-accent);
+}
+
+.assessment-pro-review__summary {
+  margin-top: 0.85rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.assessment-pro-review__summary-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+  border-bottom: 1px solid var(--ap-line);
+  padding-bottom: 0.55rem;
+}
+
+.assessment-pro-review__summary-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.assessment-pro-review__summary-row dt {
+  font-size: 0.82rem;
+  color: var(--ap-muted);
+}
+
+.assessment-pro-review__summary-row dd {
+  font-size: 0.95rem;
+  font-weight: 650;
+  text-align: right;
+  color: var(--ap-ink);
+}
+
+.assessment-pro-review__note {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--ap-muted);
+}
+
+.assessment-pro-review__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.assessment-pro-review__card {
+  border-radius: 0.85rem;
+  border: 1px solid var(--ap-line-strong);
+  background: var(--ap-surface);
+  padding: 0.95rem 1.05rem;
+}
+
+.assessment-pro-review__card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.7rem;
+}
+
+.assessment-pro-review__card-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ap-muted);
+}
+
+.assessment-pro-review__edit {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ap-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.assessment-pro-review__fields {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.assessment-pro-review__fields dt {
+  font-size: 0.75rem;
+  color: var(--ap-muted);
+}
+
+.assessment-pro-review__fields dd {
+  margin-top: 0.15rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ap-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .assessment-pro__progress-fill,
+  .assessment-pro__segment,
+  .assessment-pro-fields__choice,
+  .assessment-pro-fields__input,
+  .assessment-pro__btn-primary {
+    transition: none;
+  }
+}
+

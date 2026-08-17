@@ -2,7 +2,7 @@ import { ASSESSMENT_STEPS } from "@/app/lib/assessment-steps";
 import { ProcessMiniScreen } from "./ProcessMiniScreen";
 
 const GOAL_VALUE = "Build muscle";
-const DAYS_VALUE = "3-4 days";
+const DAYS_VALUE = "3 days";
 const LEVEL_VALUE = "Intermediate";
 
 function findField(name: string) {
@@ -46,32 +46,15 @@ function PreviewOptions({
 }
 
 export function ProcessPreviewAssessmentGoals() {
-  const nameField = findField("name");
   const goalField = findField("goal");
-  const ageField = findField("age");
-  if (
-    !nameField ||
-    !goalField ||
-    !ageField ||
-    nameField.type !== "text" ||
-    goalField.type !== "radio" ||
-    ageField.type !== "number"
-  ) {
+  if (!goalField || goalField.type !== "radio") {
     return null;
   }
 
   return (
     <ProcessMiniScreen eyebrow="Your goal" title="Share your goal">
-      <div className="process-mini-field">
-        <span className="process-mini-field__label">{nameField.label}</span>
-        <span className="process-mini-field__value">Alex Morgan</span>
-      </div>
       <p className="process-mini-q">{goalField.label}</p>
-      <PreviewOptions options={goalField.options} selected={GOAL_VALUE} />
-      <div className="process-mini-field process-mini-fill-bottom">
-        <span className="process-mini-field__label">{ageField.label}</span>
-        <span className="process-mini-field__value">28</span>
-      </div>
+      <PreviewOptions options={goalField.options} selected={GOAL_VALUE} limit={4} />
     </ProcessMiniScreen>
   );
 }
@@ -79,14 +62,11 @@ export function ProcessPreviewAssessmentGoals() {
 export function ProcessPreviewAssessmentTraining() {
   const levelField = findField("level");
   const daysField = findField("days");
-  const equipmentField = findField("equipment");
   if (
     !levelField ||
     !daysField ||
-    !equipmentField ||
     levelField.type !== "radio" ||
-    daysField.type !== "radio" ||
-    equipmentField.type !== "checkbox"
+    daysField.type !== "radio"
   ) {
     return null;
   }
@@ -105,15 +85,6 @@ export function ProcessPreviewAssessmentTraining() {
         selected={LEVEL_VALUE}
         limit={2}
       />
-      <div className="process-mini-fill-bottom">
-        <p className="process-mini-q">{equipmentField.label}</p>
-        <div className="process-mini-chips">
-          <span className="process-mini-chip process-mini-chip--selected">
-            Full gym
-          </span>
-          <span className="process-mini-chip">Dumbbells at home</span>
-        </div>
-      </div>
     </ProcessMiniScreen>
   );
 }

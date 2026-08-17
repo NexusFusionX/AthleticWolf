@@ -1,7 +1,65 @@
+"use client";
+
+import type { ComponentType } from "react";
+import {
+  Flame,
+  Barbell,
+  PersonSimpleRun,
+  Heart,
+  TrendUp,
+  Trophy,
+  ArrowsClockwise,
+  CalendarBlank,
+  CalendarCheck,
+  CalendarPlus,
+  Sun,
+  Buildings,
+  House,
+  BoundingBox,
+  Person,
+  ForkKnife,
+  Leaf,
+  Lightning,
+  Plant,
+  Tree,
+  Path,
+  Clock,
+  MapPin,
+  Question,
+  type IconProps,
+} from "@phosphor-icons/react";
 import type {
   AssessmentField,
   AssessmentFormValue,
+  AssessmentIconKey,
 } from "@/app/lib/assessment-steps";
+
+const ICON_MAP: Record<AssessmentIconKey, ComponentType<IconProps>> = {
+  flame: Flame,
+  barbell: Barbell,
+  "person-simple-run": PersonSimpleRun,
+  heart: Heart,
+  seedling: Plant,
+  "trend-up": TrendUp,
+  trophy: Trophy,
+  "arrows-clockwise": ArrowsClockwise,
+  "calendar-blank": CalendarBlank,
+  "calendar-check": CalendarCheck,
+  "calendar-plus": CalendarPlus,
+  sun: Sun,
+  buildings: Buildings,
+  house: House,
+  "bounding-box": BoundingBox,
+  person: Person,
+  "fork-knife": ForkKnife,
+  leaf: Leaf,
+  lightning: Lightning,
+  tree: Tree,
+  path: Path,
+  clock: Clock,
+  "map-pin": MapPin,
+  question: Question,
+};
 
 type AssessmentFieldsProps = {
   fields: AssessmentField[];
@@ -24,156 +82,199 @@ export function AssessmentFields({
   onSetValue,
   onToggleCheckbox,
 }: AssessmentFieldsProps) {
-  const labelClass = compact
-    ? "mb-1.5 block text-[10px] font-semibold leading-snug"
-    : "mb-2.5 block text-sm font-semibold";
-  const inputClass = compact
-    ? "w-full rounded-lg border bg-surface px-2.5 py-2 text-[10px] outline-none"
-    : "w-full rounded-xl border bg-surface px-3.5 py-3 text-sm outline-none transition-colors";
-  const optionClass = compact
-    ? "flex items-center gap-2 rounded-lg border px-2.5 py-2 text-[10px]"
-    : "flex items-center gap-3 rounded-xl border px-3.5 py-3 text-sm transition-colors";
-  const indicatorClass = compact ? "h-3 w-3 shrink-0 border-2" : "h-[18px] w-[18px] shrink-0 border-2";
-  const gapClass = compact ? "flex flex-col gap-3" : "flex flex-col gap-7";
+  if (compact) {
+    return (
+      <div className="flex flex-col gap-3">
+        {fields.map((field) => (
+          <div key={field.name}>
+            <p className="mb-1 text-[10px] font-semibold">{field.label}</p>
+            <div className="rounded-lg border border-line px-2 py-2 text-[10px]">
+              {(formData[field.name] as string) ||
+                ("placeholder" in field ? field.placeholder : undefined) ||
+                "…"}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  const singleQuestion = fields.length === 1;
 
   return (
-    <div className={gapClass}>
-      {fields.map((field) => (
-        <div key={field.name}>
-          <label className={labelClass}>
-            {field.label}
-            {field.required && <span className="ml-0.5 text-accent">*</span>}
-          </label>
+    <div className="assessment-pro-fields">
+      {fields.map((field) => {
+        const id = `assessment-${field.name}`;
 
-          {(field.type === "text" ||
-            field.type === "email" ||
-            field.type === "number") && (
-            <input
-              type={field.type}
-              value={(formData[field.name] as string) ?? ""}
-              onChange={
-                preview
-                  ? undefined
-                  : (e) => onSetValue?.(field.name, e.target.value)
-              }
-              placeholder={field.placeholder}
-              min={field.min}
-              max={field.max}
-              readOnly={preview}
-              tabIndex={preview ? -1 : undefined}
-              aria-hidden={preview}
-              className={`${inputClass} ${
-                errors[field.name]
-                  ? "border-error"
-                  : preview
-                    ? "border-line"
-                    : "border-line focus:border-accent"
+        return (
+          <div key={field.name} className="assessment-pro-fields__block">
+            <label
+              className={`assessment-pro-fields__label${
+                singleQuestion ? " assessment-pro-fields__label--hero" : ""
               }`}
-            />
-          )}
-
-          {field.type === "textarea" && (
-            <textarea
-              value={(formData[field.name] as string) ?? ""}
-              onChange={
-                preview
+              htmlFor={
+                field.type === "radio" || field.type === "checkbox"
                   ? undefined
-                  : (e) => onSetValue?.(field.name, e.target.value)
+                  : id
               }
-              placeholder={field.placeholder}
-              rows={compact ? 2 : 3}
-              readOnly={preview}
-              tabIndex={preview ? -1 : undefined}
-              aria-hidden={preview}
-              className={`${inputClass} resize-y border-line`}
-            />
-          )}
-
-          {(field.type === "radio" || field.type === "checkbox") && (
-            <div
-              className={`grid gap-2 ${field.twoCol && !compact ? "sm:grid-cols-2" : ""}`}
             >
-              {(maxOptions
-                ? field.options.slice(0, maxOptions)
-                : field.options
-              ).map((opt) => {
-                const isChecked =
-                  field.type === "checkbox"
-                    ? ((formData[field.name] as string[]) ?? []).includes(opt.value)
-                    : formData[field.name] === opt.value;
+              {field.label}
+              {field.required ? (
+                <span className="assessment-pro-fields__req" aria-hidden>
+                  *
+                </span>
+              ) : (
+                <span className="assessment-pro-fields__opt">Optional</span>
+              )}
+            </label>
+            {"help" in field && field.help ? (
+              <p className="assessment-pro-fields__help">{field.help}</p>
+            ) : null}
 
-                if (preview) {
-                  return (
-                    <div
-                      key={opt.value}
-                      aria-hidden
-                      className={`${optionClass} ${
-                        isChecked
-                          ? "border-accent bg-accent/10"
-                          : "border-line bg-surface"
-                      }`}
-                    >
-                      <span
-                        className={`${indicatorClass} ${
-                          field.type === "checkbox" ? "rounded-[4px]" : "rounded-full"
-                        } ${
-                          isChecked
-                            ? "border-accent bg-accent shadow-[inset_0_0_0_2px_#fff]"
-                            : "border-line"
-                        }`}
-                      />
-                      <span className={isChecked ? "font-semibold" : ""}>
-                        {opt.label}
-                      </span>
-                    </div>
-                  );
+            {(field.type === "text" ||
+              field.type === "email" ||
+              field.type === "number") && (
+              <div className="assessment-pro-fields__input-wrap">
+                <input
+                  id={id}
+                  type={field.type}
+                  inputMode={field.type === "number" ? "decimal" : undefined}
+                  value={(formData[field.name] as string) ?? ""}
+                  onChange={
+                    preview
+                      ? undefined
+                      : (e) => onSetValue?.(field.name, e.target.value)
+                  }
+                  placeholder={field.placeholder}
+                  min={field.min}
+                  max={field.max}
+                  readOnly={preview}
+                  autoComplete={
+                    field.name === "name"
+                      ? "name"
+                      : field.type === "email"
+                        ? "email"
+                        : undefined
+                  }
+                  className={`assessment-pro-fields__input${
+                    errors[field.name]
+                      ? " assessment-pro-fields__input--error"
+                      : ""
+                  }`}
+                  aria-invalid={errors[field.name] ? true : undefined}
+                />
+                {field.unit ? (
+                  <span className="assessment-pro-fields__unit">{field.unit}</span>
+                ) : null}
+              </div>
+            )}
+
+            {field.type === "textarea" && (
+              <textarea
+                id={id}
+                value={(formData[field.name] as string) ?? ""}
+                onChange={
+                  preview
+                    ? undefined
+                    : (e) => onSetValue?.(field.name, e.target.value)
                 }
+                placeholder={field.placeholder}
+                rows={5}
+                readOnly={preview}
+                className="assessment-pro-fields__input assessment-pro-fields__textarea"
+                aria-invalid={errors[field.name] ? true : undefined}
+              />
+            )}
 
-                return (
-                  <label
-                    key={opt.value}
-                    className={`${optionClass} cursor-pointer ${
-                      isChecked
-                        ? "border-accent bg-accent/10"
-                        : "border-line bg-surface hover:border-accent/60"
-                    }`}
-                  >
-                    <input
-                      type={field.type}
-                      name={field.name}
-                      checked={isChecked}
-                      onChange={() =>
-                        field.type === "checkbox"
-                          ? onToggleCheckbox?.(field.name, opt.value)
-                          : onSetValue?.(field.name, opt.value)
-                      }
-                      className="sr-only"
-                    />
-                    <span
-                      className={`${indicatorClass} ${
-                        field.type === "checkbox" ? "rounded-[5px]" : "rounded-full"
-                      } ${
-                        isChecked
-                          ? "border-accent bg-accent shadow-[inset_0_0_0_3px_#fff]"
-                          : "border-line"
-                      }`}
-                    />
-                    <span className={isChecked ? "font-semibold" : ""}>
-                      {opt.label}
-                    </span>
-                  </label>
-                );
-              })}
-            </div>
-          )}
+            {(field.type === "radio" || field.type === "checkbox") && (
+              <div
+                className={`assessment-pro-fields__choices${
+                  field.chips ? " assessment-pro-fields__choices--chips" : ""
+                }${field.twoCol ? " assessment-pro-fields__choices--two" : ""}`}
+                role={field.type === "radio" ? "radiogroup" : "group"}
+                aria-label={field.label}
+              >
+                {(maxOptions
+                  ? field.options.slice(0, maxOptions)
+                  : field.options
+                ).map((opt) => {
+                  const selected =
+                    field.type === "checkbox"
+                      ? ((formData[field.name] as string[]) ?? []).includes(
+                          opt.value
+                        )
+                      : formData[field.name] === opt.value;
+                  const Icon = opt.icon ? ICON_MAP[opt.icon] : null;
 
-          {errors[field.name] && "error" in field && field.error && (
-            <p className={`mt-2 text-error ${compact ? "text-[9px]" : "text-xs"}`}>
-              {field.error}
-            </p>
-          )}
-        </div>
-      ))}
+                  return (
+                    <label
+                      key={opt.value}
+                      className={`assessment-pro-fields__choice${
+                        field.chips
+                          ? " assessment-pro-fields__choice--chip"
+                          : ""
+                      }${
+                        selected
+                          ? " assessment-pro-fields__choice--selected"
+                          : ""
+                      }${!Icon ? " assessment-pro-fields__choice--plain" : ""}`}
+                    >
+                      <input
+                        type={field.type}
+                        name={field.name}
+                        value={opt.value}
+                        checked={selected}
+                        onChange={() =>
+                          field.type === "checkbox"
+                            ? onToggleCheckbox?.(field.name, opt.value)
+                            : onSetValue?.(field.name, opt.value)
+                        }
+                        className="sr-only"
+                        disabled={preview}
+                      />
+                      {Icon ? (
+                        <span
+                          className="assessment-pro-fields__icon"
+                          aria-hidden
+                        >
+                          <Icon
+                            size={20}
+                            weight={selected ? "fill" : "regular"}
+                          />
+                        </span>
+                      ) : null}
+                      <span className="assessment-pro-fields__choice-copy">
+                        <span className="assessment-pro-fields__choice-label">
+                          {opt.label}
+                        </span>
+                        {opt.hint ? (
+                          <span className="assessment-pro-fields__choice-hint">
+                            {opt.hint}
+                          </span>
+                        ) : null}
+                      </span>
+                      {!field.chips ? (
+                        <span
+                          className={`assessment-pro-fields__tick assessment-pro-fields__tick--${
+                            field.type === "checkbox" ? "box" : "radio"
+                          }`}
+                          aria-hidden
+                        />
+                      ) : null}
+                    </label>
+                  );
+                })}
+              </div>
+            )}
+
+            {errors[field.name] && "error" in field && field.error ? (
+              <p className="assessment-pro-fields__error" role="alert">
+                {field.error}
+              </p>
+            ) : null}
+          </div>
+        );
+      })}
     </div>
   );
 }
