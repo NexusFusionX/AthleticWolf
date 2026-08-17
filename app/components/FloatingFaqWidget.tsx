@@ -6,7 +6,7 @@ import { useState } from "react";
 import { X } from "@phosphor-icons/react";
 import { AiFaqChat } from "./AiFaqChat";
 
-const HIDDEN_PREFIXES = ["/quiz", "/checkout", "/auth/"] as const;
+const HIDDEN_PREFIXES = ["/quiz", "/checkout", "/auth/", "/thank-you"] as const;
 
 export function FloatingFaqWidget() {
   const pathname = usePathname();

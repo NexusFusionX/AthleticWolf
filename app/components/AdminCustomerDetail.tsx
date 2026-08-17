@@ -62,6 +62,12 @@ export function AdminCustomerDetail({
               <p className="text-xs text-muted uppercase mb-1">Name</p>
               <p className="font-display text-lg">{contact.name}</p>
             </div>
+            {contact.checkout?.gender && (
+              <div>
+                <p className="text-xs text-muted uppercase mb-1">Gender</p>
+                <p className="font-semibold text-sm">{contact.checkout.gender}</p>
+              </div>
+            )}
             <div>
               <p className="text-xs text-muted uppercase mb-1">Account email</p>
               <p className="font-semibold text-sm break-all">{contact.email}</p>

@@ -1,11 +1,13 @@
 export type PlanCheckoutData = {
   firstName?: string;
   lastName?: string;
+  gender?: string;
   contactChannel?: "phone" | "email";
   phone?: string;
   email?: string;
   accountEmail?: string;
   preferredContact?: string;
+  countryCode?: string;
 };
 
 type PlanLike = {

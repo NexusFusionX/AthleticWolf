@@ -9,6 +9,7 @@ const HIDDEN_PREFIXES = [
   "/dashboard",
   "/admin",
   "/quiz",
+  "/thank-you",
 ] as const;
 
 export function ConditionalSiteFooter() {

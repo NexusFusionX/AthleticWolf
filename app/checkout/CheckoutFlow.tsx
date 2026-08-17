@@ -10,6 +10,7 @@ import { CheckoutSteps } from "@/app/components/CheckoutSteps";
 import { StripeCheckoutPayment } from "@/app/components/StripeCheckoutPayment";
 import { CheckoutPackagePicker } from "@/app/components/CheckoutPackagePicker";
 import { CheckoutContactFields } from "@/app/components/CheckoutContactFields";
+import { CheckoutGenderFields } from "@/app/components/CheckoutGenderFields";
 import { CheckoutAccountFields } from "@/app/components/CheckoutAccountFields";
 import { CheckoutInlineLogin } from "@/app/components/CheckoutInlineLogin";
 import { CheckoutOrderSummary } from "@/app/components/CheckoutOrderSummary";
@@ -90,6 +91,7 @@ export function CheckoutFlow() {
     return {
       firstName: "",
       lastName: "",
+      gender: "",
       countryCode: storedCountry,
       contactChannel: "phone",
       phone: "",
@@ -289,6 +291,9 @@ export function CheckoutFlow() {
             ...prev,
             firstName: prev.firstName || fromMeta.firstName,
             lastName: prev.lastName || fromMeta.lastName,
+            gender:
+              prev.gender ||
+              ((meta.gender as CheckoutContact["gender"]) || ""),
             phone: prev.phone || (meta.phone as string) || "",
           }));
         }
@@ -389,6 +394,7 @@ export function CheckoutFlow() {
               first_name: contact.firstName.trim(),
               last_name: contact.lastName.trim() || null,
               full_name: fullName || contact.firstName.trim(),
+              gender: contact.gender || null,
             },
           },
         });
@@ -601,6 +607,8 @@ export function CheckoutFlow() {
             {checkoutStep === "plan" ? (
               <>
                 <CheckoutContactFields value={contact} onChange={handleContactChange} />
+
+                <CheckoutGenderFields value={contact} onChange={handleContactChange} />
 
                 {!user ? (
                   guestAuthMode === "login" ? (

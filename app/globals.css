@@ -4697,6 +4697,10 @@ header[data-site-header] {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.checkout-contact__choices--gender {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .checkout-country-select {
   position: relative;
 }
@@ -5006,6 +5010,10 @@ header[data-site-header] {
   }
 
   .checkout-contact__choices--channel {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-contact__choices--gender {
     grid-template-columns: 1fr;
   }
 }
@@ -6133,4 +6141,3 @@ a.assessment-pro__btn-primary {
     transition: none;
   }
 }
-
