@@ -3,45 +3,42 @@
 import Link from "next/link";
 import { Reveal } from "./Reveal";
 import { AccentHeading } from "./AccentHeading";
-import { ProcessPhoneFrame } from "./process/ProcessPhoneFrame";
 import {
-  ProcessPreviewCheckout,
-  ProcessPreviewPackages,
-} from "./process/ProcessPreviewCheckout";
-import {
-  ProcessPreviewAssessmentGoals,
-  ProcessPreviewAssessmentTraining,
-} from "./process/ProcessPreviewAssessment";
+  ProcessPreviewGender,
+  ProcessPreviewLocation,
+} from "./process/ProcessPreviewStartingPoint";
 import {
   ProcessPreviewDashboard,
   ProcessPreviewPlanBuilding,
+  ProcessPreviewPlanReady,
 } from "./process/ProcessPreviewDashboard";
+import "./kickoff.css";
 
 const steps = [
   {
     step: "01",
-    title: "Pick a plan & pay",
-    lead: "Choose your package and checkout in minutes.",
+    title: "Get your starting point",
+    lead: "Tell us your level, goals, and setup — so your plan fits you from day one.",
     screens: [
-      { key: "packages", node: <ProcessPreviewPackages /> },
-      { key: "checkout", node: <ProcessPreviewCheckout /> },
+      { key: "gender", node: <ProcessPreviewGender /> },
+      { key: "location", node: <ProcessPreviewLocation /> },
     ],
   },
   {
     step: "02",
-    title: "Complete your assessment",
-    lead: "After payment, answer a short intake so your coach knows you.",
+    title: "Get your personalized plan",
+    lead: "You receive a structured program built around your level and schedule.",
     screens: [
-      { key: "goals", node: <ProcessPreviewAssessmentGoals /> },
-      { key: "training", node: <ProcessPreviewAssessmentTraining /> },
+      { key: "building", node: <ProcessPreviewPlanBuilding /> },
+      { key: "ready", node: <ProcessPreviewPlanReady /> },
     ],
   },
   {
     step: "03",
-    title: "Get your plan & train",
-    lead: "Your coach delivers your program — then you start training.",
+    title: "Start training",
+    lead: "Your coach delivers your program — then you start training with clear weekly sessions.",
     screens: [
-      { key: "building", node: <ProcessPreviewPlanBuilding /> },
+      { key: "ready-final", node: <ProcessPreviewPlanReady /> },
       { key: "dashboard", node: <ProcessPreviewDashboard /> },
     ],
   },
@@ -51,9 +48,9 @@ export function KickoffGuide() {
   return (
     <section
       id="our-process"
-      className="section-y wheel-section px-6 sm:px-8"
+      className="section-y wheel-section kickoff-section px-4 sm:px-5 lg:px-6"
     >
-      <div className="mx-auto max-w-7xl">
+      <div className="kickoff-shell mx-auto">
         <Reveal variant="fade">
           <p className="text-center text-sm font-bold uppercase tracking-[0.2em] text-accent">
             Kick-Off Guide
@@ -69,7 +66,7 @@ export function KickoffGuide() {
           </p>
         </Reveal>
 
-        <div className="kickoff-grid mt-8">
+        <div className="kickoff-grid mt-10">
           {steps.map((item, i) => (
             <Reveal
               key={item.step}
@@ -85,16 +82,9 @@ export function KickoffGuide() {
                 </div>
 
                 <div className="kickoff-card__screens" aria-hidden inert>
-                  {item.screens.map((screen, screenIndex) => (
-                    <div
-                      key={screen.key}
-                      className={
-                        screenIndex === 0
-                          ? "kickoff-card__phone"
-                          : "kickoff-card__phone kickoff-card__phone--desktop"
-                      }
-                    >
-                      <ProcessPhoneFrame>{screen.node}</ProcessPhoneFrame>
+                  {item.screens.map((screen) => (
+                    <div key={screen.key} className="kickoff-card__mock">
+                      {screen.node}
                     </div>
                   ))}
                 </div>

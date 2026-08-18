@@ -1,0 +1,320 @@
+/* Kickoff — flat dark cards, Athletic Wolf brand (no light theme) */
+
+.kickoff-section .kickoff-shell {
+  width: min(100%, 96rem);
+}
+
+.kickoff-section .kickoff-grid {
+  display: grid;
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+@media (min-width: 1100px) {
+  .kickoff-section .kickoff-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+.kickoff-section .kickoff-grid__item {
+  height: 100%;
+}
+
+.kickoff-section .kickoff-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  height: 100%;
+  min-height: 0;
+  padding: 1.6rem 1.35rem 1.35rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.35rem;
+  background: #141414;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+}
+
+.kickoff-section .kickoff-card::before {
+  display: none;
+}
+
+.kickoff-section .kickoff-card__copy {
+  min-width: 0;
+}
+
+.kickoff-section .kickoff-card__step {
+  display: inline-flex;
+  margin-bottom: 0.75rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.55rem;
+  background: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.kickoff-section .kickoff-card__title {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-size: clamp(1.4rem, 2vw, 1.75rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  color: #fff;
+}
+
+.kickoff-section .kickoff-card__lead {
+  margin-top: 0.5rem;
+  max-width: 36ch;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+/* Screens sit directly on the card — no inner tray / nested box */
+.kickoff-section .kickoff-card__screens {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+  flex: 1;
+  min-height: 22rem;
+  align-items: stretch;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  pointer-events: none;
+  user-select: none;
+}
+
+.kickoff-section .kickoff-card__mock {
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0.8rem 0.7rem;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #0c0c0c;
+}
+
+@media (max-width: 1099px) {
+  .kickoff-section .kickoff-card__screens {
+    min-height: 19.5rem;
+  }
+}
+
+.kickoff-section .kickoff-card .process-mini-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100%;
+}
+
+.kickoff-section .kickoff-card .process-mini-screen__eyebrow {
+  color: var(--accent);
+  font-size: 0.56rem;
+}
+
+.kickoff-section .kickoff-card .process-mini-screen__title {
+  margin-top: 0.12rem;
+  font-size: 0.88rem;
+  line-height: 1.15;
+  color: #fff;
+}
+
+.kickoff-section .kickoff-card .process-mini-screen__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  min-height: 0;
+  justify-content: flex-start;
+}
+
+.kickoff-section .kickoff-card .process-mini-q {
+  margin: 0;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.kickoff-section .kickoff-card .process-mini-gender {
+  flex: 1;
+  min-height: 0;
+  gap: 0.45rem;
+  align-items: stretch;
+}
+
+.kickoff-section .kickoff-card .process-mini-gender__card {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  border-radius: 0.7rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  background: #121212;
+  overflow: hidden;
+}
+
+.kickoff-section .kickoff-card .process-mini-gender__card--selected {
+  border-color: var(--accent);
+  box-shadow: none;
+}
+
+.kickoff-section .kickoff-card .process-mini-gender__visual {
+  position: relative;
+  flex: 1;
+  min-height: 9.75rem;
+  background: #1a1a1a;
+}
+
+.kickoff-section .kickoff-card .process-mini-gender__image {
+  object-fit: cover;
+  object-position: center 18%;
+}
+
+.kickoff-section .kickoff-card .process-mini-gender__meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.5rem 0.35rem;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: #fff;
+  background: #0c0c0c;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.kickoff-section .kickoff-card .process-mini-gender__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  border-radius: 9999px;
+}
+
+.kickoff-section .kickoff-card .process-mini-gender__card--selected .process-mini-gender__dot {
+  border-color: var(--accent);
+  background: var(--accent);
+}
+
+.kickoff-section .kickoff-card .process-mini-place-list {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-height: 0;
+}
+
+.kickoff-section .kickoff-card .process-mini-place {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+  flex: 1;
+  min-height: 0;
+  padding: 0.65rem 0.6rem;
+  border-radius: 0.7rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  background: #161616;
+}
+
+.kickoff-section .kickoff-card .process-mini-place--selected {
+  border-color: rgba(255, 107, 53, 0.55);
+  background: #111;
+  box-shadow: none;
+}
+
+.kickoff-section .kickoff-card .process-mini-place__icon {
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 0.45rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.kickoff-section .kickoff-card .process-mini-place--selected .process-mini-place__icon {
+  background: rgba(255, 107, 53, 0.18);
+  color: var(--accent);
+}
+
+.kickoff-section .kickoff-card .process-mini-place__label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.kickoff-section .kickoff-card .process-mini-place__hint {
+  margin-top: 0.12rem;
+  font-size: 0.56rem;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.kickoff-section .kickoff-card .process-mini-place--selected .process-mini-place__hint {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.kickoff-section .kickoff-card .process-mini-place__check {
+  color: var(--accent);
+}
+
+.kickoff-section .kickoff-card .process-mini-progress {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.2rem;
+}
+
+.kickoff-section .kickoff-card .process-mini-progress__ring {
+  width: 4.75rem;
+  height: 4.75rem;
+  font-size: 0.95rem;
+}
+
+.kickoff-section .kickoff-card .process-mini-status-list {
+  flex: 1;
+  gap: 0.4rem;
+  margin-top: 0.3rem;
+}
+
+.kickoff-section .kickoff-card .process-mini-status-list__item {
+  font-size: 0.64rem;
+}
+
+.kickoff-section .kickoff-card .process-mini-ready-grid {
+  gap: 0.4rem;
+  flex: 1;
+  align-content: start;
+}
+
+.kickoff-section .kickoff-card .process-mini-ready-card {
+  padding: 0.65rem 0.55rem;
+  font-size: 0.6rem;
+  background: #161616;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.kickoff-section .kickoff-card .process-mini-fill-bottom {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.kickoff-section .kickoff-card .process-mini-checklist {
+  gap: 0.35rem;
+  flex: 1;
+}
+
+.kickoff-section .kickoff-card .process-mini-checklist li {
+  font-size: 0.64rem;
+}

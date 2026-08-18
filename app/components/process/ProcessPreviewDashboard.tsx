@@ -1,34 +1,63 @@
 import {
   Barbell,
+  CalendarBlank,
   CalendarCheck,
   ChatCircle,
   Check,
   ForkKnife,
+  Lightning,
+  MapPin,
 } from "@phosphor-icons/react";
 import { ProcessMiniScreen } from "./ProcessMiniScreen";
 
 export function ProcessPreviewPlanBuilding() {
   return (
-    <ProcessMiniScreen eyebrow="Your coach" title="Building plan">
+    <ProcessMiniScreen eyebrow="Building" title="Creating your plan">
       <div className="process-mini-progress" aria-hidden>
-        <span className="process-mini-progress__ring">72%</span>
+        <span className="process-mini-progress__ring">44%</span>
       </div>
       <p className="process-mini-caption process-mini-caption--center">
-        Custom program in progress
+        Personalized program in progress
       </p>
       <ul className="process-mini-status-list">
         <li className="process-mini-status-list__item process-mini-status-list__item--done">
-          Goals reviewed
+          Analysing your fitness goal
+        </li>
+        <li className="process-mini-status-list__item process-mini-status-list__item--done">
+          Calculating your training level
         </li>
         <li className="process-mini-status-list__item process-mini-status-list__item--active">
-          Workout plan
+          Adapting to your training location
         </li>
-        <li className="process-mini-status-list__item">Meal guidance</li>
-        <li className="process-mini-status-list__item">Check-in schedule</li>
+        <li className="process-mini-status-list__item">Building weekly schedule</li>
       </ul>
-      <p className="process-mini-note-box process-mini-fill-bottom">
-        Your coach delivers within 24–48 hours
+    </ProcessMiniScreen>
+  );
+}
+
+export function ProcessPreviewPlanReady() {
+  return (
+    <ProcessMiniScreen eyebrow="Ready" title="Your plan is ready">
+      <p className="process-mini-caption">
+        Built around your goal, schedule, and training setup.
       </p>
+      <div className="process-mini-ready-grid">
+        <div className="process-mini-ready-card process-mini-ready-card--wide">
+          <Lightning size={14} weight="fill" aria-hidden />
+          <span>Build muscle and get stronger</span>
+        </div>
+        <div className="process-mini-ready-card">
+          <MapPin size={14} weight="fill" aria-hidden />
+          <span>At gym</span>
+        </div>
+        <div className="process-mini-ready-card">
+          <CalendarBlank size={14} weight="fill" aria-hidden />
+          <span>3 days / week</span>
+        </div>
+      </div>
+      <div className="process-mini-fill-bottom">
+        <div className="process-mini-pill">Coach delivery · 24–48 hrs</div>
+      </div>
     </ProcessMiniScreen>
   );
 }

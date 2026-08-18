@@ -18,6 +18,7 @@ import {
 import {
   ProcessPreviewDashboard,
   ProcessPreviewPlanBuilding,
+  ProcessPreviewPlanReady,
 } from "./process/ProcessPreviewDashboard";
 
 const STEPS = [
@@ -78,7 +79,7 @@ const STEPS = [
     points: ["Personalized workouts & meals", "Built within 24–48 hours"],
     screens: [
       { key: "building", node: <ProcessPreviewPlanBuilding /> },
-      { key: "building-status", node: <ProcessPreviewPlanBuilding /> },
+      { key: "ready", node: <ProcessPreviewPlanReady /> },
     ],
   },
   {
