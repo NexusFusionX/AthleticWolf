@@ -16,13 +16,17 @@ const transformations = [
   },
   {
     label: "Transformation 2",
+    beforeSrc: "/media/results/client-1-before.png",
+    afterSrc: "/media/results/client-1-after.png",
     name: "Client B",
-    result: "20 lbs lost in 12 weeks",
+    result: "Body recomposition",
   },
   {
     label: "Transformation 3",
+    beforeSrc: "/media/results/client-2-before.png",
+    afterSrc: "/media/results/client-2-after.png",
     name: "Client C",
-    result: "15 lbs lost in 10 weeks",
+    result: "Fat loss transformation",
   },
 ];
 
