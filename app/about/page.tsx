@@ -30,8 +30,8 @@ export default function AboutPage() {
       <main className="flex-1">
         <AboutHeroBanner />
 
-        <section className="section-y px-6 sm:px-8">
-          <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-2 lg:items-center">
+        <section className="section-y px-4 sm:px-6 lg:px-7">
+          <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2 lg:items-center">
             <div>
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
                 Who is your coach?
@@ -67,8 +67,8 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="border-y border-line bg-black page-section px-6 sm:px-8">
-          <div className="mx-auto max-w-6xl">
+        <section className="border-y border-line bg-black page-section px-4 sm:px-6 lg:px-7">
+          <div className="mx-auto max-w-7xl">
             <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
               <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-line">
                 <Image
@@ -114,8 +114,8 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="section-y px-6 sm:px-8">
-          <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-2 lg:items-center">
+        <section className="section-y px-4 sm:px-6 lg:px-7">
+          <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-2 lg:items-center">
             <div className="relative mx-auto aspect-[3/4] w-full max-w-md overflow-hidden rounded-2xl border border-line shadow-premium lg:max-w-none">
               <Image
                 src="/media/about/coach-mirror.jpg"
@@ -148,7 +148,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="border-t border-line bg-black page-section px-6 sm:px-8">
+        <section className="border-t border-line bg-black page-section px-4 sm:px-6 lg:px-7">
           <div className="mx-auto max-w-3xl text-center">
             <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
               Get in touch

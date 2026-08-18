@@ -108,8 +108,8 @@ function ProgramRow({
 
 export function Programs() {
   return (
-    <section id="programs" className="section-y wheel-section px-6 sm:px-8">
-      <div className="mx-auto max-w-6xl">
+    <section id="programs" className="section-y wheel-section px-4 sm:px-6 lg:px-7">
+      <div className="mx-auto max-w-7xl">
         <Reveal variant="drop">
           <div className="mx-auto mb-4 h-px w-10 bg-accent" />
           <AccentHeading

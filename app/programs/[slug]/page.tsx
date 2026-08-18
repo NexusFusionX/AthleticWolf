@@ -57,7 +57,7 @@ export default async function ProgramDetailPage({
           </div>
         </section>
 
-        <section className="page-section px-6 sm:px-8">
+        <section className="page-section px-4 sm:px-6 lg:px-7">
           <div className="mx-auto grid max-w-4xl gap-10 lg:grid-cols-[1fr_320px]">
             <div>
               <div className="overflow-hidden rounded-2xl border border-line bg-ink">

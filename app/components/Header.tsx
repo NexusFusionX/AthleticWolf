@@ -128,7 +128,7 @@ export function Header() {
       data-site-header
       className="site-header sticky top-0 z-50 border-b border-white/10 bg-black"
     >
-      <div className="site-header__bar mx-auto grid max-w-6xl grid-cols-[1fr_auto_1fr] items-center gap-2 px-6 sm:px-8 md:flex md:justify-between md:gap-4">
+      <div className="site-header__bar mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-2 px-4 sm:px-6 lg:px-7 md:flex md:justify-between md:gap-4">
         <button
           type="button"
           className="site-header__menu-toggle col-start-1 row-start-1 justify-self-start md:hidden"

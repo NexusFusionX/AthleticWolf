@@ -190,11 +190,11 @@ export function SiteFooter() {
         aria-hidden
       />
 
-      <div className="mx-auto w-full max-w-6xl px-6 pt-14 sm:px-8">
+      <div className="mx-auto w-full max-w-7xl px-4 pt-14 sm:px-6 lg:px-7">
         <SiteFooterCTA />
       </div>
 
-      <div className="mx-auto w-full max-w-6xl px-6 pb-8 pt-14 sm:px-8">
+      <div className="mx-auto w-full max-w-7xl px-4 pb-8 pt-14 sm:px-6 lg:px-7">
         <div className="site-footer__main border-b border-white/10 pb-12">
           <div className="site-footer__brand">
             <BrandLogo height={152} />

@@ -9,10 +9,10 @@ const highlights = [
 export function TrustBar() {
   return (
     <section
-      className="border-y border-line bg-card/40 px-6 py-5 sm:px-8"
+      className="border-y border-line bg-card/40 px-4 py-5 sm:px-6 lg:px-7"
       aria-label="Coaching highlights"
     >
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-6 gap-y-3 text-center">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-x-6 gap-y-3 text-center">
         {highlights.map((item) => (
           <span
             key={item}

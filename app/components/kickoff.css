@@ -1,7 +1,7 @@
 /* Kickoff — flat dark cards, Athletic Wolf brand (no light theme) */
 
 .kickoff-section .kickoff-shell {
-  width: min(100%, 96rem);
+  width: min(100%, 80rem);
 }
 
 .kickoff-section .kickoff-grid {

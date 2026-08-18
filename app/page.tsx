@@ -38,8 +38,8 @@ export default function Home() {
         {/* Results before pricing — social proof first */}
         <ResultsCarousel />
 
-        <section id="packages" className="section-y wheel-section px-6 sm:px-8">
-          <div className="mx-auto max-w-6xl">
+        <section id="packages" className="section-y wheel-section px-4 sm:px-6 lg:px-7">
+          <div className="mx-auto max-w-7xl">
             <Reveal className="max-w-xl" variant="skew-up">
               <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
                 Membership
@@ -61,8 +61,8 @@ export default function Home() {
 
         <CoachVideos />
 
-        <section id="about" className="section-y wheel-section section-surface px-6 sm:px-8">
-          <div className="mx-auto max-w-6xl">
+        <section id="about" className="section-y wheel-section section-surface px-4 sm:px-6 lg:px-7">
+          <div className="mx-auto max-w-7xl">
             <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
               <Reveal variant="left">
                 <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
@@ -109,8 +109,8 @@ export default function Home() {
 
         <SeoText />
 
-        <section id="faq" className="section-y px-6 sm:px-8">
-          <div className="mx-auto max-w-6xl">
+        <section id="faq" className="section-y px-4 sm:px-6 lg:px-7">
+          <div className="mx-auto max-w-7xl">
             <Reveal variant="rise">
               <Faq showIntro />
             </Reveal>

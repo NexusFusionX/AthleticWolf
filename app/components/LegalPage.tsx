@@ -29,7 +29,7 @@ export function LegalPage({
           </div>
         </section>
 
-        <section className="page-section px-6 sm:px-8">
+        <section className="page-section px-4 sm:px-6 lg:px-7">
           <div className="legal-prose mx-auto max-w-3xl space-y-8 text-sm leading-relaxed text-muted sm:text-base">
             {children}
           </div>

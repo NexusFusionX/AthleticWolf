@@ -43,7 +43,7 @@ const steps = [
 
 export function HowCoachingWorks() {
   return (
-    <section id="how-it-works" className="section-y wheel-section px-6 sm:px-8">
+    <section id="how-it-works" className="section-y wheel-section px-4 sm:px-6 lg:px-7">
       <div className="mx-auto max-w-7xl">
         <Reveal variant="fade">
           <div className="mx-auto mb-4 h-px w-10 bg-accent" />

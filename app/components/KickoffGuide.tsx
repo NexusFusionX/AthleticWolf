@@ -48,7 +48,7 @@ export function KickoffGuide() {
   return (
     <section
       id="our-process"
-      className="section-y wheel-section kickoff-section px-4 sm:px-5 lg:px-6"
+      className="section-y wheel-section kickoff-section px-4 sm:px-6 lg:px-7"
     >
       <div className="kickoff-shell mx-auto">
         <Reveal variant="fade">

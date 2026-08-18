@@ -52,7 +52,7 @@ const categories = [
 
 export function WhoItIsFor() {
   return (
-    <section className="section-y wheel-section section-surface px-6 sm:px-8">
+    <section className="section-y wheel-section section-surface px-4 sm:px-6 lg:px-7">
       <div className="mx-auto max-w-7xl">
         <Reveal variant="blur-up">
           <div className="mx-auto mb-4 h-px w-10 bg-accent" />

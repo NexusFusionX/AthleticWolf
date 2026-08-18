@@ -40,7 +40,7 @@ export default function HowItWorksPage() {
           </div>
         </section>
 
-        <section className="page-section px-6 sm:px-8">
+        <section className="page-section px-4 sm:px-6 lg:px-7">
           <div className="mx-auto max-w-5xl">
             <HowItWorksGuide />
           </div>

@@ -15,7 +15,7 @@ export default function PackagesPage() {
 
       <main className="flex-1">
         <section className="border-b border-line bg-ink px-6 py-12 text-white sm:px-8">
-          <div className="mx-auto max-w-6xl">
+          <div className="mx-auto max-w-7xl">
             <Link
               href="/#packages"
               className="mb-6 inline-block text-sm font-semibold text-accent transition-colors hover:text-accent-bright"
@@ -36,8 +36,8 @@ export default function PackagesPage() {
           </div>
         </section>
 
-        <section className="page-section px-6 sm:px-8">
-          <div className="mx-auto max-w-6xl">
+        <section className="page-section px-4 sm:px-6 lg:px-7">
+          <div className="mx-auto max-w-7xl">
             <PackageGrid />
           </div>
         </section>

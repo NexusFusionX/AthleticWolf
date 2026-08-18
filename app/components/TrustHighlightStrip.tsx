@@ -16,14 +16,14 @@ export function TrustHighlightStrip({
 }: TrustHighlightStripProps) {
   return (
     <section
-      className={`trust-highlight-strip ${embedded ? "" : "px-6 sm:px-8"} ${className}`.trim()}
+      className={`trust-highlight-strip ${embedded ? "" : "px-4 sm:px-6 lg:px-7"} ${className}`.trim()}
       aria-label="Why train with Athletic Wolf"
     >
       <div
         className={
           embedded
             ? "grid w-full gap-4 sm:grid-cols-3"
-            : "mx-auto grid w-full max-w-6xl gap-4 sm:grid-cols-3"
+            : "mx-auto grid w-full max-w-7xl gap-4 sm:grid-cols-3"
         }
       >
         {items.map((item) => {

@@ -71,9 +71,9 @@ export function Testimonials() {
   return (
     <section
       id="testimonials"
-      className="section-y wheel-section section-surface px-6 sm:px-8"
+      className="section-y wheel-section section-surface px-4 sm:px-6 lg:px-7"
     >
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-7xl">
         <Reveal variant="fade">
           <div className="mx-auto mb-4 h-px w-10 bg-accent" />
           <AccentHeading

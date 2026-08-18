@@ -339,8 +339,8 @@ function ScrollYouTubePlayer() {
 
 export function CoachVideos() {
   return (
-    <section id="coach-videos" className="page-section px-6 sm:px-8">
-      <div className="mx-auto max-w-6xl">
+    <section id="coach-videos" className="page-section px-4 sm:px-6 lg:px-7">
+      <div className="mx-auto max-w-7xl">
         <Reveal className="max-w-xl" variant="left">
           <AccentHeading
             before="See Your Coach"

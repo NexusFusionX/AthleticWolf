@@ -57,9 +57,9 @@ export function ResultsCarousel() {
   return (
     <section
       id="results"
-      className="section-y wheel-section section-surface border-y border-line bg-ink px-6 text-white sm:px-8"
+      className="section-y wheel-section section-surface border-y border-line bg-ink px-4 text-white sm:px-6 lg:px-7"
     >
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-7xl">
         <Reveal className="max-w-xl" variant="blur-up">
           <AccentHeading
             before="Real"
