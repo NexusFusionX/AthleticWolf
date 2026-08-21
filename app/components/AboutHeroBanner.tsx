@@ -75,10 +75,10 @@ function AboutHeroCopyDesktop() {
           Contact on WhatsApp
         </a>
         <Link
-          href="/packages"
+          href="/#apply"
           className="btn btn-outline inline-flex items-center justify-center gap-2 px-6 py-3.5 text-sm font-semibold"
         >
-          View packages
+          Apply now
         </Link>
       </div>
 
@@ -123,7 +123,7 @@ function AboutHeroCopyMobile() {
         >
           WhatsApp
         </a>
-        <Link href="/packages" className="btn btn-outline hero-banner__btn">
+        <Link href="/#apply" className="btn btn-outline hero-banner__btn">
           Packages
         </Link>
       </div>

@@ -49,9 +49,9 @@ export function Faq({ showIntro = false, className = "" }: FaqProps) {
         <p className="faq-section__desc">
           Everything you need to know before you start coaching.
         </p>
-        <Link href="#packages" className="faq-section__cta btn btn-accent">
+        <Link href="#apply" className="faq-section__cta btn btn-accent">
           <span className="faq-section__cta-label">
-            Get Started
+            Apply now
             <Lightning size={16} weight="fill" aria-hidden />
           </span>
         </Link>

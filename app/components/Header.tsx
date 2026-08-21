@@ -9,7 +9,7 @@ import { BrandLogo } from "./BrandLogo";
 const NAV_LINKS = [
   { href: "/#programs", label: "Programs" },
   { href: "/how-it-works", label: "How It Works" },
-  { href: "/#packages", label: "Packages" },
+  { href: "/#apply", label: "Apply" },
   { href: "/#results", label: "Results" },
   { href: "/about", label: "About" },
   { href: "/#faq", label: "FAQ" },

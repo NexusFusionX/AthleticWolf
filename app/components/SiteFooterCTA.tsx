@@ -35,19 +35,19 @@ export function SiteFooterCTA() {
               Go to dashboard
             </Link>
             <Link
-              href="/packages"
+              href="/#apply"
               className="btn btn-outline px-8 py-3.5 text-sm font-bold uppercase tracking-wide"
             >
-              View packages
+              Apply now
             </Link>
           </>
         ) : (
           <>
             <Link
-              href="/packages"
+              href="/#apply"
               className="btn btn-accent px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white"
             >
-              View packages
+              Apply now
             </Link>
             <Link
               href="/how-it-works"

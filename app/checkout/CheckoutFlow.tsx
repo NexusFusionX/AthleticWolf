@@ -488,7 +488,7 @@ export function CheckoutFlow() {
             Head back to the packages section and pick a plan to check out.
           </p>
           <Link
-            href="/#packages"
+            href="/#apply"
             className="btn btn-accent mt-6 px-6 py-3 text-sm font-bold uppercase tracking-wide text-white"
           >
             View Packages
@@ -574,7 +574,7 @@ export function CheckoutFlow() {
                 Back
               </button>
             ) : (
-              <Link href="/#packages" className="checkout-back">
+              <Link href="/#apply" className="checkout-back">
                 <ArrowLeft size={16} weight="bold" aria-hidden />
                 Back
               </Link>

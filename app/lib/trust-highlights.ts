@@ -183,7 +183,7 @@ export function programTrustHighlights(programTitle: string): TrustHighlightItem
       icon: Package,
       title: "Included in packages",
       description: "Every coaching tier includes personalized plan delivery.",
-      href: "/packages",
+      href: "/#apply",
     },
   ];
 }

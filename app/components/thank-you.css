@@ -81,6 +81,52 @@
   color: #fff;
 }
 
+.thank-you__answers {
+  margin: 1.75rem auto 0;
+  max-width: 32rem;
+  padding: 1.15rem 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  text-align: left;
+}
+
+.thank-you__answers-title {
+  margin-bottom: 0.85rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.thank-you__answers-list {
+  display: grid;
+  gap: 0.7rem;
+  margin: 0;
+}
+
+.thank-you__answers-row {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.thank-you__answers-row dt {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.thank-you__answers-row dd {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.9);
+  word-break: break-word;
+}
+
 .thank-you__next {
   margin: 2rem auto 0;
   max-width: 28rem;

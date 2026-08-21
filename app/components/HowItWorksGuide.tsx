@@ -36,11 +36,11 @@ const STEPS = [
   },
   {
     step: "02",
-    title: "Choose your package",
-    lead: "Pick Silver, Platinum, or Diamond.",
+    title: "Apply for coaching",
+    lead: "Share where you are and what you need.",
     detail:
-      "Compare coaching packages and choose the level of support that fits your goals. All plans are prepaid 6-month coaching packages paid in full at checkout.",
-    points: ["Three coaching tiers", "Switch package at checkout"],
+      "Complete a short application — goals, challenges, and how to reach you. No card needed to start.",
+    points: ["7 quick questions", "No payment required"],
     screens: [
       { key: "packages", node: <ProcessPreviewPackages selectedSlug="silver" /> },
       { key: "packages-featured", node: <ProcessPreviewPackages selectedSlug="platinum" /> },
@@ -114,10 +114,10 @@ export function HowItWorksGuide() {
             Pick a coaching package and check out to begin your assessment.
           </p>
           <Link
-            href="/packages"
+            href="/#apply"
             className="btn btn-accent mt-6 inline-flex px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white"
           >
-            View packages
+            Apply now
           </Link>
         </div>
       </Reveal>

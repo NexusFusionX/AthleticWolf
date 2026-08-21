@@ -3,7 +3,7 @@ import { ThankYouContent } from "@/app/components/ThankYouContent";
 
 export const metadata = {
   title: "Thank You | Athletic Wolf",
-  description: "Your Athletic Wolf coaching purchase is confirmed.",
+  description: "Your Athletic Wolf application is in — we're creating your plan.",
 };
 
 export default function ThankYouPage() {

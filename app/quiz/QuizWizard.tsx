@@ -158,7 +158,7 @@ export function QuizWizard() {
       setExistingPlan(plan ?? null);
 
       if (startFresh) {
-        router.replace("/packages");
+        router.replace("/#apply");
         return;
       }
 
@@ -351,7 +351,7 @@ export function QuizWizard() {
         localStorage.removeItem(STORAGE_KEY);
         router.push("/dashboard");
       } else {
-        router.push("/packages");
+        router.push("/#apply");
       }
     } catch {
       setSubmitError("Failed to save assessment. Please try again.");

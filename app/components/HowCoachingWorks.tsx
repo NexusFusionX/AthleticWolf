@@ -3,7 +3,6 @@
 import Link from "next/link";
 import {
   ClipboardText,
-  CreditCard,
   FileText,
   User,
   Trophy,
@@ -16,23 +15,18 @@ import { AccentHeading } from "./AccentHeading";
 const steps = [
   {
     icon: User,
-    title: "Choose Your Package",
-    desc: "Pick Silver, Platinum, or Diamond — the level of support that fits you.",
-  },
-  {
-    icon: CreditCard,
-    title: "Secure Checkout",
-    desc: "Create your account and complete payment safely online.",
+    title: "Apply for Coaching",
+    desc: "Answer a short application so your coach understands your situation.",
   },
   {
     icon: ClipboardText,
-    title: "Complete Assessment",
-    desc: "Answer a few questions about your goals, schedule, and experience.",
+    title: "Coach Review",
+    desc: "Your coach reviews your answers and reaches out with next steps.",
   },
   {
     icon: FileText,
     title: "Get Your Plan",
-    desc: "Receive your custom workout and nutrition plan within days.",
+    desc: "Receive a custom workout and nutrition plan built around you.",
   },
   {
     icon: Trophy,
@@ -56,7 +50,7 @@ export function HowCoachingWorks() {
         </Reveal>
 
         <div className="mt-8">
-          <div className="hidden lg:grid lg:grid-cols-5 lg:gap-6">
+          <div className="hidden lg:grid lg:grid-cols-4 lg:gap-6">
             {steps.map((step, i) => {
               const Icon = step.icon;
               return (
@@ -119,10 +113,10 @@ export function HowCoachingWorks() {
 
         <div className="mt-8 text-center">
           <Link
-            href="/packages"
+            href="/#apply"
             className="btn btn-accent px-6 py-3 text-sm font-semibold text-white"
           >
-            View coaching packages
+            Apply for coaching
           </Link>
         </div>
       </div>

@@ -94,14 +94,14 @@ export default async function ProgramDetailPage({
             <div className="h-fit rounded-2xl border border-line bg-card p-6 shadow-premium">
               <p className="font-display text-lg">Ready to start?</p>
               <p className="mt-2 text-sm text-muted">
-                Every program is built into our coaching packages. Pick a package
-                and we'll tailor it to this goal from day one.
+                Apply with a short form and we&apos;ll tailor coaching to this
+                goal from day one.
               </p>
               <Link
-                href="/packages"
+                href="/#apply"
                 className="btn btn-accent mt-6 w-full px-6 py-3.5 text-sm font-bold uppercase tracking-wide text-white"
               >
-                View Packages
+                Apply now
               </Link>
             </div>
           </div>

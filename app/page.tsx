@@ -14,9 +14,9 @@ import { HeroBanner } from "./components/HeroBanner";
 import { SeoText } from "./components/SeoText";
 import { PromoMarquee } from "./components/PromoMarquee";
 import { AccentHeading } from "./components/AccentHeading";
-import { PackageGrid } from "./components/PackageCard";
 import { Testimonials } from "./components/Testimonials";
 import { KickoffGuide } from "./components/KickoffGuide";
+import { LeadFormWizard } from "./components/lead-form/LeadFormWizard";
 
 export default function Home() {
   return (
@@ -35,33 +35,25 @@ export default function Home() {
         <WhoItIsFor />
         <DoesThisSoundLikeYou />
 
-        {/* Results before pricing — social proof first */}
         <ResultsCarousel />
 
-        <section id="packages" className="section-y wheel-section px-4 sm:px-6 lg:px-7">
+        <section
+          id="apply"
+          className="section-y wheel-section px-4 sm:px-6 lg:px-7"
+        >
           <div className="mx-auto max-w-7xl">
-            <Reveal className="max-w-xl" variant="skew-up">
-              <p className="text-sm font-bold uppercase tracking-[0.2em] text-accent">
-                Membership
-              </p>
-              <AccentHeading
-                accent="Choose"
-                after="Your Package"
-                className="font-display mt-3 text-4xl sm:text-5xl"
-              />
-              <p className="mt-4 text-muted">
-                All plans are prepaid 6-month coaching packages — pay once at
-                checkout for the full term.
-              </p>
+            <Reveal variant="skew-up">
+              <LeadFormWizard />
             </Reveal>
-
-            <PackageGrid className="mt-8" />
           </div>
         </section>
 
         <CoachVideos />
 
-        <section id="about" className="section-y wheel-section section-surface px-4 sm:px-6 lg:px-7">
+        <section
+          id="about"
+          className="section-y wheel-section section-surface px-4 sm:px-6 lg:px-7"
+        >
           <div className="mx-auto max-w-7xl">
             <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
               <Reveal variant="left">

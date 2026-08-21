@@ -224,22 +224,15 @@ export default function DashboardPage() {
             <div className="rounded-xl border border-dashed border-line bg-surface p-8 text-center">
               <p className="font-display text-xl">No active package yet</p>
               <p className="mt-2 text-sm text-muted">
-                Choose a coaching package to get started. After checkout,
-                you&apos;ll complete a short intake assessment and your coach
-                will build your program.
+                Apply for coaching with a short form. Your coach will review
+                your answers and follow up with next steps.
               </p>
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
                 <Link
-                  href="/packages"
+                  href="/#apply"
                   className="btn btn-accent px-8 py-3.5 text-base font-semibold text-white"
                 >
-                  View packages
-                </Link>
-                <Link
-                  href="/#packages"
-                  className="btn btn-outline px-8 py-3.5 text-base font-semibold"
-                >
-                  Compare plans
+                  Apply now
                 </Link>
               </div>
             </div>

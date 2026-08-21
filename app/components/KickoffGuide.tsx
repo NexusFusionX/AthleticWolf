@@ -96,7 +96,7 @@ export function KickoffGuide() {
         <Reveal delay={0.2} variant="up">
           <div className="mt-12 text-center">
             <Link
-              href="/packages"
+              href="/#apply"
               className="btn btn-accent px-8 py-3.5 text-sm font-bold uppercase tracking-wide text-white"
             >
               Get Started
